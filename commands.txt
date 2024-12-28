@@ -1,1 +1,1 @@
-python -m streamlit run  dashboard.py
+python -m streamlit run sentiment_analysis_example.py

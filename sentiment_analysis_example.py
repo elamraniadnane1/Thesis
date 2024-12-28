@@ -1,36 +1,148 @@
+import streamlit as st
+import pandas as pd
 from transformers import pipeline
+import matplotlib.pyplot as plt
 
-# Load the sentiment analysis pipeline with the specified model
-pipe = pipeline("text-classification", model="CAMeL-Lab/bert-base-arabic-camelbert-da-sentiment")
+# ------------------------------------------------------
+# 1. Initialize the sentiment analysis pipeline
+# ------------------------------------------------------
+@st.cache_resource
+def load_sentiment_pipeline():
+    # This model performs sentiment classification on Arabic text
+    sentiment_pipe = pipeline(
+        "text-classification", 
+        model="CAMeL-Lab/bert-base-arabic-camelbert-da-sentiment"
+    )
+    return sentiment_pipe
 
-def analyze_sentiment(texts):
+# ------------------------------------------------------
+# 2. Load data
+# ------------------------------------------------------
+@st.cache_data
+def load_data(csv_file_path: str):
     """
-    Analyze sentiment for a list of texts.
-
-    Parameters:
-        texts (list of str): List of text inputs to analyze.
-
-    Returns:
-        list of dict: List of sentiment analysis results for each text.
+    Load the comments CSV into a pandas DataFrame.
+    Expected CSV format:
+    article_url, commenter, comment_date, comment
     """
-    if not isinstance(texts, list):
-        raise ValueError("Input must be a list of strings.")
+    df = pd.read_csv(csv_file_path)
+    # Clean up or rename columns if needed
+    df.columns = ["article_url", "commenter", "comment_date", "comment"]
+    return df
 
-    results = pipe(texts)
-    return results
+# ------------------------------------------------------
+# 3. Perform sentiment analysis
+# ------------------------------------------------------
+def analyze_sentiment(df: pd.DataFrame, sentiment_pipe):
+    sentiments = []
+    for comment in df['comment']:
+        # The pipeline returns a list of dicts, e.g. [{'label': 'POSITIVE', 'score': 0.954...}]
+        # For the CAMeL model, labels might be "POS", "NEG", or "NEU" (depending on the model).
+        # Check the model documentation or do a quick test to see the exact label outputs.
+        result = sentiment_pipe(comment)
+        sentiments.append(result[0]['label'])
+    
+    df['sentiment'] = sentiments
+    return df
+
+# ------------------------------------------------------
+# 4. Main Streamlit App
+# ------------------------------------------------------
+def main():
+    st.set_page_config(page_title="Hespress Sentiment Analysis", layout="wide")
+
+    st.title("Arabic Sentiment Analysis Dashboard")
+    st.write(
+        """
+        This dashboard uses an Arabic BERT model 
+        ([`CAMeL-Lab/bert-base-arabic-camelbert-da-sentiment`](https://huggingface.co/CAMeL-Lab/bert-base-arabic-camelbert-da-sentiment)) 
+        to analyze the sentiment of comments. 
+        Upload your CSV file or use the default example to get started.
+        """
+    )
+
+    # ------------------------------------------------------
+    # 4a. File upload
+    # ------------------------------------------------------
+    uploaded_file = st.file_uploader("Upload a CSV file with columns (article_url, commenter, comment_date, comment):", type="csv")
+
+    # Default path (update if needed)
+    csv_file_path = "C:\\Users\\DELL\\OneDrive\\Desktop\\Thesis\\hespress_politics_comments.csv"
+
+    # Load pipeline once
+    sentiment_pipe = load_sentiment_pipeline()
+
+    df = None
+    if uploaded_file is not None:
+        df = pd.read_csv(uploaded_file)
+        df.columns = ["article_url", "commenter", "comment_date", "comment"]
+        st.success("File uploaded successfully!")
+    else:
+        # Use the default CSV file if no file is uploaded
+        st.info("No file uploaded. Using the default CSV file.")
+        df = load_data(csv_file_path)
+
+    # ------------------------------------------------------
+    # 4b. Show raw data
+    # ------------------------------------------------------
+    if df is not None:
+        st.subheader("1. Preview of the Data")
+        st.dataframe(df.head(10))
+
+        # ------------------------------------------------------
+        # 4c. Run sentiment analysis
+        # ------------------------------------------------------
+        with st.spinner("Analyzing sentiment..."):
+            df = analyze_sentiment(df, sentiment_pipe)
+
+        st.subheader("2. Sentiment Analysis Results")
+        st.dataframe(df.head(10))
+
+        # ------------------------------------------------------
+        # 4d. Visualization
+        # ------------------------------------------------------
+        st.subheader("3. Sentiment Distribution")
+
+        sentiment_counts = df['sentiment'].value_counts()
+        fig, ax = plt.subplots()
+        sentiment_counts.plot(
+            kind='bar',
+            color=['green', 'red', 'blue'],
+            ax=ax
+        )
+        ax.set_xlabel("Sentiment")
+        ax.set_ylabel("Count")
+        ax.set_title("Distribution of Sentiments in Comments")
+        st.pyplot(fig)
+
+        # ------------------------------------------------------
+        # 4e. Possible grouping or filtering
+        # ------------------------------------------------------
+        st.subheader("4. Filter by Sentiment")
+        selected_sentiment = st.selectbox("Choose a sentiment to filter:", ["ALL"] + list(sentiment_counts.index))
+
+        if selected_sentiment != "ALL":
+            filtered_df = df[df['sentiment'] == selected_sentiment]
+        else:
+            filtered_df = df
+
+        st.write(f"Showing comments for sentiment: **{selected_sentiment}**")
+        st.dataframe(filtered_df[['commenter', 'comment_date', 'comment', 'sentiment']])
+
+        # ------------------------------------------------------
+        # 4f. Conclusion / Insights
+        # ------------------------------------------------------
+        st.subheader("5. Observations / Insights")
+        st.write(
+            """
+            - Use the above table and chart to identify common themes 
+              or patterns in citizen comments.
+            - Focus on negative or neutral sentiments to understand areas 
+              of dissatisfaction or potential improvements.
+            - The government can prioritize policies or decisions 
+              that address the most prominent concerns.
+            """
+        )
 
 if __name__ == "__main__":
-    # Sample Arabic texts for sentiment analysis
-    sample_texts = [
-        "\u0635\u0648\u062a\u0643 \u062c\u0645\u064a\u0644 \u062c\u062f\u0627 \u0648\u0645\u0644\u0647\u0645.",  # "Your voice is very beautiful and inspiring."
-        "\u0644\u0627 \u0623\u062d\u0628 \u0647\u0630\u0627 \u0627\u0644\u0645\u0643\u0627\u0646.",  # "I don't like this place."
-        "\u0627\u0644\u062e\u062f\u0645\u0629 \u0645\u0645\u062a\u0627\u0632\u0629 \u0648\u0627\u0644\u0637\u0639\u0627\u0645 \u0644\u0630\u064a\u0630 \u062c\u062f\u064b\u0627."  # "The service is excellent and the food is very delicious."
-    ]
-
-    # Perform sentiment analysis
-    sentiments = analyze_sentiment(sample_texts)
-
-    # Print the results
-    for text, sentiment in zip(sample_texts, sentiments):
-        print(f"Text: {text}")
-        print(f"Sentiment: {sentiment}\n")
+    main()

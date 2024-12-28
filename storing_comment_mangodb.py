@@ -16,16 +16,16 @@ def main():
         print(f"Error reading {csv_file}: {e}")
         return
 
-    # 2. Connect to MongoDB Atlas
-    #    Make sure to update with your actual credentials and cluster info.
-    CONNECTION_STRING = (
-        "mongodb+srv://YOUR_USERNAME:YOUR_PASSWORD"
-        "@YOUR_CLUSTER.mongodb.net/?retryWrites=true&w=majority"
-    )
-    client = pymongo.MongoClient(CONNECTION_STRING)
+        # 2. Connect to MongoDB Atlas
+        #    Make sure to update with your actual credentials and cluster info.
+        CONNECTION_STRING = (
+            "mongodb+srv://YOUR_USERNAME:YOUR_PASSWORD"
+            "@YOUR_CLUSTER.mongodb.net/?retryWrites=true&w=majority"
+        )
+        client = pymongo.MongoClient(CONNECTION_STRING)
 
     # 3. Select your database and collection
-    db = client["YOUR_DATABASE_NAME"]
+    db = client["these"]
     collection = db["hespress_politics_comments"]  # Choose the collection name
 
     # 4. Convert DataFrame to a list of dictionaries (MongoDB-compatible format)
