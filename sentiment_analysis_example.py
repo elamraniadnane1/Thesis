@@ -68,7 +68,7 @@ def highlight_sentiment(row):
 def main():
     st.set_page_config(page_title="Hespress Sentiment Analysis", layout="wide")
 
-    st.title("Arabic Sentiment Analysis Dashboard")
+    st.title("Hespress Sentiment Analysis Dashboard")
     st.write(
         """
         This dashboard uses an Arabic BERT model 
