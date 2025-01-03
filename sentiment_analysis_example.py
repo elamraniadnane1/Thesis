@@ -90,8 +90,10 @@ def analyze_sentiment(df: pd.DataFrame, sentiment_pipe):
     """Run the sentiment analysis pipeline on each comment without chunking."""
     sentiments = []
     for comment in df['comment']:
-        result = sentiment_pipe(comment)
-        sentiments.append(result[0]['label'])  # "POS", "NEG", "NEU"
+        # If pipeline returns a single dict per comment
+        result = sentiment_pipe(comment)  
+        # result might look like: {'label': 'POS', 'score': 0.99}
+        sentiments.append(result['label'])  # "POS", "NEG", or "NEU"
     df['sentiment'] = sentiments
     return df
 
@@ -120,7 +122,9 @@ def analyze_sentiment_in_chunks(df: pd.DataFrame, sentiment_pipe, chunk_size: in
         
         # Inference on the chunk
         results = sentiment_pipe(chunk)
-        chunk_sentiments = [res[0]['label'] for res in results]
+        # results might be a list of dicts:
+        # [{'label': 'POS', 'score': 0.99}, {'label': 'NEG', 'score': 0.88}, ...]
+        chunk_sentiments = [res['label'] for res in results]
         sentiments.extend(chunk_sentiments)
         
         # Update progress bar
@@ -169,7 +173,7 @@ def plot_sentiment_pie_chart(df: pd.DataFrame):
 def plot_heatmap(df: pd.DataFrame):
     """
     Example: Plot a simple heatmap showing correlation 
-    among numeric columns (not very relevant unless you have numeric data).
+    among numeric columns (for demonstration).
     """
     numeric_data = pd.DataFrame({
         'random_feature_1': np.random.randn(len(df)),
@@ -280,10 +284,8 @@ def main():
         if st.button("Run Sentiment Analysis"):
             with st.spinner("Analyzing sentiment..."):
                 if analysis_method == "Standard":
-                    # Standard analysis (no chunking)
                     df = analyze_sentiment(df, sentiment_pipe)
                 else:
-                    # Chunked analysis
                     df = analyze_sentiment_in_chunks(df, sentiment_pipe, chunk_size=chunk_size)
             st.success("Sentiment Analysis Complete!")
 
@@ -294,9 +296,10 @@ def main():
             st.info("Click the button above to run sentiment analysis.")
 
         # ------------------------------------------------------
-        # 7d. Sentiment Distribution
+        # 7d. Post-Analysis Visualizations
         # ------------------------------------------------------
         if "sentiment" in df.columns:
+            # 3. Sentiment Distribution
             st.subheader("3. Sentiment Distribution")
             sentiment_counts = df['sentiment'].value_counts()
 
@@ -311,16 +314,12 @@ def main():
             # 3b. Plotly Pie Chart
             plot_sentiment_pie_chart(df)
 
-            # ------------------------------------------------------
-            # 7e. Top Commenters
-            # ------------------------------------------------------
+            # 4. Top Commenters
             if show_top_commenters:
                 st.subheader("4. Top Commenters")
                 top_commenters_bar_chart(df, top_n=top_n_commenters)
 
-            # ------------------------------------------------------
-            # 7f. Filter by sentiment
-            # ------------------------------------------------------
+            # 5. Filter by sentiment
             st.subheader("5. Filter / Search by Sentiment")
             selected_sentiment = st.selectbox("Choose a sentiment to filter:", ["ALL"] + list(sentiment_counts.index))
 
@@ -334,9 +333,7 @@ def main():
                 filtered_df[['commenter', 'comment_date', 'comment', 'sentiment']].style.apply(highlight_sentiment, axis=1)
             )
 
-        # ------------------------------------------------------
-        # 7g. Additional Observations / Insights
-        # ------------------------------------------------------
+        # 6. Observations / Insights
         st.subheader("6. Observations / Insights")
         st.write(
             """
@@ -351,9 +348,7 @@ def main():
             """
         )
 
-        # ------------------------------------------------------
-        # 7h. Optional Heatmap
-        # ------------------------------------------------------
+        # 7. Optional Heatmap
         if show_heatmap:
             st.subheader("Sample Correlation Heatmap")
             st.write(
@@ -361,9 +356,7 @@ def main():
             )
             plot_heatmap(df)
 
-        # ------------------------------------------------------
-        # 7i. Custom Comment Analysis
-        # ------------------------------------------------------
+        # 8. Custom Comment Analysis
         st.subheader("7. Try It Yourself: Custom Comment Analysis")
         user_comment = st.text_area("Enter an Arabic comment to analyze its sentiment:")
         analyze_btn = st.button("Analyze This Comment")
@@ -371,14 +364,13 @@ def main():
             if user_comment.strip():
                 with st.spinner("Analyzing..."):
                     user_result = sentiment_pipe(user_comment)
-                    user_sentiment = user_result[0]['label']
+                    # If pipeline returns a single dict like: {'label': 'POS', 'score': 0.99}
+                    user_sentiment = user_result['label']
                 st.write(f"**Predicted Sentiment**: {user_sentiment}")
             else:
                 st.warning("Please enter a non-empty comment.")
 
-        # ------------------------------------------------------
-        # 7j. Time-based sentiment analysis
-        # ------------------------------------------------------
+        # 9. Time-based sentiment analysis
         if "sentiment" in df.columns:
             st.subheader("8. Time-Based Sentiment Analysis")
             try:
@@ -394,11 +386,13 @@ def main():
                 st.dataframe(pivoted.style.highlight_max(color='lightgreen', axis=0))
 
                 # Plot trends over time using Plotly
-                pivoted_df = pivoted.reset_index().melt(id_vars='comment_date', var_name='sentiment', value_name='count')
+                pivoted_df = pivoted.reset_index().melt(
+                    id_vars='comment_date', var_name='sentiment', value_name='count'
+                )
                 fig2 = px.line(
-                    pivoted_df, 
-                    x='comment_date', 
-                    y='count', 
+                    pivoted_df,
+                    x='comment_date',
+                    y='count',
                     color='sentiment',
                     title="Sentiment Counts Over Time (Interactive)",
                     markers=True
@@ -409,9 +403,7 @@ def main():
             except Exception as e:
                 st.warning(f"Could not parse dates. Error: {e}")
 
-        # ------------------------------------------------------
-        # 7k. Word Cloud Visualization
-        # ------------------------------------------------------
+        # 10. Word Cloud Visualization
         if "sentiment" in df.columns:
             st.subheader("9. Word Cloud")
             sentiment_options = ["ALL"] + list(df['sentiment'].unique())
@@ -432,9 +424,7 @@ def main():
                 else:
                     st.warning("No text available to generate a word cloud.")
 
-        # ------------------------------------------------------
-        # 7l. Downloading the Results
-        # ------------------------------------------------------
+        # 11. Downloading the Results
         if "sentiment" in df.columns:
             st.subheader("10. Download Results")
             st.write("Click the button below to download the analyzed dataset as a CSV.")
