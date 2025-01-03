@@ -84,7 +84,7 @@ def main():
     uploaded_file = st.file_uploader("Upload a CSV file with columns (article_url, commenter, comment_date, comment):", type="csv")
 
     # Default path (update if needed)
-    csv_file_path = "C:\\Users\\DELL\\OneDrive\\Desktop\\Thesis\\hespress_politics_comments.csv"
+    csv_file_path = "mount\\src\\thesis\\hespress_politics_comments.csv"
 
     # Load pipeline once
     sentiment_pipe = load_sentiment_pipeline()
