@@ -374,15 +374,41 @@ def main():
         if "sentiment" in df.columns:
             st.subheader("8. Time-Based Sentiment Analysis")
             try:
-                df['comment_date'] = pd.to_datetime(df['comment_date'], errors='coerce')
+                import dateparser
+
+                # Function to parse Arabic dates
+                def parse_arabic_date(date_str):
+                    """
+                    Parses an Arabic date string into a datetime object.
+                    Returns NaT if parsing fails.
+                    """
+                    parsed_date = dateparser.parse(date_str, languages=['ar'], settings={'TIMEZONE': 'UTC'})
+                    return parsed_date
+
+                # Apply the parsing function to the 'comment_date' column
+                st.write("Parsing dates. This may take a moment...")
+                df['parsed_date'] = df['comment_date'].apply(parse_arabic_date)
+
+                # Count how many dates were successfully parsed
+                num_parsed = df['parsed_date'].notna().sum()
+                total = len(df)
+                st.write(f"Successfully parsed {num_parsed} out of {total} dates.")
+
                 # Drop rows where the date could not be parsed
-                df = df.dropna(subset=['comment_date'])
+                df = df.dropna(subset=['parsed_date'])
+
+                # Replace the original 'comment_date' with the parsed dates
+                df['comment_date'] = df['parsed_date']
+                df = df.drop(columns=['parsed_date'])
+
+                # Ensure 'comment_date' is in datetime format
+                df['comment_date'] = pd.to_datetime(df['comment_date'])
 
                 # Group by date and sentiment
                 daily_counts = df.groupby([df['comment_date'].dt.date, 'sentiment']).size().reset_index(name='count')
                 pivoted = daily_counts.pivot(index='comment_date', columns='sentiment', values='count').fillna(0)
 
-                st.write("Daily counts of each sentiment:")
+                st.write("### Daily Counts of Each Sentiment")
                 st.dataframe(pivoted.style.highlight_max(color='lightgreen', axis=0))
 
                 # Plot trends over time using Plotly
@@ -397,32 +423,64 @@ def main():
                     title="Sentiment Counts Over Time (Interactive)",
                     markers=True
                 )
-                fig2.update_layout(xaxis_title="Date", yaxis_title="Count")
-                st.plotly_chart(fig2)
+                fig2.update_layout(
+                    xaxis_title="Date",
+                    yaxis_title="Count",
+                    legend_title="Sentiment",
+                    template="plotly_dark"  # Optional: Choose a template that fits your app's theme
+                )
+                st.plotly_chart(fig2, use_container_width=True)
 
             except Exception as e:
                 st.warning(f"Could not parse dates. Error: {e}")
 
+
+        # ------------------------------------------------------
         # 10. Word Cloud Visualization
+        # ------------------------------------------------------
         if "sentiment" in df.columns:
             st.subheader("9. Word Cloud")
-            sentiment_options = ["ALL"] + list(df['sentiment'].unique())
-            sentiment_choice = st.selectbox("Generate word cloud for which sentiment?", sentiment_options)
-
-            if sentiment_choice == "ALL":
-                text_data = " ".join(df['comment'].astype(str))
+            
+            # Retrieve unique sentiments and sort them for better UX
+            sentiment_options = sorted(df['sentiment'].unique())
+            
+            # Multi-select widget for choosing multiple sentiments
+            selected_sentiments = st.multiselect(
+                "Generate word cloud for which sentiment(s)?",
+                options=sentiment_options,
+                default=sentiment_options  # Default to all sentiments selected
+            )
+            
+            # Determine the text data based on user selection
+            if selected_sentiments:
+                text_data = " ".join(
+                    df[df['sentiment'].isin(selected_sentiments)]['comment'].astype(str)
+                )
             else:
-                text_data = " ".join(df[df['sentiment'] == sentiment_choice]['comment'].astype(str))
-
+                st.warning("Please select at least one sentiment to generate a word cloud.")
+                text_data = ""
+            
+            # Button to generate the word cloud
             if st.button("Generate Word Cloud"):
                 if text_data.strip():
-                    wordcloud = WordCloud(background_color='white', width=800, height=600).generate(text_data)
+                    # Generate the word cloud
+                    wordcloud = WordCloud(
+                        background_color='white',
+                        width=800,
+                        height=600,
+                        font_path='arial.ttf',  # Specify a font path if needed
+                        collocations=False,     # Avoid duplicate words
+                        stopwords=set([])       # Define stopwords if necessary
+                    ).generate(text_data)
+                    
+                    # Display the word cloud using Matplotlib
                     fig3, ax3 = plt.subplots(figsize=(10, 6))
                     ax3.imshow(wordcloud, interpolation='bilinear')
-                    ax3.axis("off")
+                    ax3.axis("off")  # Hide the axes
                     st.pyplot(fig3)
                 else:
                     st.warning("No text available to generate a word cloud.")
+
 
         # 11. Downloading the Results
         if "sentiment" in df.columns:
