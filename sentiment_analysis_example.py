@@ -284,7 +284,7 @@ def main():
         if st.button("Run Sentiment Analysis"):
             with st.spinner("Analyzing sentiment..."):
                 if analysis_method == "Standard":
-                    df = analyze_sentiment(df, sentiment_pipe)
+                    df = analyze_sentiment_in_chunks(df, sentiment_pipe, chunk_size=1000)
                 else:
                     df = analyze_sentiment_in_chunks(df, sentiment_pipe, chunk_size=chunk_size)
             st.success("Sentiment Analysis Complete!")
@@ -376,63 +376,100 @@ def main():
             try:
                 import dateparser
 
+                # Function to correct month names
+                def correct_month_names(date_str, mapping):
+                    for wrong, correct in mapping.items():
+                        if wrong in date_str:
+                            return date_str.replace(wrong, correct)
+                    return date_str  # Return unchanged if no match found
+
+                # Define month mapping
+                month_mapping = {
+                    'دجنبر': 'ديسمبر',
+                    'كانون الثاني': 'كانون الثاني',  # January
+                    'شباط': 'شباط',                # February
+                    'آذار': 'آذار',                 # March
+                    'نيسان': 'نيسان',                # April
+                    'أيار': 'أيار',                  # May
+                    'حزيران': 'حزيران',              # June
+                    'تموز': 'تموز',                  # July
+                    'آب': 'آب',                      # August
+                    'أيلول': 'أيلول',                # September
+                    'تشرين الأول': 'تشرين الأول',      # October
+                    'تشرين الثاني': 'تشرين الثاني',      # November
+                    'كانون الأول': 'كانون الأول',        # December
+                    # Add any other necessary mappings
+                }
+
                 # Function to parse Arabic dates
                 def parse_arabic_date(date_str):
-                    """
-                    Parses an Arabic date string into a datetime object.
-                    Returns NaT if parsing fails.
-                    """
-                    parsed_date = dateparser.parse(date_str, languages=['ar'], settings={'TIMEZONE': 'UTC'})
+                    parsed_date = dateparser.parse(
+                        date_str,
+                        languages=['ar'],
+                        settings={
+                            'DATE_ORDER': 'DMY',
+                            'TIMEZONE': 'UTC',
+                            'RETURN_AS_TIMEZONE_AWARE': False
+                        }
+                    )
                     return parsed_date
 
-                # Apply the parsing function to the 'comment_date' column
-                st.write("Parsing dates. This may take a moment...")
-                df['parsed_date'] = df['comment_date'].apply(parse_arabic_date)
+                # Correct month names
+                st.write("Correcting month names in dates...")
+                df['comment_date_corrected'] = df['comment_date'].apply(lambda x: correct_month_names(x, month_mapping))
 
-                # Count how many dates were successfully parsed
+                # Parse corrected dates
+                st.write("Parsing corrected dates. This may take a moment...")
+                df['parsed_date'] = df['comment_date_corrected'].apply(parse_arabic_date)
+
+                # Count successfully parsed dates
                 num_parsed = df['parsed_date'].notna().sum()
                 total = len(df)
                 st.write(f"Successfully parsed {num_parsed} out of {total} dates.")
 
-                # Drop rows where the date could not be parsed
-                df = df.dropna(subset=['parsed_date'])
+                if num_parsed == 0:
+                    st.warning("No dates were successfully parsed. Please check the date formats and month mappings.")
+                else:
+                    # Drop rows where parsing failed
+                    df = df.dropna(subset=['parsed_date'])
 
-                # Replace the original 'comment_date' with the parsed dates
-                df['comment_date'] = df['parsed_date']
-                df = df.drop(columns=['parsed_date'])
+                    # Update 'comment_date' with parsed dates
+                    df['comment_date'] = df['parsed_date']
+                    df = df.drop(columns=['parsed_date', 'comment_date_corrected'])
 
-                # Ensure 'comment_date' is in datetime format
-                df['comment_date'] = pd.to_datetime(df['comment_date'])
+                    # Ensure 'comment_date' is datetime
+                    df['comment_date'] = pd.to_datetime(df['comment_date'])
 
-                # Group by date and sentiment
-                daily_counts = df.groupby([df['comment_date'].dt.date, 'sentiment']).size().reset_index(name='count')
-                pivoted = daily_counts.pivot(index='comment_date', columns='sentiment', values='count').fillna(0)
+                    # Group by date and sentiment
+                    daily_counts = df.groupby([df['comment_date'].dt.date, 'sentiment']).size().reset_index(name='count')
+                    pivoted = daily_counts.pivot(index='comment_date', columns='sentiment', values='count').fillna(0)
 
-                st.write("### Daily Counts of Each Sentiment")
-                st.dataframe(pivoted.style.highlight_max(color='lightgreen', axis=0))
+                    st.write("### Daily Counts of Each Sentiment")
+                    st.dataframe(pivoted.style.highlight_max(color='lightgreen', axis=0))
 
-                # Plot trends over time using Plotly
-                pivoted_df = pivoted.reset_index().melt(
-                    id_vars='comment_date', var_name='sentiment', value_name='count'
-                )
-                fig2 = px.line(
-                    pivoted_df,
-                    x='comment_date',
-                    y='count',
-                    color='sentiment',
-                    title="Sentiment Counts Over Time (Interactive)",
-                    markers=True
-                )
-                fig2.update_layout(
-                    xaxis_title="Date",
-                    yaxis_title="Count",
-                    legend_title="Sentiment",
-                    template="plotly_dark"  # Optional: Choose a template that fits your app's theme
-                )
-                st.plotly_chart(fig2, use_container_width=True)
+                    # Plot trends over time using Plotly
+                    pivoted_df = pivoted.reset_index().melt(
+                        id_vars='comment_date', var_name='sentiment', value_name='count'
+                    )
+                    fig2 = px.line(
+                        pivoted_df,
+                        x='comment_date',
+                        y='count',
+                        color='sentiment',
+                        title="Sentiment Counts Over Time (Interactive)",
+                        markers=True
+                    )
+                    fig2.update_layout(
+                        xaxis_title="Date",
+                        yaxis_title="Count",
+                        legend_title="Sentiment",
+                        template="plotly_dark"  # Optional: Choose a template that fits your app's theme
+                    )
+                    st.plotly_chart(fig2, use_container_width=True)
 
             except Exception as e:
                 st.warning(f"Could not parse dates. Error: {e}")
+
 
 
         # ------------------------------------------------------
