@@ -1,15 +1,69 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 from transformers import pipeline
 import matplotlib.pyplot as plt
-from wordcloud import WordCloud  # Make sure to install: pip install wordcloud
+from wordcloud import WordCloud
+import plotly.express as px
+import plotly.graph_objects as go
+import seaborn as sns
+import io
+from io import BytesIO
+import base64
 
 # ------------------------------------------------------
-# 1. Initialize the sentiment analysis pipeline
+# 1. Custom CSS (Optional)
+# ------------------------------------------------------
+# Add a custom style to polish the appearance of the Streamlit app.
+st.set_page_config(page_title="Hespress Sentiment Analysis", layout="wide")
+st.markdown(
+    """
+    <style>
+    /* Custom fonts and background */
+    body {
+        background-color: #F8F9FA;
+    }
+    .title h1, .title h2, .title h3, .title h4, .title h5, .title h6 {
+        color: #2B3E50;
+    }
+    .css-18e3th9 {
+        padding: 1rem 2rem 2rem 2rem; 
+    }
+    /* Table hover and header color */
+    table.dataframe tbody tr:hover {
+        background-color: #EEE !important;
+    }
+    table.dataframe thead {
+        background-color: #395B64;
+        color: #F8F9FA;
+    }
+    .stSpinner > div > div {
+        border-top-color: #5CDB94 !important;
+    }
+    /* Custom button styling */
+    div.stButton > button {
+        color: white;
+        background: #3AAFA9;
+        border-radius: 0.5rem;
+        height: 3rem;
+        font-size: 1rem;
+        margin-top: 10px;
+    }
+    div.stButton > button:hover {
+        color: white;
+        background: #2B7A78;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+# ------------------------------------------------------
+# 2. Initialize the sentiment analysis pipeline
 # ------------------------------------------------------
 @st.cache_resource
 def load_sentiment_pipeline():
-    # This model performs sentiment classification on Arabic text
+    """Load the Arabic BERT model for sentiment analysis (cached)."""
     sentiment_pipe = pipeline(
         "text-classification",
         model="CAMeL-Lab/bert-base-arabic-camelbert-da-sentiment"
@@ -17,36 +71,34 @@ def load_sentiment_pipeline():
     return sentiment_pipe
 
 # ------------------------------------------------------
-# 2. Load data
+# 3. Load data
 # ------------------------------------------------------
 @st.cache_data
-def load_data(csv_file_path: str):
+def load_data(csv_file_path: str) -> pd.DataFrame:
     """
     Load the comments CSV into a pandas DataFrame.
     Expected CSV format:
     article_url, commenter, comment_date, comment
     """
     df = pd.read_csv(csv_file_path)
-    # Clean up or rename columns if needed
     df.columns = ["article_url", "commenter", "comment_date", "comment"]
     return df
 
 # ------------------------------------------------------
-# 3. Perform sentiment analysis
+# 4. Perform sentiment analysis
 # ------------------------------------------------------
 def analyze_sentiment(df: pd.DataFrame, sentiment_pipe):
+    """Run the sentiment analysis pipeline on each comment."""
     sentiments = []
     for comment in df['comment']:
-        # The pipeline returns a list of dicts, e.g. [{'label': 'POSITIVE', 'score': 0.954...}]
-        # The CAMeL model might label them as "POS", "NEG", or "NEU".
         result = sentiment_pipe(comment)
+        # Possible outputs: "POS", "NEG", "NEU"
         sentiments.append(result[0]['label'])
-    
     df['sentiment'] = sentiments
     return df
 
 # ------------------------------------------------------
-# 4. Helper for table highlighting based on sentiment
+# 5. Helper for table highlighting based on sentiment
 # ------------------------------------------------------
 def highlight_sentiment(row):
     """
@@ -63,25 +115,99 @@ def highlight_sentiment(row):
     return [f"background-color: {color}"] * len(row)
 
 # ------------------------------------------------------
-# 5. Main Streamlit App
+# 6. Additional Visualizations / Analyses
+# ------------------------------------------------------
+def plot_sentiment_pie_chart(df: pd.DataFrame):
+    """Create a pie chart of sentiment distribution using Plotly."""
+    sentiment_counts = df['sentiment'].value_counts().reset_index()
+    sentiment_counts.columns = ['sentiment', 'count']
+    
+    fig = px.pie(
+        sentiment_counts,
+        names='sentiment',
+        values='count',
+        color='sentiment',
+        color_discrete_map={'POS': 'green', 'NEG': 'red', 'NEU': 'blue'},
+        title='Sentiment Distribution (Pie Chart)',
+        hole=0.3  # For a donut chart; set to 0 for a regular pie.
+    )
+    st.plotly_chart(fig)
+
+def plot_heatmap(df: pd.DataFrame):
+    """
+    Example: Plot a simple heatmap showing correlation 
+    among numeric columns (not very relevant unless you have numeric data).
+    """
+    # You can add numeric columns or features if you have them.
+    # As an example, let's just show how to build a random correlation heatmap.
+    numeric_data = pd.DataFrame({
+        'random_feature_1': np.random.randn(len(df)),
+        'random_feature_2': np.random.randn(len(df))
+    })
+    corr = numeric_data.corr()
+    
+    fig, ax = plt.subplots(figsize=(4, 3))
+    sns.heatmap(corr, annot=True, cmap='Blues', ax=ax)
+    ax.set_title("Sample Correlation Heatmap")
+    st.pyplot(fig)
+
+def top_commenters_bar_chart(df: pd.DataFrame, top_n: int = 10):
+    """
+    Show a bar chart of the top commenters (by comment count).
+    """
+    top_commenters = df['commenter'].value_counts().head(top_n).reset_index()
+    top_commenters.columns = ['commenter', 'count']
+    
+    fig = px.bar(
+        top_commenters, 
+        x='commenter', 
+        y='count', 
+        title=f"Top {top_n} Commenters",
+        color='count',
+        color_continuous_scale='Tealgrn'
+    )
+    st.plotly_chart(fig)
+
+def download_csv(df: pd.DataFrame, filename='analyzed_comments.csv'):
+    """
+    Provide a link to download the DataFrame as a CSV.
+    """
+    csv_buffer = BytesIO()
+    df.to_csv(csv_buffer, index=False, encoding='utf-8-sig')
+    b64 = base64.b64encode(csv_buffer.getvalue()).decode()
+    href = f'<a href="data:file/csv;base64,{b64}" download="{filename}">Download CSV File</a>'
+    st.markdown(href, unsafe_allow_html=True)
+
+# ------------------------------------------------------
+# 7. Main Streamlit App
 # ------------------------------------------------------
 def main():
-    st.set_page_config(page_title="Hespress Sentiment Analysis", layout="wide")
-
     st.title("Hespress Sentiment Analysis Dashboard")
     st.write(
         """
-        This dashboard uses an Arabic BERT model 
+        This dashboard uses an **Arabic BERT** model 
         ([`CAMeL-Lab/bert-base-arabic-camelbert-da-sentiment`](https://huggingface.co/CAMeL-Lab/bert-base-arabic-camelbert-da-sentiment)) 
         to analyze the sentiment of comments. 
         Upload your CSV file or use the default example to get started.
         """
     )
 
+    # Sidebar options
+    with st.sidebar:
+        st.header("App Configuration")
+        show_heatmap = st.checkbox("Show Sample Heatmap", value=False)
+        show_top_commenters = st.checkbox("Show Top Commenters Bar Chart", value=True)
+        top_n_commenters = st.slider("Number of Top Commenters to Display", 5, 30, 10)
+        st.write("---")
+        st.write("**Data Upload**")
+
     # ------------------------------------------------------
-    # 5a. File upload
+    # 7a. File upload
     # ------------------------------------------------------
-    uploaded_file = st.file_uploader("Upload a CSV file with columns (article_url, commenter, comment_date, comment):", type="csv")
+    uploaded_file = st.file_uploader(
+        label="Upload a CSV file (with columns: article_url, commenter, comment_date, comment):",
+        type="csv"
+    )
 
     # Default path (update if needed)
     csv_file_path = "hespress_politics_comments.csv"
@@ -95,48 +221,56 @@ def main():
         df.columns = ["article_url", "commenter", "comment_date", "comment"]
         st.success("File uploaded successfully!")
     else:
-        # Use the default CSV file if no file is uploaded
-        st.info("No file uploaded. Using the default CSV file.")
+        st.info("No file uploaded. Using the default example CSV file.")
         df = load_data(csv_file_path)
 
-    # ------------------------------------------------------
-    # 5b. Show raw data
-    # ------------------------------------------------------
     if df is not None:
+        # ------------------------------------------------------
+        # 7b. Data Preview
+        # ------------------------------------------------------
         st.subheader("1. Preview of the Data")
+        st.write("Here is a quick glance at the first 10 rows:")
         st.dataframe(df.head(10))
 
         # ------------------------------------------------------
-        # 5c. Run sentiment analysis
+        # 7c. Sentiment Analysis
         # ------------------------------------------------------
+        st.subheader("2. Sentiment Analysis")
         with st.spinner("Analyzing sentiment..."):
             df = analyze_sentiment(df, sentiment_pipe)
+        st.success("Sentiment Analysis Complete!")
 
-        st.subheader("2. Sentiment Analysis Results")
-        # Use a stylistic approach to highlight rows by sentiment
+        # Show results with highlighting
+        st.write("Sentiment Analysis Results (first 10 rows):")
         st.dataframe(df.head(10).style.apply(highlight_sentiment, axis=1))
 
         # ------------------------------------------------------
-        # 5d. Visualization - Overall sentiment distribution
+        # 7d. Sentiment Distribution
         # ------------------------------------------------------
         st.subheader("3. Sentiment Distribution")
-
         sentiment_counts = df['sentiment'].value_counts()
+        # 3a. Traditional Matplotlib bar chart
         fig, ax = plt.subplots()
-        sentiment_counts.plot(
-            kind='bar',
-            color=['green', 'red', 'blue'],
-            ax=ax
-        )
+        sentiment_counts.plot(kind='bar', ax=ax, color=['green', 'red', 'blue'])
         ax.set_xlabel("Sentiment")
         ax.set_ylabel("Count")
-        ax.set_title("Distribution of Sentiments in Comments")
+        ax.set_title("Bar Chart: Distribution of Sentiments in Comments")
         st.pyplot(fig)
 
+        # 3b. Plotly Pie Chart
+        plot_sentiment_pie_chart(df)
+
         # ------------------------------------------------------
-        # 5e. Filter by sentiment
+        # 7e. Top Commenters
         # ------------------------------------------------------
-        st.subheader("4. Filter by Sentiment")
+        if show_top_commenters:
+            st.subheader("4. Top Commenters")
+            top_commenters_bar_chart(df, top_n=top_n_commenters)
+
+        # ------------------------------------------------------
+        # 7f. Filter by sentiment
+        # ------------------------------------------------------
+        st.subheader("5. Filter / Search by Sentiment")
         selected_sentiment = st.selectbox("Choose a sentiment to filter:", ["ALL"] + list(sentiment_counts.index))
 
         if selected_sentiment != "ALL":
@@ -145,29 +279,44 @@ def main():
             filtered_df = df
 
         st.write(f"Showing comments for sentiment: **{selected_sentiment}**")
-        st.dataframe(filtered_df[['commenter', 'comment_date', 'comment', 'sentiment']].style.apply(highlight_sentiment, axis=1))
+        st.dataframe(
+            filtered_df[['commenter', 'comment_date', 'comment', 'sentiment']].style.apply(highlight_sentiment, axis=1)
+        )
 
         # ------------------------------------------------------
-        # 5f. Observations / Insights
+        # 7g. Additional Observations / Insights
         # ------------------------------------------------------
-        st.subheader("5. Observations / Insights")
+        st.subheader("6. Observations / Insights")
         st.write(
             """
-            - Use the above table and chart to identify common themes 
+            - Use the above tables and charts to identify common themes 
               or patterns in citizen comments.
             - Focus on negative or neutral sentiments to understand areas 
               of dissatisfaction or potential improvements.
             - The government can prioritize policies or decisions 
               that address the most prominent concerns.
+            - Compare sentiment trends over time to see if reactions 
+              change based on events, announcements, or policy changes.
             """
         )
 
         # ------------------------------------------------------
-        # 5g. Try it yourself: Analyze a custom comment
+        # 7h. Optional Heatmap
         # ------------------------------------------------------
-        st.subheader("6. Try It Yourself: Custom Comment Analysis")
+        if show_heatmap:
+            st.subheader("Sample Correlation Heatmap")
+            st.write(
+                "This is an example heatmap for demonstration, based on random numeric data."
+            )
+            plot_heatmap(df)
+
+        # ------------------------------------------------------
+        # 7i. Custom Comment Analysis
+        # ------------------------------------------------------
+        st.subheader("7. Try It Yourself: Custom Comment Analysis")
         user_comment = st.text_area("Enter an Arabic comment to analyze its sentiment:")
-        if st.button("Analyze Comment"):
+        analyze_btn = st.button("Analyze Comment")
+        if analyze_btn:
             if user_comment.strip():
                 with st.spinner("Analyzing..."):
                     user_result = sentiment_pipe(user_comment)
@@ -177,39 +326,41 @@ def main():
                 st.warning("Please enter a non-empty comment.")
 
         # ------------------------------------------------------
-        # 5h. Time-based sentiment analysis
+        # 7j. Time-based sentiment analysis
         # ------------------------------------------------------
-        st.subheader("7. Time-Based Sentiment Analysis")
-        # Convert comment_date to datetime (assuming YYYY-MM-DD or similar format)
+        st.subheader("8. Time-Based Sentiment Analysis")
         try:
             df['comment_date'] = pd.to_datetime(df['comment_date'], errors='coerce')
-            # Drop NaT rows if any
+            # Drop rows where the date could not be parsed
             df = df.dropna(subset=['comment_date'])
 
             # Group by date and sentiment
             daily_counts = df.groupby([df['comment_date'].dt.date, 'sentiment']).size().reset_index(name='count')
-
-            # Pivot so that each sentiment is a column
             pivoted = daily_counts.pivot(index='comment_date', columns='sentiment', values='count').fillna(0)
 
             st.write("Daily counts of each sentiment:")
             st.dataframe(pivoted.style.highlight_max(color='lightgreen', axis=0))
 
-            # Plot the trends over time (stacked area or line)
-            fig2, ax2 = plt.subplots(figsize=(10, 5))
-            pivoted.plot(kind='line', ax=ax2, marker='o')
-            ax2.set_title("Sentiment Counts Over Time")
-            ax2.set_xlabel("Date")
-            ax2.set_ylabel("Count")
-            plt.xticks(rotation=45)
-            st.pyplot(fig2)
+            # Plot trends over time using Plotly
+            pivoted_df = pivoted.reset_index().melt(id_vars='comment_date', var_name='sentiment', value_name='count')
+            fig2 = px.line(
+                pivoted_df, 
+                x='comment_date', 
+                y='count', 
+                color='sentiment',
+                title="Sentiment Counts Over Time (Interactive)",
+                markers=True
+            )
+            fig2.update_layout(xaxis_title="Date", yaxis_title="Count")
+            st.plotly_chart(fig2)
+
         except Exception as e:
             st.warning(f"Could not parse dates. Error: {e}")
 
         # ------------------------------------------------------
-        # 5i. Word Cloud Visualization
+        # 7k. Word Cloud Visualization
         # ------------------------------------------------------
-        st.subheader("8. Word Cloud")
+        st.subheader("9. Word Cloud")
         sentiment_options = ["ALL"] + list(sentiment_counts.index)
         sentiment_choice = st.selectbox("Generate word cloud for which sentiment?", sentiment_options)
 
@@ -220,18 +371,20 @@ def main():
 
         if st.button("Generate Word Cloud"):
             if text_data.strip():
-                wordcloud = WordCloud(
-                    background_color='white',
-                    width=800,
-                    height=600
-                ).generate(text_data)
-
+                wordcloud = WordCloud(background_color='white', width=800, height=600).generate(text_data)
                 fig3, ax3 = plt.subplots(figsize=(10, 6))
                 ax3.imshow(wordcloud, interpolation='bilinear')
                 ax3.axis("off")
                 st.pyplot(fig3)
             else:
                 st.warning("No text available to generate a word cloud.")
+
+        # ------------------------------------------------------
+        # 7l. Downloading the Results
+        # ------------------------------------------------------
+        st.subheader("10. Download Results")
+        st.write("Click the button below to download the analyzed dataset as a CSV.")
+        download_csv(df, filename="hespress_analyzed_comments.csv")
 
 if __name__ == "__main__":
     main()
