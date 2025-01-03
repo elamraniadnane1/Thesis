@@ -360,15 +360,17 @@ def main():
         st.subheader("7. Try It Yourself: Custom Comment Analysis")
         user_comment = st.text_area("Enter an Arabic comment to analyze its sentiment:")
         analyze_btn = st.button("Analyze This Comment")
+
         if analyze_btn:
             if user_comment.strip():
                 with st.spinner("Analyzing..."):
                     user_result = sentiment_pipe(user_comment)
-                    # If pipeline returns a single dict like: {'label': 'POS', 'score': 0.99}
-                    user_sentiment = user_result['label']
+                    # Correctly access the first element of the list and then the 'label'
+                    user_sentiment = user_result[0]['label']
                 st.write(f"**Predicted Sentiment**: {user_sentiment}")
             else:
                 st.warning("Please enter a non-empty comment.")
+
 
         # 9. Time-based sentiment analysis
         if "sentiment" in df.columns:
