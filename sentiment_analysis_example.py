@@ -28,48 +28,174 @@ from streamlit import tabs
 # ------------------------------------------------------
 # 1. Custom CSS (Optional)
 # ------------------------------------------------------
-st.set_page_config(page_title="Social Media Analysis Tool 2025, By: Adnane El Amrani", layout="wide")
+st.set_page_config(
+    page_title="Social Media Analysis Tool 2025, By: Adnane El Amrani",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
 st.markdown(
     """
     <style>
-    /* Custom fonts and background */
+    /* Import Lucide icons CSS */
+    @import url('https://cdn.jsdelivr.net/npm/lucide-static@0.16.29/font/lucide.min.css');
+    
+    /* Main layout and typography */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+    
     body {
-        background-color: #F8F9FA;
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #f0f4f8 0%, #d7e3fc 100%);
+        color: #1a365d;
     }
-    .title h1, .title h2, .title h3, .title h4, .title h5, .title h6 {
+    
+    /* Previous styles remain the same until tabs... */
+    
+    /* Enhanced Tabs styling with icons */
+    .stTabs {
+        background: white;
+        padding: 1rem;
+        border-radius: 15px;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        margin-bottom: 2.5rem;
+        position: relative;
+    }
+
+    .stTabs [data-baseweb="tab-list"] {
+        display: flex;
+        gap: 10px;
+        padding: 0.75rem;
+        overflow-x: auto;
+        scrollbar-width: thin;
+        white-space: nowrap;
+        -ms-overflow-style: -ms-autohiding-scrollbar;
+        position: relative;
+        max-width: calc(5 * 200px);
+        margin: 0 auto;
+    }
+
+    .stTabs [data-baseweb="tab"] {
+        min-width: 180px;
+        height: 50px;
+        background: rgba(243, 244, 246, 0.7);
+        border-radius: 10px;
         color: #2B3E50;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        padding: 0.5rem 1rem;
+        margin: 0;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        gap: 8px;
     }
-    .css-18e3th9 {
-        padding: 1rem 2rem 2rem 2rem; 
+
+    /* Tab icons */
+    .stTabs [data-baseweb="tab"]::before {
+        font-family: 'lucide';
+        font-size: 1.2rem;
+        margin-right: 0.5rem;
+        opacity: 0.8;
+        transition: all 0.3s ease;
     }
-    /* Table hover and header color */
-    table.dataframe tbody tr:hover {
-        background-color: #EEE !important;
+
+    /* Custom icons for each tab - adjust content based on your tab names */
+    .stTabs [data-baseweb="tab"][aria-label*="Dashboard"]::before {
+        content: '\\e900';  /* dashboard icon */
     }
-    table.dataframe thead {
-        background-color: #395B64;
-        color: #F8F9FA;
+
+    .stTabs [data-baseweb="tab"][aria-label*="Analytics"]::before {
+        content: '\\e901';  /* chart icon */
     }
-    .stSpinner > div > div {
-        border-top-color: #5CDB94 !important;
+
+    .stTabs [data-baseweb="tab"][aria-label*="Posts"]::before {
+        content: '\\e902';  /* message-square icon */
     }
-    /* Custom button styling */
-    div.stButton > button {
-        color: white;
-        background: #3AAFA9;
-        border-radius: 0.5rem;
-        height: 3rem;
-        font-size: 1rem;
-        margin-top: 10px;
+
+    .stTabs [data-baseweb="tab"][aria-label*="Users"]::before {
+        content: '\\e903';  /* users icon */
     }
-    div.stButton > button:hover {
-        color: white;
-        background: #2B7A78;
+
+    .stTabs [data-baseweb="tab"][aria-label*="Settings"]::before {
+        content: '\\e904';  /* settings icon */
+    }
+
+    /* Icon hover effect */
+    .stTabs [data-baseweb="tab"]:hover::before {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+
+    /* Active tab icon styling */
+    .stTabs [aria-selected="true"]::before {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+
+    .stTabs [aria-selected="true"] {
+        background: linear-gradient(135deg, #3AAFA9 0%, #2B7A78 100%) !important;
+        color: white !important;
+        font-weight: 600;
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(43, 122, 120, 0.2);
+    }
+
+    /* Gradient fade for overflow indication */
+    .stTabs [data-baseweb="tab-list"]::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 50px;
+        background: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,1));
+        pointer-events: none;
+    }
+
+    /* Tab hover effect */
+    .stTabs [data-baseweb="tab"]:hover {
+        background: rgba(58, 175, 169, 0.1);
+        transform: translateY(-2px);
+    }
+
+    /* Rest of the styles remain the same... */
+
+    /* Enhanced animations for tabs */
+    .stTabs [data-baseweb="tab"] {
+        animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateX(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    /* Responsive adjustments for tabs with icons */
+    @media screen and (max-width: 768px) {
+        .stTabs [data-baseweb="tab"] {
+            min-width: 160px;
+            height: 45px;
+            font-size: 0.8rem;
+            padding: 0.4rem 0.8rem;
+        }
+
+        .stTabs [data-baseweb="tab"]::before {
+            font-size: 1rem;
+            margin-right: 0.3rem;
+        }
     }
     </style>
     """,
-    unsafe_allow_html=True,
-)
+    unsafe_allow_html=True)
 
 # ------------------------------------------------------
 # 2. Initialize the sentiment analysis pipeline
@@ -570,54 +696,221 @@ def main():
                 st.warning("Please enter a non-empty comment.") 
    
         # Create Streamlit tabs for organized navigation
+        # First, add the tabs with icons
         tabs = st.tabs([
-            "Data Preprocessing",
-            "Sentiment Analysis",
-            "Data Visualizations",
-            "Topic Modeling",
-            "Terrorism Detection",
-            "Offensive Language Detection",
-            "Scraping",
-            "Chatbot",
-            "Evaluation",
-            "Performance",
-            "Monitoring",
-            "Download"
-        ])  
+            "🔄 Data Preprocessing",
+            "😊 Sentiment Analysis",
+            "📊 Data Visualizations",
+            "🔍 Topic Modeling",
+            "⚠️ Terrorism Detection",
+            "🚫 Offensive Language Detection",
+            "🌐 Scraping",
+            "🤖 Chatbot",
+            "📈 Evaluation",
+            "⚡ Performance",
+            "📡 Monitoring",
+            "⬇️ Download"
+        ]) 
 
         with tabs[0]:
-            st.subheader("Preview of the Data")
-            st.write("Here is a quick glance at the first 10 rows:")
-            st.dataframe(df.head(10))
+            st.subheader("Data Overview")
+            
+            # Data statistics in an expandable section
+            with st.expander("📊 Dataset Statistics", expanded=True):
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    st.metric("Total Comments", len(df))
+                with col2:
+                    st.metric("Unique Commenters", df['commenter'].nunique())
+                with col3:
+                    st.metric("Articles Covered", df['article_url'].nunique())
+                
+                # Calculate missing values
+                missing_data = df.isnull().sum()
+                if missing_data.any():
+                    st.write("Missing Values per Column:")
+                    missing_df = pd.DataFrame({
+                        'Column': missing_data.index,
+                        'Missing Count': missing_data.values,
+                        'Percentage': (missing_data.values / len(df) * 100).round(2)
+                    })
+                    st.dataframe(missing_df)
 
+            # Text preprocessing options
+            st.subheader("🔄 Text Preprocessing Options")
+            
+            preprocess_col1, preprocess_col2 = st.columns(2)
+            
+            with preprocess_col1:
+                remove_urls = st.checkbox("Remove URLs", value=True)
+                remove_numbers = st.checkbox("Remove Numbers", value=False)
+                remove_punctuation = st.checkbox("Remove Punctuation", value=False)
+                
+            with preprocess_col2:
+                remove_extra_spaces = st.checkbox("Remove Extra Spaces", value=True)
+                normalize_arabic = st.checkbox("Normalize Arabic Text", value=True)
+                remove_emoji = st.checkbox("Remove Emojis", value=False)
 
-            st.subheader("Data Preprocessing")
-            if show_heatmap:
-                st.subheader("Sample Correlation Heatmap")
-                st.write(
-                    "This is an example heatmap for demonstration, based on random numeric data."
-                )
-                plot_heatmap(df)
+            if st.button("Apply Text Preprocessing"):
+                with st.spinner("Preprocessing text..."):
+                    # Create a copy of the dataframe
+                    processed_df = df.copy()
+                    
+                    def preprocess_text(text):
+                        if pd.isna(text):
+                            return text
+                            
+                        # Convert to string if not already
+                        text = str(text)
+                        
+                        if remove_urls:
+                            text = re.sub(r'http\S+|www.\S+', '', text)
+                            
+                        if remove_numbers:
+                            text = re.sub(r'\d+', '', text)
+                            
+                        if remove_punctuation:
+                            text = re.sub(r'[^\w\s]', '', text)
+                            
+                        if remove_extra_spaces:
+                            text = ' '.join(text.split())
+                            
+                        if normalize_arabic:
+                            # Basic Arabic normalization
+                            text = re.sub("[إأٱآا]", "ا", text)
+                            text = re.sub("ى", "ي", text)
+                            text = re.sub("ة", "ه", text)
+                            
+                        if remove_emoji:
+                            text = re.sub(r'[\U00010000-\U0010ffff]', '', text)
+                            
+                        return text
+                    
+                    processed_df['processed_comment'] = processed_df['comment'].apply(preprocess_text)
+                    df = processed_df
+                    st.success("Text preprocessing completed!")
 
-            # Buttons for common preprocessing tasks
-            col1, col2 = st.columns(2)
-
-            with col1:
+            # Data cleaning options
+            st.subheader("🧹 Data Cleaning")
+            
+            clean_col1, clean_col2 = st.columns(2)
+            
+            with clean_col1:
                 if st.button("Remove Duplicate Comments"):
                     initial_count = len(df)
-                    df.drop_duplicates(subset=["article_url", "commenter", "comment_date", "comment"], keep="first", inplace=True)
+                    df.drop_duplicates(subset=["article_url", "commenter", "comment_date", "comment"], 
+                                     keep="first", inplace=True)
                     st.success(f"Removed duplicates. Row count went from {initial_count} to {len(df)}.")
+                    
+                min_length = st.number_input("Minimum Comment Length", min_value=1, value=5)
+                if st.button("Remove Short Comments"):
+                    initial_count = len(df)
+                    df = df[df['comment'].str.len() >= min_length]
+                    st.success(f"Removed comments shorter than {min_length} characters. Rows: {initial_count} → {len(df)}")
 
-            with col2:
+            with clean_col2:
                 if st.button("Drop Missing Values"):
                     initial_count = len(df)
-                    df.dropna(subset=["comment"], inplace=True)  # Example: drop rows with missing comment text
-                    st.success(f"Dropped missing comment rows. Row count went from {initial_count} to {len(df)}.")
+                    df.dropna(subset=["comment"], inplace=True)
+                    st.success(f"Dropped missing comment rows. Rows: {initial_count} → {len(df)}")
+                
+                # Add option to remove comments with specific patterns
+                pattern = st.text_input("Remove comments containing pattern (regex):")
+                if st.button("Remove Pattern") and pattern:
+                    initial_count = len(df)
+                    df = df[~df['comment'].str.contains(pattern, na=False, regex=True)]
+                    st.success(f"Removed comments with pattern. Rows: {initial_count} → {len(df)}")
 
-            # Show a preview again after preprocessing
-            st.write("Data Preview After Preprocessing:")
-            st.dataframe(df.head(10))
+            # Data preview
+            st.subheader("👀 Data Preview")
+            
+            preview_options = st.radio(
+                "Choose preview type:",
+                ["Sample Data", "Filtered View", "Statistics"],
+                horizontal=True
+            )
+            
+            if preview_options == "Sample Data":
+                sample_size = st.slider("Sample size", 5, 50, 10)
+                st.dataframe(df.sample(n=sample_size))
+                
+            elif preview_options == "Filtered View":
+                col1, col2 = st.columns(2)
+                with col1:
+                    selected_commenter = st.selectbox(
+                        "Filter by commenter:",
+                        ["All"] + list(df['commenter'].unique())
+                    )
+                with col2:
+                    # Function to parse Arabic date
+                    def parse_arabic_date(date_str):
+                        try:
+                            # Split the date string
+                            # Example: "الجمعة 20 دجنبر 2024 - 19:11"
+                            parts = date_str.split()
+                            
+                            # Extract day, month, and year
+                            day = int(parts[1])  # 20
+                            month_name = parts[2]  # دجنبر
+                            year = int(parts[3])  # 2024
+                            
+                            # Map Arabic month names to numbers
+                            month_map = {
+                                'يناير': 1, 'فبراير': 2, 'مارس': 3, 'أبريل': 4,
+                                'ماي': 5, 'يونيو': 6, 'يوليوز': 7, 'غشت': 8,
+                                'شتنبر': 9, 'أكتوبر': 10, 'نونبر': 11, 'دجنبر': 12
+                            }
+                            
+                            month = month_map.get(month_name, 1)  # Default to 1 if month not found
+                            
+                            return pd.to_datetime(f"{year}-{month:02d}-{day:02d}")
+                        except Exception:
+                            # Return a default date if parsing fails
+                            return pd.to_datetime('2024-01-01')
 
+                    # Convert comment_dates to datetime
+                    df['parsed_date'] = df['comment_date'].apply(parse_arabic_date)
+                    
+                    # Get min and max dates for the date input
+                    min_date = df['parsed_date'].min().date()
+                    max_date = df['parsed_date'].max().date()
+                    
+                    date_range = st.date_input(
+                        "Select date range",
+                        value=(min_date, max_date),
+                        min_value=min_date,
+                        max_value=max_date
+                    )
+                
+                filtered_df = df.copy()
+                if selected_commenter != "All":
+                    filtered_df = filtered_df[filtered_df['commenter'] == selected_commenter]
+                st.dataframe(filtered_df)
+                
+            else:  # Statistics
+                st.write("Comment Length Statistics:")
+                df['comment_length'] = df['comment'].str.len()
+                stats_df = df['comment_length'].describe()
+                st.dataframe(stats_df)
+                
+                fig = px.histogram(
+                    df,
+                    x='comment_length',
+                    nbins=50,
+                    title='Distribution of Comment Lengths'
+                )
+                st.plotly_chart(fig)
+
+            # Export processed data
+            st.subheader("💾 Export Processed Data")
+            if st.button("Download Processed Dataset"):
+                csv = df.to_csv(index=False).encode('utf-8')
+                st.download_button(
+                    label="Download CSV",
+                    data=csv,
+                    file_name='processed_comments.csv',
+                    mime='text/csv'
+                )
 
         with tabs[1]:
             st.subheader("Sentiment Analysis")
