@@ -6,6 +6,10 @@ import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 import plotly.express as px
 import plotly.graph_objects as go
+import json
+import os
+from datetime import datetime
+import plotly.figure_factory as ff
 import seaborn as sns
 import io
 from io import BytesIO
@@ -274,24 +278,6 @@ def analyze_sentiment_in_chunks(df: pd.DataFrame, sentiment_pipe, chunk_size: in
     df['sentiment'] = sentiments
     return df
 
-# ------------------------------------------------------
-# 5. Helper for table highlighting based on sentiment
-# ------------------------------------------------------
-def highlight_sentiment(row):
-    """
-    Returns a background color for each row based on the sentiment value.
-    Adjust the colors to your preference.
-    """
-    color = "white"
-    if row["sentiment"] == "POS":
-        color = "#d8f5d8"  # light green
-    elif row["sentiment"] == "NEG":
-        color = "#fddddd"  # light red
-    elif row["sentiment"] == "NEU":
-        color = "#f9f9c5"  # light yellow
-    return [f"background-color: {color}"] * len(row)
-
-# --- ADD AFTER LINE 110 ---
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
@@ -439,6 +425,33 @@ def extract_article_data(driver, url):
         logging.error(f"Error processing URL {url}: {e}")
 
     return article_data, comments_data
+import dateparser
+
+# Function to parse Arabic date
+def parse_arabic_date(date_str):
+    try:
+        # Split the date string
+        # Example: "الجمعة 20 دجنبر 2024 - 19:11"
+        parts = date_str.split()
+        
+        # Extract day, month, and year
+        day = int(parts[1])  # 20
+        month_name = parts[2]  # دجنبر
+        year = int(parts[3])  # 2024
+        
+        # Map Arabic month names to numbers
+        month_map = {
+            'يناير': 1, 'فبراير': 2, 'مارس': 3, 'أبريل': 4,
+            'ماي': 5, 'يونيو': 6, 'يوليوز': 7, 'غشت': 8,
+            'شتنبر': 9, 'أكتوبر': 10, 'نونبر': 11, 'دجنبر': 12
+        }
+        
+        month = month_map.get(month_name, 1)  # Default to 1 if month not found
+        
+        return pd.to_datetime(f"{year}-{month:02d}-{day:02d}")
+    except Exception:
+        # Return a default date if parsing fails
+        return pd.to_datetime('2024-12-01')
 
 def run_scraper():
     """
@@ -620,6 +633,20 @@ def download_csv(df: pd.DataFrame, filename='analyzed_comments.csv'):
     href = f'<a href="data:file/csv;base64,{b64}" download="{filename}">Download CSV File</a>'
     st.markdown(href, unsafe_allow_html=True)
 
+# Add this with your other helper functions, before the main() function
+def highlight_sentiment(row):
+    """
+    Returns a background color for each row based on the sentiment value.
+    Colors: green for positive, red for negative, yellow for neutral
+    """
+    color = "white"
+    if row["sentiment"] == "POS":
+        color = "#d8f5d8"  # light green
+    elif row["sentiment"] == "NEG":
+        color = "#fddddd"  # light red
+    elif row["sentiment"] == "NEU":
+        color = "#f9f9c5"  # light yellow
+    return [f"background-color: {color}"] * len(row)
 
 def main():
     st.title("Social Media Analysis Tool 2025, By : Adnane El Amrani")
@@ -842,31 +869,7 @@ def main():
                         ["All"] + list(df['commenter'].unique())
                     )
                 with col2:
-                    # Function to parse Arabic date
-                    def parse_arabic_date(date_str):
-                        try:
-                            # Split the date string
-                            # Example: "الجمعة 20 دجنبر 2024 - 19:11"
-                            parts = date_str.split()
-                            
-                            # Extract day, month, and year
-                            day = int(parts[1])  # 20
-                            month_name = parts[2]  # دجنبر
-                            year = int(parts[3])  # 2024
-                            
-                            # Map Arabic month names to numbers
-                            month_map = {
-                                'يناير': 1, 'فبراير': 2, 'مارس': 3, 'أبريل': 4,
-                                'ماي': 5, 'يونيو': 6, 'يوليوز': 7, 'غشت': 8,
-                                'شتنبر': 9, 'أكتوبر': 10, 'نونبر': 11, 'دجنبر': 12
-                            }
-                            
-                            month = month_map.get(month_name, 1)  # Default to 1 if month not found
-                            
-                            return pd.to_datetime(f"{year}-{month:02d}-{day:02d}")
-                        except Exception:
-                            # Return a default date if parsing fails
-                            return pd.to_datetime('2024-01-01')
+                    
 
                     # Convert comment_dates to datetime
                     df['parsed_date'] = df['comment_date'].apply(parse_arabic_date)
@@ -955,8 +958,6 @@ def main():
                 ax.set_title("Bar Chart: Distribution of Sentiments in Comments")
                 st.pyplot(fig)
 
-                # Plotly Pie Chart
-                plot_sentiment_pie_chart(df)
 
                 # Comment Length Distribution
                 st.subheader("Comment Length Distribution")
@@ -1025,18 +1026,7 @@ def main():
                             # Add any other necessary mappings
                         }
 
-                        # Function to parse Arabic dates
-                        def parse_arabic_date(date_str):
-                            parsed_date = dateparser.parse(
-                                date_str,
-                                languages=['ar'],
-                                settings={
-                                    'DATE_ORDER': 'DMY',
-                                    'TIMEZONE': 'UTC',
-                                    'RETURN_AS_TIMEZONE_AWARE': False
-                                }
-                            )
-                            return parsed_date
+                        
 
                         # Correct month names
                         st.write("Correcting month names in dates...")
@@ -1055,7 +1045,8 @@ def main():
                             st.warning("No dates were successfully parsed. Please check the date formats and month mappings.")
                         else:
                             # Drop rows where parsing failed
-                            df = df.dropna(subset=['parsed_date'])
+                            if 'parsed_date' in df.columns:
+                                df = df.dropna(subset=['parsed_date'])
 
                             # Update 'comment_date' with parsed dates
                             df['comment_date'] = df['parsed_date']
@@ -1063,6 +1054,8 @@ def main():
 
                             # Ensure 'comment_date' is datetime
                             df['comment_date'] = pd.to_datetime(df['comment_date'])
+
+                            df['date'] = df['comment_date']
 
                             # Group by date and sentiment
                             daily_counts = df.groupby([df['comment_date'].dt.date, 'sentiment']).size().reset_index(name='count')
@@ -1095,10 +1088,1055 @@ def main():
                         st.warning(f"Could not parse dates. Error: {e}")
 
             
+        with tabs[2]:
+            st.subheader("Sentiment Analysis")
+            if st.button("Run Analysis"):
+                with st.spinner("Analyzing sentiment..."):
+                    if analysis_method == "Standard":
+                        df = analyze_sentiment_in_chunks(df, sentiment_pipe, chunk_size=1000)
+                    else:
+                        df = analyze_sentiment_in_chunks(df, sentiment_pipe, chunk_size=chunk_size)
+                st.success("Sentiment Analysis Complete!")
+
+                # Show first 10 results with highlighting
+                st.write("Sentiment Analysis Results (first 10 rows):")
+                st.dataframe(df.head(10).style.apply(highlight_sentiment, axis=1))
+            else:
+                st.info("Click the button above to run sentiment analysis.")
+            
+            import dateparser
+
+            # Function to correct month names
+            def correct_month_names(date_str, mapping):
+                for wrong, correct in mapping.items():
+                    if wrong in date_str:
+                        return date_str.replace(wrong, correct)
+                return date_str  # Return unchanged if no match found
+
+            # Define month mapping
+            month_mapping = {
+                'دجنبر': 'ديسمبر',
+                'كانون الثاني': 'كانون الثاني',  # January
+                'شباط': 'شباط',                # February
+                'آذار': 'آذار',                 # March
+                'نيسان': 'نيسان',                # April
+                'أيار': 'أيار',                  # May
+                'حزيران': 'حزيران',              # June
+                'تموز': 'تموز',                  # July
+                'آب': 'آب',                      # August
+                'أيلول': 'أيلول',                # September
+                'تشرين الأول': 'تشرين الأول',      # October
+                'تشرين الثاني': 'تشرين الثاني',      # November
+                'كانون الأول': 'كانون الأول',        # December
+                # Add any other necessary mappings
+            }
 
             
-        with tabs[3]:
 
+            # Correct month names
+            st.write("Correcting month names in dates...")
+            df['comment_date_corrected'] = df['comment_date'].apply(lambda x: correct_month_names(x, month_mapping))
+
+            # Parse corrected dates
+            st.write("Parsing corrected dates. This may take a moment...")
+            df['parsed_date'] = df['comment_date_corrected'].apply(parse_arabic_date)
+        
+            # Count successfully parsed dates
+            num_parsed = df['parsed_date'].notna().sum()
+            total = len(df)
+            st.write(f"Successfully parsed {num_parsed} out of {total} dates.")
+
+            if num_parsed == 0:
+                st.warning("No dates were successfully parsed. Please check the date formats and month mappings.")
+            else:
+                # Drop rows where parsing failed
+                if 'parsed_date' in df.columns:
+                    df = df.dropna(subset=['parsed_date'])
+
+                # Update 'comment_date' with parsed dates
+                df['comment_date'] = df['parsed_date']
+                df = df.drop(columns=['parsed_date', 'comment_date_corrected'])
+
+                # Ensure 'comment_date' is datetime
+                df['comment_date'] = pd.to_datetime(df['comment_date'])
+
+                df['date'] = df['comment_date']
+
+            
+
+
+            if "sentiment" in df.columns:
+                # Create tabs within the sentiment analysis section
+                sentiment_subtabs = st.tabs([
+                    "📊 Basic Analysis",
+                    "📈 Advanced Metrics",
+                    "🔍 Pattern Analysis",
+                    "⏱️ Temporal Analysis",
+                    "🔗 Cross Analysis"
+                ])
+
+                with sentiment_subtabs[0]:
+                    col1, col2 = st.columns(2)
+                    
+                    with col1:
+                        # Sentiment Distribution Pie Chart
+                        plot_sentiment_pie_chart(df)
+                        
+                        # Add sentiment percentages
+                        sentiment_percentages = df['sentiment'].value_counts(normalize=True) * 100
+                        st.write("### Sentiment Distribution (%)")
+                        for sent, pct in sentiment_percentages.items():
+                            st.metric(sent, f"{pct:.1f}%")
+                    
+                    with col2:
+                        # Comment Length vs Sentiment Box Plot
+                        df['comment_length'] = df['comment'].str.len()
+                        fig = px.box(df, x='sentiment', y='comment_length',
+                                title='Comment Length Distribution by Sentiment',
+                                color='sentiment')
+                        st.plotly_chart(fig)
+
+                with sentiment_subtabs[1]:
+                    # Advanced Metrics Section
+                    col1, col2 = st.columns(2)
+                    
+                    try:
+                        # Convert comment_date to datetime if not already
+                        #df['date'] = pd.to_datetime(df['comment_date'].apply(lambda x: x.split('-')[0]), format='%Y')
+                        df['date'] = pd.to_datetime(df['comment_date'], errors="coerce")
+                        with col1:
+                            # Sentiment Ratio Over Time
+                            sentiment_ratio = df.groupby('date')['sentiment'].value_counts(normalize=True).unstack()
+                            fig = px.line(sentiment_ratio, title='Sentiment Ratio Evolution',
+                                        labels={'value': 'Ratio', 'date': 'Date'})
+                            st.plotly_chart(fig)
+
+                        with col2:
+                            # Sentiment by Day of Week
+                            df['day_of_week'] = df['date'].dt.day_name()
+                            dow_sentiment = df.groupby('day_of_week')['sentiment'].value_counts(normalize=True).unstack()
+                            fig = px.bar(dow_sentiment, title='Sentiment Distribution by Day of Week',
+                                        barmode='stack')
+                            st.plotly_chart(fig)
+
+                        # Hour of Day Analysis
+                        df['hour'] = df['date'].dt.hour
+                        hourly_sentiment = df.groupby('hour')['sentiment'].value_counts(normalize=True).unstack()
+                        fig = px.line(hourly_sentiment, title='Sentiment Distribution by Hour',
+                                    labels={'hour': 'Hour of Day', 'value': 'Ratio'})
+                        st.plotly_chart(fig)
+                        
+                    except Exception as e:
+                        st.warning(f"Could not process temporal data: {str(e)}")
+
+                with sentiment_subtabs[2]:
+                    # Pattern Analysis Section
+                    st.write("### Comment Pattern Analysis")
+                    
+                    # Word Count Distribution
+                    df['word_count'] = df['comment'].str.split().str.len()
+                    fig = px.histogram(df, x='word_count', color='sentiment',
+                                    title='Word Count Distribution by Sentiment',
+                                    marginal='box')
+                    st.plotly_chart(fig)
+
+                    # Add average words per comment metric
+                    avg_words = df['word_count'].mean()
+                    st.metric("Average Words per Comment", f"{avg_words:.1f}")
+
+                    # Most active times
+                    st.write("### Comment Activity Patterns")
+                    try:
+                        df['hour'] = pd.to_datetime(df['comment_date']).dt.hour
+                        hourly_counts = df.groupby('hour').size()
+                        fig = px.bar(x=hourly_counts.index, y=hourly_counts.values,
+                                title='Comments by Hour of Day',
+                                labels={'x': 'Hour', 'y': 'Number of Comments'})
+                        st.plotly_chart(fig)
+                    except:
+                        st.warning("Could not process time-based patterns")
+
+                with sentiment_subtabs[3]:
+                    # Temporal Analysis Section
+                    st.write("### Temporal Patterns")
+                    # Drop rows where parsing failed
+                    if 'parsed_date' in df.columns:
+                        df = df.dropna(subset=['parsed_date'])
+
+                            
+                    df['comment_date'] = pd.to_datetime(df['comment_date'])
+                    df['date'] = df['comment_date']
+                    try:
+                        # Monthly Trend
+                        df['month'] = df['date'].dt.month
+                        monthly_sentiment = df.groupby(['month', 'sentiment']).size().unstack(fill_value=0)
+                        fig = px.line(monthly_sentiment, title='Monthly Sentiment Trends',
+                                    labels={'month': 'Month', 'value': 'Count'})
+                        st.plotly_chart(fig)
+
+                        # Seasonal Analysis
+                        df['season'] = df['month'].map({12:'Winter', 1:'Winter', 2:'Winter',
+                                                    3:'Spring', 4:'Spring', 5:'Spring',
+                                                    6:'Summer', 7:'Summer', 8:'Summer',
+                                                    9:'Fall', 10:'Fall', 11:'Fall'})
+                        seasonal = df.groupby(['season', 'sentiment']).size().unstack(fill_value=0)
+                        fig = px.bar(seasonal, title='Seasonal Sentiment Distribution',
+                                    barmode='group')
+                        st.plotly_chart(fig)
+                    except Exception as e:
+                        st.warning(f"Could not process seasonal data: {str(e)}")
+
+                with sentiment_subtabs[4]:
+                    # Cross Analysis Section
+                    st.write("### Cross-Variable Analysis")
+                    
+                    # Comment Length vs Engagement
+                    df['engagement_score'] = df.groupby('commenter')['comment'].transform('count')
+                    fig = px.scatter(df, x='comment_length', y='engagement_score',
+                                color='sentiment', title='Comment Length vs User Engagement',
+                                trendline="lowess")
+                    st.plotly_chart(fig)
+
+                    # User Behavior Analysis
+                    user_sentiment = df.groupby('commenter')['sentiment'].value_counts().unstack(fill_value=0)
+                    user_sentiment['total'] = user_sentiment.sum(axis=1)
+                    top_users = user_sentiment.nlargest(10, 'total')
+                    fig = px.bar(top_users, title='Top 10 Users Sentiment Distribution',
+                                barmode='stack')
+                    st.plotly_chart(fig)
+
+                    # User Engagement Stats
+                    st.write("### User Engagement Statistics")
+                    engagement_stats = df.groupby('commenter').agg({
+                        'comment': 'count',
+                        'comment_length': 'mean'
+                    }).round(2)
+                    engagement_stats.columns = ['Number of Comments', 'Avg Comment Length']
+                    st.dataframe(engagement_stats.head(10))
+
+                # Interactive Filtering
+                st.write("### 🔍 Interactive Comment Explorer")
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    selected_sentiment = st.selectbox(
+                        "Filter by Sentiment:",
+                        ["All"] + list(df['sentiment'].unique())
+                    )
+                    
+                with col2:
+                    min_length = st.slider(
+                        "Minimum Comment Length:",
+                        min_value=0,
+                        max_value=int(df['comment_length'].max()),
+                        value=0
+                    )
+
+                # Apply filters
+                filtered_df = df.copy()
+                if selected_sentiment != "All":
+                    filtered_df = filtered_df[filtered_df['sentiment'] == selected_sentiment]
+                filtered_df = filtered_df[filtered_df['comment_length'] >= min_length]
+
+                # Show filtered results
+                st.dataframe(
+                    filtered_df[['commenter', 'comment_date', 'comment', 'sentiment', 'comment_length']]
+                    .style.apply(highlight_sentiment, axis=1)
+                )
+
+                # Export Options
+                st.write("### 📥 Export Analysis")
+                if st.button("Generate Analysis Report"):
+                    report = f"""
+                    Sentiment Analysis Report
+                    ========================
+                    Total Comments: {len(df)}
+                    Sentiment Distribution:
+                    {sentiment_percentages.to_string()}
+                    
+                    Average Comment Length by Sentiment:
+                    {df.groupby('sentiment')['comment_length'].mean().to_string()}
+                    
+                    Most Active Users:
+                    {df['commenter'].value_counts().head().to_string()}
+                    """
+                    
+                    st.download_button(
+                        label="Download Report",
+                        data=report,
+                        file_name="sentiment_analysis_report.txt",
+                        mime="text/plain"
+                    )
+                    
+            # Add enhanced analysis options with more controls
+            analysis_options = st.expander("Analysis Options", expanded=False)
+            with analysis_options:
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    confidence_threshold = st.slider(
+                        "Confidence Threshold",
+                        min_value=0.0,
+                        max_value=1.0,
+                        value=0.5,
+                        step=0.05,
+                        help="Filter results based on model confidence"
+                    )
+                    
+                    sentiment_filter = st.multiselect(
+                        "Filter Sentiments",
+                        ["POS", "NEG", "NEU"],
+                        default=["POS", "NEG", "NEU"],
+                        help="Select specific sentiments to analyze"
+                    )
+                    
+                with col2:
+                    batch_size = st.number_input(
+                        "Batch Size",
+                        min_value=10,
+                        max_value=1000,
+                        value=100,
+                        help="Number of comments to process at once"
+                    )
+                    
+                    min_comment_length = st.number_input(
+                        "Minimum Comment Length",
+                        min_value=0,
+                        value=5,
+                        help="Filter out short comments"
+                    )
+                    
+                with col3:
+                    time_period = st.selectbox(
+                        "Analysis Time Period",
+                        ["All Time", "Last Week", "Last Month", "Last Quarter", "Last Year", "Custom Range"],
+                        help="Filter analysis by time period"
+                    )
+                    
+                    if time_period == "Custom Range":
+                        start_date = st.date_input("Start Date")
+                        end_date = st.date_input("End Date")
+
+            # Advanced date processing function
+            def detect_and_preprocess_dates(date_value):
+                """
+                Convert Arabic/French string dates to datetime objects with comprehensive error handling.
+                If already a Timestamp (or not a string), return as-is or convert safely.
+                """
+                # 1. If the value is already a Timestamp or NaN, return it (or NaT if missing)
+                if pd.isna(date_value):
+                    return pd.NaT
+                if isinstance(date_value, pd.Timestamp):
+                    return date_value  # It's already parsed
+                
+                # 2. If it's not a string, try to convert it
+                if not isinstance(date_value, str):
+                    try:
+                        return pd.to_datetime(date_value, errors="coerce")
+                    except Exception:
+                        return pd.NaT
+                
+                # 3. Otherwise, it's a string. Proceed with custom parsing logic:
+                try:
+                    # Arabic month mappings with variations
+                    arabic_months = {
+                        'يناير': '01', 'فبراير': '02', 'مارس': '03', 'أبريل': '04', 'ابريل': '04',
+                        'ماي': '05', 'مايو': '05', 'يونيو': '06', 'يوليوز': '07', 'يوليو': '07',
+                        'غشت': '08', 'اغسطس': '08', 'شتنبر': '09', 'سبتمبر': '09',
+                        'أكتوبر': '10', 'اكتوبر': '10', 'نونبر': '11', 'نوفمبر': '11',
+                        'دجنبر': '12', 'ديسمبر': '12'
+                    }
+                    
+                    # Arabic weekday mappings (for optional validation)
+                    arabic_weekdays = {
+                        'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت', 'الأحد'
+                    }
+                    
+                    parts = date_value.split()
+                    if not parts:  # Empty string
+                        return pd.NaT
+                    
+                    # Optional: If you expect something like "الجمعة 20 دجنبر 2024 - 19:11"
+                    #  - parts[0] => weekday
+                    #  - parts[1] => day
+                    #  - parts[2] => monthName
+                    #  - parts[3] => year
+                    #  - parts[4] => '-' or similar
+                    #  - parts[5] => time
+                    
+                    # Check if the first token is a known weekday (this is optional)
+                    if parts[0] in arabic_weekdays:
+                        # Then the day is likely parts[1]
+                        day_str = parts[1]
+                        month_str = parts[2] if len(parts) > 2 else ''
+                        year_str = parts[3] if len(parts) > 3 else ''
+                        # If there's a time, it may be parts[5]
+                        time_str = parts[5] if len(parts) > 5 else "00:00"
+                    else:
+                        # If there's no weekday, you might have a different format
+                        # Adjust logic as needed for your data
+                        return pd.to_datetime(date_value, errors='coerce')
+                    
+                    # Map Arabic month name
+                    month = arabic_months.get(month_str, '01')  # Default to '01' if not found
+                    
+                    # Validate day/year
+                    if not (day_str.isdigit() and year_str.isdigit()):
+                        return pd.NaT
+                    
+                    # Build final date string
+                    datetime_str = f"{year_str}-{month}-{day_str} {time_str}"
+                    return pd.to_datetime(datetime_str, format='%Y-%m-%d %H:%M', errors='coerce')
+                
+                except Exception as e:
+                    st.warning(f"Date parsing error: {str(e)} for date: {date_value}")
+                    return pd.NaT
+
+
+
+            if st.button("Run Advanced Sentiment Analysis"):
+                with st.spinner("Performing comprehensive sentiment analysis..."):
+                    try:
+                        # Process sentiment analysis
+                        if analysis_method == "Standard":
+                            results = analyze_sentiment_in_chunks(df, sentiment_pipe, chunk_size=1000)
+                        else:
+                            results = analyze_sentiment_in_chunks(df, sentiment_pipe, chunk_size=batch_size)
+                        
+                        if not isinstance(results, pd.DataFrame):
+                            st.error("Sentiment analysis failed to return proper results.")
+                            st.stop()
+
+                        df = results.copy()  # Ensure we work on a fresh copy
+
+                        # -------------------------------------------------------------------
+                        # FIX FOR KEYERROR: 'confidence'
+                        # If the model/pipeline doesn't return confidence scores,
+                        # create a dummy 'confidence' column so the filter step won't fail.
+                        # -------------------------------------------------------------------
+                        if 'confidence' not in df.columns:
+                            st.warning("Confidence scores not available in the dataset. Creating a dummy column with 1.0")
+                            df['confidence'] = 1.0
+
+                        # Process dates
+                        df['processed_date'] = df['comment_date'].apply(detect_and_preprocess_dates)
+                        
+                        # Remove rows with no valid date if needed
+                        df.dropna(subset=['processed_date'], inplace=True)
+
+                        # Apply filters
+                        df = df[df['comment'].astype(str).str.len() >= min_comment_length]
+                        if sentiment_filter:
+                            df = df[df['sentiment'].isin(sentiment_filter)]
+                            
+                        # Confidence-based filtering
+                        df = df[df['confidence'] >= confidence_threshold]
+                        
+                        # Time period filtering
+                        if time_period != "All Time":
+                            now = pd.Timestamp.now()
+                            if time_period == "Custom Range":
+                                df = df[
+                                    (df['processed_date'].dt.date >= start_date) & 
+                                    (df['processed_date'].dt.date <= end_date)
+                                ]
+                            else:
+                                time_deltas = {
+                                    "Last Week": pd.Timedelta(days=7),
+                                    "Last Month": pd.Timedelta(days=30),
+                                    "Last Quarter": pd.Timedelta(days=90),
+                                    "Last Year": pd.Timedelta(days=365)
+                                }
+                                df = df[df['processed_date'] >= now - time_deltas.get(time_period, pd.Timedelta(days=365))]
+
+                        # If no rows remain, warn and stop
+                        if df.empty:
+                            st.warning("No data available after applying the current filters/time range.")
+                            st.stop()
+
+                        # Create analysis tabs
+                        analysis_tabs = st.tabs(["📊 Basic Stats", "📈 Temporal Analysis", 
+                                                "🔍 Detailed Analysis", "💭 Content Analysis"])
+
+                        # ------------------- TAB 1: Basic Stats --------------------
+                        with analysis_tabs[0]:
+                            st.subheader("Statistical Overview")
+                            
+                            total_comments = len(df)
+                            avg_confidence = df['confidence'].mean()
+                            avg_length = df['comment'].astype(str).str.len().mean()
+                            unique_commenters = df['commenter'].nunique()
+                            
+                            stats_cols = st.columns(4)
+                            with stats_cols[0]:
+                                st.metric("Total Comments", f"{total_comments:,}")
+                                
+                            with stats_cols[1]:
+                                if not np.isnan(avg_confidence):
+                                    st.metric("Average Confidence", f"{avg_confidence:.2%}")
+                                else:
+                                    st.metric("Average Confidence", "N/A")
+                                
+                            with stats_cols[2]:
+                                if not np.isnan(avg_length):
+                                    st.metric("Avg Comment Length", f"{avg_length:.0f} chars")
+                                else:
+                                    st.metric("Avg Comment Length", "N/A")
+                                
+                            with stats_cols[3]:
+                                st.metric("Unique Commenters", f"{unique_commenters:,}")
+
+                            # Sentiment distribution
+                            sentiment_dist = df['sentiment'].value_counts()
+                            fig_sentiment = px.pie(
+                                values=sentiment_dist.values,
+                                names=sentiment_dist.index,
+                                title="Sentiment Distribution",
+                                color_discrete_map={'POS': '#90EE90', 'NEG': '#FFB6C1', 'NEU': '#F0F8FF'}
+                            )
+                            st.plotly_chart(fig_sentiment, use_container_width=True)
+
+                            # Confidence distribution
+                            fig_confidence = px.histogram(
+                                df,
+                                x='confidence',
+                                color='sentiment',
+                                nbins=50,
+                                title='Sentiment Confidence Distribution',
+                                color_discrete_map={'POS': '#90EE90', 'NEG': '#FFB6C1', 'NEU': '#F0F8FF'}
+                            )
+                            st.plotly_chart(fig_confidence, use_container_width=True)
+
+                        # ------------------- TAB 2: Temporal Analysis --------------------
+                        with analysis_tabs[1]:
+                            st.subheader("Temporal Patterns")
+
+                            # Prepare daily sentiments
+                            df['date'] = df['processed_date'].dt.date
+                            daily_counts = df.groupby(['date', 'sentiment']).size().reset_index(name='count')
+                            if daily_counts.empty:
+                                st.warning("No daily sentiment data to display.")
+                            else:
+                                # Pivot to get columns = sentiments
+                                pivoted = daily_counts.pivot(index='date', columns='sentiment', values='count').fillna(0)
+
+                                # Rolling average
+                                window_size = st.slider("Rolling Average Window (days)", 1, 30, 7)
+                                rolling_sentiments = pivoted.rolling(window=window_size).mean().reset_index()
+
+                                # Melt for Plotly
+                                melted_rolling = rolling_sentiments.melt(
+                                    id_vars='date', 
+                                    var_name='sentiment', 
+                                    value_name='count'
+                                )
+
+                                fig_time = px.line(
+                                    melted_rolling,
+                                    x='date',
+                                    y='count',
+                                    color='sentiment',
+                                    title=f"{window_size}-Day Rolling Average of Sentiment Distribution",
+                                    labels={"count": "Number of Comments", "date": "Date"}
+                                )
+                                st.plotly_chart(fig_time, use_container_width=True)
+                            
+                            # Hourly distribution
+                            df['hour'] = df['processed_date'].dt.hour
+                            hourly_dist = df.groupby(['hour', 'sentiment']).size().reset_index(name='count')
+
+                            if hourly_dist.empty:
+                                st.warning("No hourly sentiment data to display.")
+                            else:
+                                fig_hourly = px.bar(
+                                    hourly_dist,
+                                    x='hour',
+                                    y='count',
+                                    color='sentiment',
+                                    title="Hourly Distribution of Sentiments",
+                                    labels={"count": "Number of Comments", "hour": "Hour of Day"},
+                                    barmode="group"
+                                )
+                                st.plotly_chart(fig_hourly, use_container_width=True)
+
+                        # ------------------- TAB 3: Detailed Analysis --------------------
+                        with analysis_tabs[2]:
+                            st.subheader("Detailed Comment Analysis")
+                            
+                            # Advanced filtering options (within the result set)
+                            col1, col2, col3 = st.columns(3)
+                            
+                            with col1:
+                                selected_sentiment = st.selectbox(
+                                    "Filter by Sentiment",
+                                    ["All"] + list(df['sentiment'].unique())
+                                )
+                                
+                            with col2:
+                                confidence_range = st.slider(
+                                    "Confidence Range",
+                                    0.0, 1.0, (0.5, 1.0)
+                                )
+                                
+                            with col3:
+                                sort_by = st.selectbox(
+                                    "Sort By",
+                                    ["Date", "Confidence", "Comment Length"]
+                                )
+                            
+                            # Apply subfilters
+                            filtered_df = df.copy()
+                            if selected_sentiment != "All":
+                                filtered_df = filtered_df[filtered_df['sentiment'] == selected_sentiment]
+                            
+                            filtered_df = filtered_df[
+                                (filtered_df['confidence'] >= confidence_range[0]) & 
+                                (filtered_df['confidence'] <= confidence_range[1])
+                            ]
+                            
+                            # Sorting
+                            if sort_by == "Date":
+                                filtered_df = filtered_df.sort_values('processed_date', ascending=False)
+                            elif sort_by == "Confidence":
+                                filtered_df = filtered_df.sort_values('confidence', ascending=False)
+                            else:  # Comment Length
+                                filtered_df['comment_length'] = filtered_df['comment'].astype(str).str.len()
+                                filtered_df = filtered_df.sort_values('comment_length', ascending=False)
+                            
+                            if filtered_df.empty:
+                                st.warning("No comments match your subfilters.")
+                            else:
+                                # Display results
+                                st.dataframe(
+                                    filtered_df[['commenter', 'processed_date', 'comment', 'sentiment', 'confidence']]
+                                    .style.apply(highlight_sentiment, axis=1)
+                                    .format({
+                                        'processed_date': lambda x: x.strftime('%Y-%m-%d %H:%M'),
+                                        'confidence': '{:.2%}'
+                                    })
+                                    .set_properties(**{'text-align': 'left'})
+                                    .hide_index(),
+                                    height=400
+                                )
+
+                        # ------------------- TAB 4: Content Analysis --------------------
+                        with analysis_tabs[3]:
+                            st.subheader("Content Analysis")
+                            
+                            # Comment length distribution
+                            length_series = df['comment'].astype(str).apply(len)
+                            if length_series.empty:
+                                st.warning("No valid comment lengths to plot.")
+                            else:
+                                fig_lengths = px.histogram(
+                                    x=length_series,
+                                    nbins=30,
+                                    title="Comment Length Distribution",
+                                    labels={'x': 'Comment Length (characters)', 'y': 'Count'}
+                                )
+                                st.plotly_chart(fig_lengths, use_container_width=True)
+                            
+                            # Most active commenters
+                            st.subheader("Most Active Commenters")
+                            top_commenters = df['commenter'].value_counts().head(10)
+                            if top_commenters.empty:
+                                st.warning("No commenters found in the filtered dataset.")
+                            else:
+                                fig_commenters = px.bar(
+                                    x=top_commenters.index,
+                                    y=top_commenters.values,
+                                    title="Top 10 Most Active Commenters",
+                                    labels={'x': 'Commenter', 'y': 'Number of Comments'}
+                                )
+                                st.plotly_chart(fig_commenters, use_container_width=True)
+
+                        # ------------------- Export Options -------------------
+                        st.subheader("Export Results")
+                        export_col1, export_col2 = st.columns(2)
+                        
+                        with export_col1:
+                            if st.button("Export to CSV"):
+                                csv_data = df.to_csv(index=False).encode('utf-8')
+                                st.download_button(
+                                    "Download CSV",
+                                    csv_data,
+                                    "sentiment_analysis_results.csv",
+                                    "text/csv",
+                                    key='download-csv'
+                                )
+                                
+                        with export_col2:
+                            if st.button("Export Analysis Report"):
+                                # Example of a simple "report" string builder
+                                report_str = (
+                                    f"Sentiment Analysis Report\n"
+                                    f"Total Comments: {len(df)}\n"
+                                    f"Average Confidence: {df['confidence'].mean():.2%}\n"
+                                    f"Sentiments:\n{df['sentiment'].value_counts()}\n"
+                                    "\n---\n"
+                                    "Further details could be added here..."
+                                )
+                                st.download_button(
+                                    "Download Report",
+                                    report_str,
+                                    "sentiment_analysis_report.txt",
+                                    "text/plain",
+                                    key='download-report'
+                                )
+
+                    except Exception as e:
+                        st.error(f"An error occurred during analysis: {str(e)}")
+                        st.stop()
+
+            # -------------------------------------------------------------------
+            # Enhanced Feedback System with Storage
+            # -------------------------------------------------------------------
+            st.divider()
+            st.subheader("Analysis Feedback & Quality Control")
+            
+            # Initialize feedback storage
+            if 'feedback_file' not in st.session_state:
+                st.session_state.feedback_file = 'feedback_data.json'
+                if not os.path.exists(st.session_state.feedback_file):
+                    with open(st.session_state.feedback_file, 'w', encoding='utf-8') as f:
+                        json.dump([], f)
+
+            feedback_container = st.container()
+            with feedback_container:
+                feedback_tabs = st.tabs([
+                    "📝 Quick Feedback",
+                    "📊 Detailed Feedback",
+                    "❌ Error Reports",
+                    "📈 Feedback Analytics"
+                ])
+                
+                with feedback_tabs[0]:
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        quick_rating = st.slider(
+                            "Rate the analysis quality",
+                            1, 5, 3,
+                            help="1 = Poor, 5 = Excellent"
+                        )
+                        
+                        analysis_speed = st.select_slider(
+                            "Analysis Speed",
+                            options=["Very Slow", "Slow", "Average", "Fast", "Very Fast"],
+                            value="Average"
+                        )
+                        
+                    with col2:
+                        satisfaction = st.select_slider(
+                            "Overall Satisfaction",
+                            options=["Very Dissatisfied", "Dissatisfied", "Neutral", "Satisfied", "Very Satisfied"],
+                            value="Neutral"
+                        )
+                        
+                        would_recommend = st.radio(
+                            "Would you recommend this tool?",
+                            ["Yes", "Maybe", "No"]
+                        )
+                    
+                    quick_comment = st.text_area(
+                        "Quick Comment (Optional)",
+                        height=100,
+                        placeholder="Any immediate thoughts or suggestions?"
+                    )
+                
+                with feedback_tabs[1]:
+                    st.subheader("Detailed Analysis Feedback")
+                    
+                    # Specific aspect ratings
+                    aspect_col1, aspect_col2 = st.columns(2)
+                    
+                    with aspect_col1:
+                        sentiment_accuracy = st.slider(
+                            "Sentiment Analysis Accuracy",
+                            1, 5, 3,
+                            help="How accurate were the sentiment predictions?"
+                        )
+                        
+                        visualization_quality = st.slider(
+                            "Visualization Quality",
+                            1, 5, 3,
+                            help="How helpful were the visualizations?"
+                        )
+                        
+                        ui_experience = st.slider(
+                            "User Interface Experience",
+                            1, 5, 3,
+                            help="How user-friendly was the interface?"
+                        )
+                    
+                    with aspect_col2:
+                        data_processing = st.slider(
+                            "Data Processing Quality",
+                            1, 5, 3,
+                            help="How well was the data processed and analyzed?"
+                        )
+                        
+                        feature_completeness = st.slider(
+                            "Feature Completeness",
+                            1, 5, 3,
+                            help="How complete are the available features?"
+                        )
+                        
+                        documentation_clarity = st.slider(
+                            "Documentation Clarity",
+                            1, 5, 3,
+                            help="How clear were the instructions and documentation?"
+                        )
+                    
+                    # Positive aspects
+                    st.subheader("Strengths and Areas for Improvement")
+                    
+                    positive_aspects = st.multiselect(
+                        "What worked well?",
+                        [
+                            "Sentiment Accuracy",
+                            "Date Processing",
+                            "Visualization Quality",
+                            "Processing Speed",
+                            "User Interface",
+                            "Analysis Depth",
+                            "Export Options",
+                            "Error Handling",
+                            "Documentation",
+                            "Feature Set"
+                        ],
+                        default=["Sentiment Accuracy"]
+                    )
+                    
+                    improvement_needed = st.multiselect(
+                        "What needs improvement?",
+                        [
+                            "Sentiment Accuracy",
+                            "Date Processing",
+                            "Visualization Quality",
+                            "Processing Speed",
+                            "User Interface",
+                            "Analysis Depth",
+                            "Export Options",
+                            "Error Handling",
+                            "Documentation",
+                            "Feature Set"
+                        ]
+                    )
+                    
+                    # Detailed feedback
+                    st.subheader("Additional Feedback")
+                    
+                    detailed_feedback = st.text_area(
+                        "Detailed comments or suggestions",
+                        height=150,
+                        placeholder="Please provide any specific feedback, suggestions, or feature requests..."
+                    )
+                    
+                    # Feature requests
+                    feature_requests = st.text_area(
+                        "Feature Requests",
+                        height=100,
+                        placeholder="What additional features would you like to see?"
+                    )
+                
+                with feedback_tabs[2]:
+                    st.subheader("Error Reporting")
+                    
+                    error_type = st.selectbox(
+                        "Type of Error",
+                        [
+                            "None",
+                            "Sentiment Misclassification",
+                            "Date Processing Error",
+                            "Visualization Error",
+                            "Performance Issue",
+                            "Data Processing Error",
+                            "UI/UX Issue",
+                            "Export Error",
+                            "Other"
+                        ]
+                    )
+                    
+                    if error_type != "None":
+                        error_severity = st.select_slider(
+                            "Error Severity",
+                            options=["Low", "Medium", "High", "Critical"],
+                            value="Medium"
+                        )
+                        
+                        error_frequency = st.select_slider(
+                            "Error Frequency",
+                            options=["One-time", "Occasional", "Frequent", "Consistent"],
+                            value="One-time"
+                        )
+                        
+                        error_description = st.text_area(
+                            "Error Description",
+                            height=150,
+                            help="Please provide specific examples and steps to reproduce the error"
+                        )
+                        
+                        reproducible = st.checkbox("Is this error consistently reproducible?")
+                        
+                        if reproducible:
+                            steps_to_reproduce = st.text_area(
+                                "Steps to Reproduce",
+                                height=150,
+                                placeholder="1. Step one\n2. Step two\n3. Step three..."
+                            )
+                        
+                        # File upload for error evidence
+                        st.subheader("Error Evidence")
+                        
+                        evidence_type = st.multiselect(
+                            "Type of Evidence",
+                            ["Screenshot", "Log File", "Data Sample", "Other"]
+                        )
+                        
+                        if "Screenshot" in evidence_type:
+                            error_screenshot = st.file_uploader(
+                                "Upload Screenshot",
+                                type=['png', 'jpg', 'jpeg']
+                            )
+                        
+                        if "Log File" in evidence_type:
+                            error_log = st.file_uploader(
+                                "Upload Log File",
+                                type=['txt', 'log']
+                            )
+                        
+                        if "Data Sample" in evidence_type:
+                            data_sample = st.file_uploader(
+                                "Upload Data Sample",
+                                type=['csv', 'xlsx', 'json']
+                            )
+                
+                with feedback_tabs[3]:
+                    st.subheader("Feedback Analytics")
+                    
+                    # Load existing feedback data
+                    try:
+                        with open(st.session_state.feedback_file, 'r', encoding='utf-8') as f:
+                            feedback_data = json.load(f)
+                        
+                        if feedback_data:
+                            # Convert to DataFrame for analysis
+                            feedback_df = pd.DataFrame(feedback_data)
+                            
+                            # Display overall metrics
+                            metric_cols = st.columns(4)
+                            
+                            with metric_cols[0]:
+                                avg_rating = feedback_df['quick_rating'].mean()
+                                st.metric("Average Rating", f"{avg_rating:.2f}/5")
+                            
+                            with metric_cols[1]:
+                                satisfaction_counts = feedback_df['satisfaction'].value_counts()
+                                most_common = satisfaction_counts.index[0]
+                                st.metric("Most Common Satisfaction", most_common)
+                            
+                            with metric_cols[2]:
+                                recommend_pct = (feedback_df['would_recommend'] == 'Yes').mean() * 100
+                                st.metric("Would Recommend", f"{recommend_pct:.1f}%")
+                            
+                            with metric_cols[3]:
+                                total_feedback = len(feedback_df)
+                                st.metric("Total Feedback Count", total_feedback)
+                            
+                            # Ratings over time
+                            st.subheader("Ratings Trend")
+                            feedback_df['timestamp'] = pd.to_datetime(feedback_df['timestamp'])
+                            ratings_time = px.line(
+                                feedback_df,
+                                x='timestamp',
+                                y='quick_rating',
+                                title="Rating Trends Over Time"
+                            )
+                            st.plotly_chart(ratings_time, use_container_width=True)
+                            
+                            # Common issues wordcloud (placeholder logic)
+                            if 'detailed_feedback' in feedback_df.columns:
+                                st.subheader("Common Feedback Themes")
+                                all_feedback = ' '.join(feedback_df['detailed_feedback'].dropna())
+                                # (Implement a wordcloud or text analysis here if desired)
+                            
+                            # Error distribution
+                            if 'error_type' in feedback_df.columns:
+                                error_counts = feedback_df['error_type'].value_counts()
+                                fig_errors = px.pie(
+                                    values=error_counts.values,
+                                    names=error_counts.index,
+                                    title="Distribution of Reported Issues"
+                                )
+                                st.plotly_chart(fig_errors, use_container_width=True)
+                        
+                        else:
+                            st.info("No feedback data available yet.")
+                        
+                    except Exception as e:
+                        st.error(f"Error loading feedback data: {str(e)}")
+
+            # Submit feedback button with improved validation and storage
+            if st.button("Submit Comprehensive Feedback", type="primary"):
+                if quick_rating > 0 and satisfaction:
+                    try:
+                        # Prepare feedback data
+                        feedback_entry = {
+                            "timestamp": datetime.now().isoformat(),
+                            "quick_rating": quick_rating,
+                            "satisfaction": satisfaction,
+                            "analysis_speed": analysis_speed,
+                            "would_recommend": would_recommend,
+                            "quick_comment": quick_comment,
+                            "sentiment_accuracy": sentiment_accuracy if 'sentiment_accuracy' in locals() else None,
+                            "visualization_quality": visualization_quality if 'visualization_quality' in locals() else None,
+                            "ui_experience": ui_experience if 'ui_experience' in locals() else None,
+                            "data_processing": data_processing if 'data_processing' in locals() else None,
+                            "feature_completeness": feature_completeness if 'feature_completeness' in locals() else None,
+                            "documentation_clarity": documentation_clarity if 'documentation_clarity' in locals() else None,
+                            "positive_aspects": positive_aspects if 'positive_aspects' in locals() else [],
+                            "improvement_needed": improvement_needed if 'improvement_needed' in locals() else [],
+                            "detailed_feedback": detailed_feedback if 'detailed_feedback' in locals() else "",
+                            "feature_requests": feature_requests if 'feature_requests' in locals() else "",
+                            "error_type": error_type if 'error_type' in locals() else "None",
+                            "error_severity": error_severity if 'error_severity' in locals() and error_type != "None" else None,
+                            "error_frequency": error_frequency if 'error_frequency' in locals() and error_type != "None" else None,
+                            "error_description": error_description if 'error_description' in locals() and error_type != "None" else None,
+                            "reproducible": reproducible if 'reproducible' in locals() and error_type != "None" else None,
+                            "steps_to_reproduce": steps_to_reproduce if 'steps_to_reproduce' in locals() and 'reproducible' in locals() and reproducible else None
+                        }
+                        
+                        # Load existing feedback
+                        with open(st.session_state.feedback_file, 'r', encoding='utf-8') as f:
+                            existing_feedback = json.load(f)
+                        
+                        # Append new feedback
+                        existing_feedback.append(feedback_entry)
+                        
+                        # Save updated feedback
+                        with open(st.session_state.feedback_file, 'w', encoding='utf-8') as f:
+                            json.dump(existing_feedback, f, ensure_ascii=False, indent=2)
+                        
+                        st.success("Thank you for your comprehensive feedback! Your input helps us improve the analysis system.")
+                        
+                        # Show feedback summary
+                        st.write("Feedback Summary:")
+                        summary_cols = st.columns(3)
+                        with summary_cols[0]:
+                            st.metric("Quality Rating", f"{quick_rating}/5")
+                        with summary_cols[1]:
+                            st.metric("Satisfaction", satisfaction)
+                        with summary_cols[2]:
+                            st.metric("Would Recommend", would_recommend)
+                        
+                    except Exception as e:
+                        st.error(f"Error saving feedback: {str(e)}")
+                else:
+                    st.warning("Please provide at least a quality rating and satisfaction level.")
+
+
+          
+            
+        with tabs[3]:
             #Political Topic Modeling with GPT
             st.subheader("Political Topic Modeling")
             st.write(
@@ -1162,7 +2200,7 @@ def main():
                     st.experimental_rerun()  # Force a rerun to refresh your dashboard with new data
                 except Exception as e:
                     st.warning(f"Could not reload new data automatically: {e}")
-
+        #with_tab[5]:
  
         with tabs[11]:
             if "sentiment" in df.columns:

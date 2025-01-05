@@ -1,0 +1,28 @@
+[
+  {
+    "timestamp": "2025-01-05T00:20:19.382354",
+    "quick_rating": 3,
+    "satisfaction": "Neutral",
+    "analysis_speed": "Average",
+    "would_recommend": "Yes",
+    "quick_comment": "",
+    "sentiment_accuracy": 3,
+    "visualization_quality": 3,
+    "ui_experience": 3,
+    "data_processing": 3,
+    "feature_completeness": 3,
+    "documentation_clarity": 3,
+    "positive_aspects": [
+      "Sentiment Accuracy"
+    ],
+    "improvement_needed": [],
+    "detailed_feedback": "",
+    "feature_requests": "",
+    "error_type": "None",
+    "error_severity": null,
+    "error_frequency": null,
+    "error_description": null,
+    "reproducible": null,
+    "steps_to_reproduce": null
+  }
+]
