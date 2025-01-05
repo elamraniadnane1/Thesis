@@ -2230,7 +2230,158 @@ def main():
                     st.experimental_rerun()  # Force a rerun to refresh your dashboard with new data
                 except Exception as e:
                     st.warning(f"Could not reload new data automatically: {e}")
-        #with_tab[5]:
+        with tabs[7]:
+            st.subheader("🤖 Interactive Politics Chatbot")
+
+            # --------------------------------------------------------------------------------
+            # 1. SIDEBAR MODEL CONFIGURATION
+            #    (This is the ONLY place the user can change model or temperature)
+            # --------------------------------------------------------------------------------
+            st.sidebar.markdown("### Chatbot Configuration")
+            model = st.sidebar.selectbox(
+                "Select GPT Model",
+                ["gpt-3.5-turbo", "gpt-4"],
+                help="GPT-3.5 is faster and cheaper, GPT-4 is more capable"
+            )
+            
+            temperature = st.sidebar.slider(
+                "Temperature",
+                min_value=0.0,
+                max_value=1.0,
+                value=0.7,
+                step=0.1,
+                help="Higher = more creative, Lower = more focused"
+            )
+            
+            max_tokens = st.sidebar.number_input(
+                "Max Response Length",
+                min_value=50,
+                max_value=2000,
+                value=500,
+                step=50,
+                help="Maximum number of tokens in the response"
+            )
+
+            # Save the current config in session_state (used by both React & Native Chat)
+            st.session_state["selected_model"] = model
+            st.session_state["temperature"] = temperature
+            st.session_state["max_tokens"] = max_tokens
+
+            # --------------------------------------------------------------------------------
+            # 2. ADD OPTIONAL STYLES FOR THE PAGE LAYOUT
+            # --------------------------------------------------------------------------------
+            st.markdown(
+                """
+                <style>
+                .stApp {
+                    max-width: 100%;
+                    margin: 0 auto;
+                }
+                .chat-container {
+                    max-width: 800px;
+                    margin: 0 auto;
+                }
+                </style>
+                """,
+                unsafe_allow_html=True
+            )
+
+            from streamlit.components.v1 import html
+
+            # --------------------------------------------------------------------------------
+            # 3. REACT-BASED CHATBOT CODE
+            # --------------------------------------------------------------------------------
+         
+
+            # --------------------------------------------------------------------------------
+            # 5. STREAMLIT-SIDE PYTHON LOGIC TO HANDLE MESSAGES FROM THE REACT FRONT-END
+            # --------------------------------------------------------------------------------
+            if "openai_messages" not in st.session_state:
+                st.session_state.openai_messages = []
+
+            # This function calls OpenAI, injecting relevant context from your df
+            def handle_message(user_query):
+                try:
+                    # 1) Gather relevant context from your DataFrame, e.g. last 5 matching comments
+                    relevant_comments = df[
+                        df['comment'].str.contains(user_query, case=False, na=False)
+                    ].head(5)['comment'].tolist()
+                    context_str = "\n".join(relevant_comments)
+                    
+                    # 2) Build a system prompt
+                    system_prompt = f"""
+                    You are a knowledgeable assistant specialized in Moroccan politics.
+                    The user asked: {user_query}
+
+                    Here are some relevant user comments to draw context from:
+                    {context_str}
+
+                    Provide a thoughtful, balanced response that:
+                    - Analyzes main themes/opinions
+                    - Uses relevant examples from these comments
+                    - Remains neutral and explains different viewpoints
+                    """
+
+                    # 3) Construct messages for the OpenAI ChatCompletion
+                    messages_for_api = [
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_query}
+                    ]
+
+                    # 4) Call OpenAI
+                    response = openai.ChatCompletion.create(
+                        model=st.session_state.get("selected_model", "gpt-3.5-turbo"),
+                        messages=messages_for_api,
+                        temperature=st.session_state.get("temperature", 0.7),
+                        max_tokens=st.session_state.get("max_tokens", 500)
+                    )
+
+                    return response.choices[0].message["content"]
+                except Exception as e:
+                    st.error(f"Error: {str(e)}")
+                    return "Sorry, an error occurred."
+
+            # The front-end calls Streamlit via window.Streamlit.query({"type": "chat", "message": "..."})
+            def handle_frontend_query(query):
+                if query.get("type") == "chat":
+                    user_text = query.get("message", "")
+                    # We ignore "context" or "model" from the front-end; we rely on the sidebar
+                    assistant_answer = handle_message(user_text)
+                    return assistant_answer
+                return None
+
+            # Register that callback
+            st.session_state["handle_frontend_query"] = handle_frontend_query
+
+            # --------------------------------------------------------------------------------
+            # 6. (OPTIONAL) NATIVE STREAMLIT CHAT UI
+            #    You can remove this if you only want the React front-end.
+            # --------------------------------------------------------------------------------
+            if "messages" not in st.session_state:
+                st.session_state.messages = []
+
+            # Display existing conversation
+            for msg in st.session_state.messages:
+                with st.chat_message(msg["role"]):
+                    st.markdown(msg["content"])
+
+            # Chat input
+            if prompt := st.chat_input("Ask about Moroccan politics..."):
+                # Show user message
+                st.session_state.messages.append({"role": "user", "content": prompt})
+                with st.chat_message("user"):
+                    st.markdown(prompt)
+                
+                # Use the same handle_message logic for the native chat
+                assistant_response = handle_message(prompt)
+
+                # Show assistant reply
+                st.session_state.messages.append({"role": "assistant", "content": assistant_response})
+                with st.chat_message("assistant"):
+                    st.markdown(assistant_response)
+
+
+
  
         with tabs[11]:
             if "sentiment" in df.columns:
