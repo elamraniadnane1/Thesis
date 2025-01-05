@@ -26,17 +26,40 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import openai
 from streamlit import tabs
+import re
+import concurrent.futures
+from pathlib import Path
 
 
 
 # ------------------------------------------------------
 # 1. Custom CSS (Optional)
 # ------------------------------------------------------
+# Load the SVG file
+def load_svg():
+    svg_path = Path("icon.svg")
+    return svg_path.read_text()
+
 st.set_page_config(
     page_title="Social Media Analysis Tool 2025, By: Adnane El Amrani",
+    page_icon=load_svg(),
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+
+
+# Create a ThreadPoolExecutor for potential background tasks (scraping, heavy analysis).
+# This allows the scraping/analysis to run in a background thread so the UI remains responsive.
+executor = concurrent.futures.ThreadPoolExecutor(max_workers=4)
+
+# We'll also create some session_state placeholders to avoid re-running heavy tasks:
+if "df_main" not in st.session_state:
+    st.session_state.df_main = None   # Will store our main DataFrame (comments) once loaded
+if "analysis_done" not in st.session_state:
+    st.session_state.analysis_done = False  # Flag to track if sentiment analysis is done
+if "scraping_in_progress" not in st.session_state:
+    st.session_state.scraping_in_progress = False
 
 st.markdown(
     """
@@ -649,13 +672,13 @@ def highlight_sentiment(row):
     return [f"background-color: {color}"] * len(row)
 
 def main():
-    st.title("Social Media Analysis Tool 2025, By : Adnane El Amrani")
+    st.title("Social Media & Newspaper Analysis Tool")
     st.write(
         """
         This dashboard uses an **Arabic BERT** model 
         ([`CAMeL-Lab/bert-base-arabic-camelbert-da-sentiment`](https://huggingface.co/CAMeL-Lab/bert-base-arabic-camelbert-da-sentiment)) 
         to analyze the sentiment of comments. 
-        Upload your CSV file or use the default example to get started.
+        Upload your CSV file to get started.
         """
     )
 
@@ -701,10 +724,12 @@ def main():
     if uploaded_file is not None:
         df = pd.read_csv(uploaded_file)
         df.columns = ["article_url", "commenter", "comment_date", "comment"]
+        st.session_state.df_main = df
         st.success("File uploaded successfully!")
     else:
         st.info("No file uploaded. Using the Hespress CSV file stored in our Database.")
         df = load_data(csv_file_path)
+        st.session_state.df_main = df
     
 
     if df is not None:
@@ -920,9 +945,9 @@ def main():
             if st.button("Run Sentiment Analysis"):
                 with st.spinner("Analyzing sentiment..."):
                     if analysis_method == "Standard":
-                        df = analyze_sentiment_in_chunks(df, sentiment_pipe, chunk_size=1000)
+                        st.session_state.df_main = analyze_sentiment_in_chunks(df, sentiment_pipe, chunk_size=1000)
                     else:
-                        df = analyze_sentiment_in_chunks(df, sentiment_pipe, chunk_size=chunk_size)
+                        st.session_state.df_main = analyze_sentiment_in_chunks(df, sentiment_pipe, chunk_size=chunk_size)
                 st.success("Sentiment Analysis Complete!")
 
                 # Show first 10 results with highlighting
@@ -2171,28 +2196,33 @@ def main():
         
             st.subheader("Scrape More Data from Hespress")
             if st.button("Scrape"):
-                st.info("Scraping in progress... This may take a few minutes.")
+                if st.session_state.scraping_in_progress:
+                    st.warning("Scraping is already in progress. Please wait.")
+                else:
+                    st.session_state.scraping_in_progress = True
+                    st.info("Scraping in progress... This may take a few minutes.")
                 
-                # Create a progress bar
-                progress_bar = st.progress(0)
                 
-                # Simulate incremental progress (e.g., 5 steps total)
-                # If your `run_scraper()` can provide real-time progress,
-                # integrate that logic instead of this static loop.
-                import time
-                total_steps = 5
-                for i in range(total_steps):
-                    # Simulate some wait time
-                    time.sleep(1)
-                    progress_bar.progress(int((i + 1) * (100 / total_steps)))
-                
-                # Actually run your scraper function
-                run_scraper()
-                
-                # Clear the progress bar once done
-                progress_bar.empty()
-                
-                st.success("Scraping complete! The new data has been appended to the existing CSV files.")
+                    # Create a progress bar
+                    progress_bar = st.progress(0)
+                    
+                    # Simulate incremental progress (e.g., 5 steps total)
+                    # If your `run_scraper()` can provide real-time progress,
+                    # integrate that logic instead of this static loop.
+                    import time
+                    total_steps = 5
+                    for i in range(total_steps):
+                        # Simulate some wait time
+                        time.sleep(1)
+                        progress_bar.progress(int((i + 1) * (100 / total_steps)))
+                    
+                    # Actually run your scraper function
+                    future = executor.submit(run_scraper)
+                    
+                    # Clear the progress bar once done
+                    progress_bar.empty()
+                    
+                    st.success("Scraping complete! The new data has been appended to the existing CSV files.")
 
                 # OPTIONAL: Immediately reload the updated CSV if you want to reflect the new data in this session:
                 try:
