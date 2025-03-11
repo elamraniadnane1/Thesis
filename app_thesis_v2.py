@@ -160,45 +160,54 @@ else:
 st.markdown(
     """
     <style>
+    /* 1) FANCY TITLE - Google Font & Neon-Glow + Hue-Rotate Animation */
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap');
 
-        .fancy-title {
-            font-family: 'Poppins', sans-serif;
-            font-size: 40px;
-            font-weight: 700;
-            text-align: center;
-            color: #fff;
-            background: linear-gradient(45deg, #ff416c, #ff4b2b, #ff6a00);
-            padding: 15px;
-            border-radius: 12px;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.2);
-            animation: glow 2s infinite alternate ease-in-out;
+    .fancy-title {
+        font-family: 'Poppins', sans-serif;
+        font-size: 40px;
+        font-weight: 700;
+        text-align: center;
+        color: #fff;
+        background: linear-gradient(45deg, #ff416c, #ff4b2b, #ff6a00);
+        padding: 15px;
+        border-radius: 12px;
+        text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+        /* Two animations: glow (pulsing shadow) + hue-rotate (shifting colors) */
+        animation: glow 2s infinite alternate ease-in-out, hue-rotate 8s infinite linear;
+        display: inline-block;
+        margin: 0 auto;
+    }
+
+    @keyframes glow {
+        0% {
+            box-shadow: 0 0 10px rgba(255, 75, 43, 0.6);
         }
-
-        @keyframes glow {
-            from {
-                box-shadow: 0px 0px 10px rgba(255, 75, 43, 0.6);
-            }
-            to {
-                box-shadow: 0px 0px 20px rgba(255, 75, 43, 1);
-            }
+        100% {
+            box-shadow: 0 0 20px rgba(255, 75, 43, 1);
         }
+    }
 
-    <h1 class="fancy-title">🚀 Civic Catalyst AI Toolkit for Citizen Participation</h1>
+    @keyframes hue-rotate {
+        0% {
+            filter: hue-rotate(0deg);
+        }
+        100% {
+            filter: hue-rotate(360deg);
+        }
+    }
 
+    /* 2) BODY ZOOM AT 90% */
     body {
-            zoom: 90%;
-        }
+        zoom: 90%;
+    }
+
+    /* 3) TAB STYLING */
     /* Import Lucide icons CSS */
     @import url('https://cdn.jsdelivr.net/npm/lucide-static@0.16.29/font/lucide.min.css');
-    
-    /* Main layout and typography */
+    /* Import Poppins and Inter fonts (already partially above) */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
     
-    
-    /* Previous styles remain the same until tabs... */
-    
-    /* Enhanced Tabs styling with icons */
     .stTabs {
         background: white;
         padding: 1rem;
@@ -238,6 +247,7 @@ st.markdown(
         justify-content: center;
         text-align: center;
         gap: 8px;
+        animation: slideIn 0.3s ease-out;
     }
 
     /* Tab icons */
@@ -249,39 +259,34 @@ st.markdown(
         transition: all 0.3s ease;
     }
 
-    /* Custom icons for each tab - adjust content based on your tab names */
+    /* Example icons for tab labels containing certain strings */
     .stTabs [data-baseweb="tab"][aria-label*="Dashboard"]::before {
-        content: '\\e900';  /* dashboard icon */
+        content: '\\e900';
     }
-
     .stTabs [data-baseweb="tab"][aria-label*="Analytics"]::before {
-        content: '\\e901';  /* chart icon */
+        content: '\\e901';
     }
-
     .stTabs [data-baseweb="tab"][aria-label*="Posts"]::before {
-        content: '\\e902';  /* message-square icon */
+        content: '\\e902';
     }
-
     .stTabs [data-baseweb="tab"][aria-label*="Users"]::before {
-        content: '\\e903';  /* users icon */
+        content: '\\e903';
     }
-
     .stTabs [data-baseweb="tab"][aria-label*="Settings"]::before {
-        content: '\\e904';  /* settings icon */
+        content: '\\e904';
     }
 
-    /* Icon hover effect */
+    /* Hover icon effect */
     .stTabs [data-baseweb="tab"]:hover::before {
         transform: scale(1.1);
         opacity: 1;
     }
 
-    /* Active tab icon styling */
+    /* Active tab styling */
     .stTabs [aria-selected="true"]::before {
         opacity: 1;
         transform: scale(1.1);
     }
-
     .stTabs [aria-selected="true"] {
         background: linear-gradient(135deg, #3AAFA9 0%, #2B7A78 100%) !important;
         color: white !important;
@@ -308,13 +313,7 @@ st.markdown(
         transform: translateY(-2px);
     }
 
-    /* Rest of the styles remain the same... */
-
-    /* Enhanced animations for tabs */
-    .stTabs [data-baseweb="tab"] {
-        animation: slideIn 0.3s ease-out;
-    }
-
+    /* Slide-in animation */
     @keyframes slideIn {
         from {
             opacity: 0;
@@ -326,7 +325,7 @@ st.markdown(
         }
     }
 
-    /* Responsive adjustments for tabs with icons */
+    /* Responsive adjustments for small screens */
     @media screen and (max-width: 768px) {
         .stTabs [data-baseweb="tab"] {
             min-width: 160px;
@@ -334,15 +333,19 @@ st.markdown(
             font-size: 0.8rem;
             padding: 0.4rem 0.8rem;
         }
-
         .stTabs [data-baseweb="tab"]::before {
             font-size: 1rem;
             margin-right: 0.3rem;
         }
     }
     </style>
+
+    <!-- 4) TITLE ELEMENT -->
+    <h1 class="fancy-title">🚀 Civic Catalyst AI Toolkit for Citizen Participation</h1>
     """,
-    unsafe_allow_html=True)
+    unsafe_allow_html=True
+)
+
 
 # ------------------------------------------------------
 # 2. Initialize the sentiment analysis pipeline
