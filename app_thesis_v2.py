@@ -62,7 +62,7 @@ def logout():
     """
     st.session_state['authentication_status'] = False  # Adjust the key based on your auth_system
     st.rerun()
-
+theme = st.get_option("theme.base")  # Returns "light" or "dark"
 # ------------------------------------------------------
 # 1. Custom CSS (Optional)
 # ------------------------------------------------------
@@ -156,7 +156,7 @@ else:
     </style>
     """
     st.markdown(light_mode_css, unsafe_allow_html=True)
-    
+
 st.markdown(
     """
     <style>
