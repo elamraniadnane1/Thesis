@@ -1,32 +1,32 @@
 # Web framework
-streamlit
+streamlit==1.30.0
 
 # Data handling and visualization
 pandas==1.5.3
-numpy==1.24.3
-matplotlib==3.6.3
+numpy==1.24.4
+matplotlib==3.7.2
 seaborn==0.12.2
-plotly==5.14.1
-wordcloud==1.8.2.2
+plotly==5.20.0
+wordcloud==1.9.3
 
 # NLP and Machine Learning
-transformers==4.28.1
+transformers==4.38.1
 sentence-transformers==2.2.2
 faiss-cpu==1.7.4
+huggingface-hub==0.19.4  # Ensures compatibility with sentence-transformers
 
 # Web scraping
-beautifulsoup4==4.11.2
-selenium==4.8.3
+beautifulsoup4==4.12.3
+selenium==4.18.1
 webdriver-manager==4.0.1
 
 # Date and time utilities
 dateparser==1.1.8
 
-
 # Additional utilities
-requests==2.28.2
-regex==2023.6.3
-logging==0.4.9.6
+requests==2.31.0
+regex==2023.12.25
 concurrent-log-handler==0.9.24
 
-openai==0.27.4
+# OpenAI API
+openai==1.11.1

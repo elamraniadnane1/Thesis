@@ -5,8 +5,15 @@ from transformers import pipeline
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 import plotly.express as px
-import plotly.graph_objects as go
+import plotly.graph_objects as  go
+from huggingface_hub import hf_hub_download
 import json
+import asyncio
+import sys
+
+if sys.platform == "win32":
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
 import os
 from datetime import datetime
 import plotly.figure_factory as ff
