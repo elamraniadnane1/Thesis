@@ -29,6 +29,6 @@ regex==2023.12.25
 concurrent-log-handler==0.9.24
 
 # OpenAI API
-openai==1.11.1
+openai==0.28
 # Authentication
 PyJWT==2.8.0

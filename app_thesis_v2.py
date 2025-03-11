@@ -160,6 +160,36 @@ else:
 st.markdown(
     """
     <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap');
+
+        .fancy-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 40px;
+            font-weight: 700;
+            text-align: center;
+            color: #fff;
+            background: linear-gradient(45deg, #ff416c, #ff4b2b, #ff6a00);
+            padding: 15px;
+            border-radius: 12px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.2);
+            animation: glow 2s infinite alternate ease-in-out;
+        }
+
+        @keyframes glow {
+            from {
+                box-shadow: 0px 0px 10px rgba(255, 75, 43, 0.6);
+            }
+            to {
+                box-shadow: 0px 0px 20px rgba(255, 75, 43, 1);
+            }
+        }
+    </style>
+
+    <h1 class="fancy-title">🚀 Civic Catalyst AI Toolkit for Citizen Participation</h1>
+
+    body {
+            zoom: 90%;
+        }
     /* Import Lucide icons CSS */
     @import url('https://cdn.jsdelivr.net/npm/lucide-static@0.16.29/font/lucide.min.css');
     
@@ -2380,11 +2410,11 @@ def main():
                 """
                 <style>
                 .stApp {
-                    max-width: 100%;
+                    max-width: 90%;
                     margin: 0 auto;
                 }
                 .chat-container {
-                    max-width: 800px;
+                    max-width: 600px;
                     margin: 0 auto;
                 }
                 </style>
