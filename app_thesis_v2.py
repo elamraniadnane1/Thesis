@@ -183,7 +183,6 @@ st.markdown(
                 box-shadow: 0px 0px 20px rgba(255, 75, 43, 1);
             }
         }
-    </style>
 
     <h1 class="fancy-title">🚀 Civic Catalyst AI Toolkit for Citizen Participation</h1>
 
