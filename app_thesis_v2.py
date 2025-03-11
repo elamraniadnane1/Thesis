@@ -72,7 +72,7 @@ def load_svg():
     return svg_path.read_text()
 
 st.set_page_config(
-    page_title="Social Media Analysis Tool 2025, By: Adnane El Amrani",
+    page_title="Civic Catalyst AI Toolkit for Citizen Participation",
     page_icon=load_svg(),
     layout="wide",
     initial_sidebar_state="expanded"
@@ -745,19 +745,11 @@ def highlight_sentiment(row):
     return [f"background-color: {color}"] * len(row)
 @require_auth
 def main():
-    st.title("Social Media & Newspaper Analysis Tool")
-    st.write(
-        """
-        This dashboard uses an **Arabic BERT** model 
-        ([`CAMeL-Lab/bert-base-arabic-camelbert-da-sentiment`](https://huggingface.co/CAMeL-Lab/bert-base-arabic-camelbert-da-sentiment)) 
-        to analyze the sentiment of comments. 
-        Upload your CSV file to get started.
-        """
-    )
+    st.title("Civic Catalyst AI Toolkit for Citizen Participation")
+
 
     # Sidebar options
     with st.sidebar:
-        st.markdown("---")
         if st.button("Logout"):
             logout()
             st.success("You have been logged out.")
