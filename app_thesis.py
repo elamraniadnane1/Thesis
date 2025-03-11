@@ -747,7 +747,7 @@ def main():
         Upload your CSV file to get started.
         """
     )
-
+    
     # Sidebar options
     with st.sidebar:
         st.markdown("---")
@@ -2318,7 +2318,7 @@ def main():
                     st.warning(f"Could not reload new data automatically: {e}")
         with tabs[7]:
             st.subheader("🤖 Interactive Politics Chatbot")
-
+            
             # --------------------------------------------------------------------------------
             # 1. SIDEBAR MODEL CONFIGURATION
             #    (This is the ONLY place the user can change model or temperature)
@@ -2460,9 +2460,10 @@ def main():
             for msg in st.session_state.messages:
                 with st.chat_message(msg["role"]):
                     st.markdown(msg["content"])
-
+            # Place chat input outside of restricted UI elements
+            prompt = st.chat_input("Ask about Moroccan politics...")
             # Chat input
-            if prompt := st.chat_input("Ask about Moroccan politics..."):
+            if prompt :
                 # Show user message
                 st.session_state.messages.append({"role": "user", "content": prompt})
                 with st.chat_message("user"):
