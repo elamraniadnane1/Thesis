@@ -131,7 +131,32 @@ if "analysis_done" not in st.session_state:
     st.session_state.analysis_done = False  # Flag to track if sentiment analysis is done
 if "scraping_in_progress" not in st.session_state:
     st.session_state.scraping_in_progress = False
-
+if theme == "dark":
+    # Use dark-friendly CSS
+    dark_mode_css = """
+    <style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        /* Let Streamlit or user override handle background in dark mode */
+        background: none !important; 
+        color: #f0f0f0 !important;  /* Lighter text for dark background */
+    }
+    </style>
+    """
+    st.markdown(dark_mode_css, unsafe_allow_html=True)
+else:
+    # Use your original gradient for light mode
+    light_mode_css = """
+    <style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #f0f4f8 0%, #d7e3fc 100%) !important;
+        color: #1a365d !important; 
+    }
+    </style>
+    """
+    st.markdown(light_mode_css, unsafe_allow_html=True)
+    
 st.markdown(
     """
     <style>
@@ -141,11 +166,6 @@ st.markdown(
     /* Main layout and typography */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
     
-    body {
-        font-family: 'Poppins', sans-serif;
-        background: linear-gradient(135deg, #f0f4f8 0%, #d7e3fc 100%);
-        color: #1a365d;
-    }
     
     /* Previous styles remain the same until tabs... */
     
@@ -2315,6 +2335,7 @@ def main():
                     st.rerun()  # Force a rerun to refresh your dashboard with new data
                 except Exception as e:
                     st.warning(f"Could not reload new data automatically: {e}")
+        prompt = st.chat_input("Ask about Moroccan politics...")
         with tabs[7]:
             st.subheader("🤖 Interactive Politics Chatbot")
 
@@ -2461,7 +2482,7 @@ def main():
                     st.markdown(msg["content"])
 
             # Chat input
-            if prompt := st.chat_input("Ask about Moroccan politics..."):
+            if prompt :
                 # Show user message
                 st.session_state.messages.append({"role": "user", "content": prompt})
                 with st.chat_message("user"):
