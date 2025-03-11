@@ -125,6 +125,34 @@ if "analysis_done" not in st.session_state:
 if "scraping_in_progress" not in st.session_state:
     st.session_state.scraping_in_progress = False
 
+theme = st.get_option("theme.base")  # Returns "light" or "dark"
+
+if theme == "dark":
+    # Use dark-friendly CSS
+    dark_mode_css = """
+    <style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        /* Let Streamlit or user override handle background in dark mode */
+        background: none !important; 
+        color: #f0f0f0 !important;  /* Lighter text for dark background */
+    }
+    </style>
+    """
+    st.markdown(dark_mode_css, unsafe_allow_html=True)
+else:
+    # Use your original gradient for light mode
+    light_mode_css = """
+    <style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #f0f4f8 0%, #d7e3fc 100%) !important;
+        color: #1a365d !important; 
+    }
+    </style>
+    """
+    st.markdown(light_mode_css, unsafe_allow_html=True)
+
 st.markdown(
     """
     <style>
@@ -134,11 +162,6 @@ st.markdown(
     /* Main layout and typography */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
     
-    body {
-        font-family: 'Poppins', sans-serif;
-        background: linear-gradient(135deg, #f0f4f8 0%, #d7e3fc 100%);
-        color: #1a365d;
-    }
     
     /* Previous styles remain the same until tabs... */
     
