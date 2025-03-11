@@ -2339,6 +2339,9 @@ def main():
                     st.rerun()  # Force a rerun to refresh your dashboard with new data
                 except Exception as e:
                     st.warning(f"Could not reload new data automatically: {e}")
+        
+        # Place chat input outside of restricted UI elements
+        prompt = st.chat_input("Ask about Moroccan politics...")
         with tabs[7]:
             st.subheader("🤖 Interactive Politics Chatbot")
             
@@ -2483,8 +2486,7 @@ def main():
             for msg in st.session_state.messages:
                 with st.chat_message(msg["role"]):
                     st.markdown(msg["content"])
-            # Place chat input outside of restricted UI elements
-            prompt = st.chat_input("Ask about Moroccan politics...")
+    
             # Chat input
             if prompt :
                 # Show user message
