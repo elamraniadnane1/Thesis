@@ -1,5 +1,5 @@
 # Web framework
-streamlit==1.27.0
+streamlit
 
 # Data handling and visualization
 pandas==1.5.3
