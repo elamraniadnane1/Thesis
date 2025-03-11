@@ -29,8 +29,32 @@ from streamlit import tabs
 import re
 import concurrent.futures
 from pathlib import Path
+from sentence_transformers import SentenceTransformer
+import faiss
+import numpy as np
 
 
+
+# Set OpenAI API key from Streamlit secrets
+openai.api_key = st.secrets["openai"]["api_key"]
+
+# Import the authentication system
+from auth_system import init_auth, login_page, require_auth
+# Initialize authentication
+init_auth()
+# Check authentication before showing the main app
+if not login_page():
+    st.stop()
+
+# ------------------------------------------------------
+# Define Logout Function
+# ------------------------------------------------------
+def logout():
+    """
+    Reset the authentication status and refresh the app to show the login page.
+    """
+    st.session_state['authentication_status'] = False  # Adjust the key based on your auth_system
+    st.rerun()
 
 # ------------------------------------------------------
 # 1. Custom CSS (Optional)
@@ -47,6 +71,46 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# -----------------------------------------------------------------------------------
+# Initialize Embedding Model and FAISS Index for RAG
+# -----------------------------------------------------------------------------------
+@st.cache_resource
+def initialize_rag(csv_file_path: str):
+    """
+    Initializes the RAG system by loading comments, generating embeddings,
+    and setting up the FAISS index for similarity search.
+    """
+    # Load comments
+    df = pd.read_csv(csv_file_path)
+    df.columns = ["article_url", "commenter", "comment_date", "comment"]
+    df['processed_comment'] = df['comment'].apply(preprocess_text)
+    
+    # Initialize Sentence Transformer model
+    embedding_model = SentenceTransformer('all-MiniLM-L6-v2')  # Lightweight and efficient
+    
+    # Generate embeddings
+    embeddings = embedding_model.encode(df['processed_comment'].tolist(), convert_to_numpy=True)
+    
+    # Normalize embeddings for cosine similarity
+    faiss.normalize_L2(embeddings)
+    
+    # Initialize FAISS index
+    dimension = embeddings.shape[1]
+    index = faiss.IndexFlatIP(dimension)  # Using Inner Product for cosine similarity
+    index.add(embeddings)
+    
+    return df, embedding_model, index
+
+# Preprocessing function (as defined earlier)
+def preprocess_text(text):
+    if pd.isna(text):
+        return ""
+    text = str(text).lower()
+    text = re.sub(r'http\S+|www.\S+', '', text)  # Remove URLs
+    text = re.sub(r'[^\w\s]', '', text)  # Remove punctuation
+    text = re.sub(r'\d+', '', text)  # Remove numbers
+    text = ' '.join(text.split())  # Remove extra spaces
+    return text
 
 
 # Create a ThreadPoolExecutor for potential background tasks (scraping, heavy analysis).
@@ -557,6 +621,8 @@ def run_scraper():
         combined_comments.to_csv('hespress_politics_comments.csv', index=False, encoding='utf-8-sig')
         logging.info(f"Saved {len(new_comments)} new comments to 'hespress_politics_comments.csv'.")
 
+        st.rerun()
+
 # Cache the results to minimize repeated API calls and control costs
 @st.cache_data
 def perform_gpt_topic_modeling(text_data: str, model_name: str, language_hint: str = "Arabic", max_topics: int = 5) -> list:
@@ -670,7 +736,7 @@ def highlight_sentiment(row):
     elif row["sentiment"] == "NEU":
         color = "#f9f9c5"  # light yellow
     return [f"background-color: {color}"] * len(row)
-
+@require_auth
 def main():
     st.title("Social Media & Newspaper Analysis Tool")
     st.write(
@@ -684,6 +750,12 @@ def main():
 
     # Sidebar options
     with st.sidebar:
+        st.markdown("---")
+        if st.button("Logout"):
+            logout()
+            st.success("You have been logged out.")
+
+        st.write("---")
         st.header("App Configuration")
         show_heatmap = st.checkbox("Show Sample Heatmap", value=False)
         show_top_commenters = st.checkbox("Show Top Commenters Bar Chart", value=True)
@@ -691,10 +763,10 @@ def main():
         
         st.markdown("---")
 
-        st.write("GPT Model Selection")
+        st.write("GPT Model Selection (Political Topic Modeling)")
         gpt_model = st.selectbox(
             "Choose GPT Model:",
-            options=["gpt-3.5-turbo", "gpt-4", "text-davinci-003"],
+            options=["gpt-3.5-turbo", "gpt-4"],
             index=0,
             help="Select a GPT model for topic modeling. GPT-3.5-turbo is cheaper, GPT-4 is more powerful."
         )
@@ -717,8 +789,22 @@ def main():
     # Default path (update if needed)
     csv_file_path = "hespress_politics_comments.csv"
 
+
+
     # Load pipeline once
     sentiment_pipe = load_sentiment_pipeline()
+
+    # Initialize RAG
+    csv_file_path = "hespress_politics_comments.csv"
+    if os.path.exists(csv_file_path):
+        df_main, embedding_model, faiss_index = initialize_rag(csv_file_path)
+        st.session_state.df_main = df_main
+        st.session_state.embedding_model = embedding_model
+        st.session_state.faiss_index = faiss_index
+        st.success(f"Loaded and indexed data from `{csv_file_path}`.")
+    else:
+        st.error(f"The file `{csv_file_path}` does not exist. Please upload the CSV file.")
+        st.stop()
 
     df = None
     if uploaded_file is not None:
@@ -2227,7 +2313,7 @@ def main():
                 # OPTIONAL: Immediately reload the updated CSV if you want to reflect the new data in this session:
                 try:
                     df = pd.read_csv("hespress_politics_comments.csv")
-                    st.experimental_rerun()  # Force a rerun to refresh your dashboard with new data
+                    st.rerun()  # Force a rerun to refresh your dashboard with new data
                 except Exception as e:
                     st.warning(f"Could not reload new data automatically: {e}")
         with tabs[7]:
@@ -2298,17 +2384,39 @@ def main():
             # --------------------------------------------------------------------------------
             if "openai_messages" not in st.session_state:
                 st.session_state.openai_messages = []
-
-            # This function calls OpenAI, injecting relevant context from your df
+            def preprocess_text(text):
+                if pd.isna(text):
+                    return ""
+                text = str(text).lower()
+                text = re.sub(r'http\S+|www.\S+', '', text)  # Remove URLs
+                text = re.sub(r'[^\w\s]', '', text)  # Remove punctuation
+                text = re.sub(r'\d+', '', text)  # Remove numbers
+                text = ' '.join(text.split())  # Remove extra spaces
+                return text
+            # This function calls OpenAI, injecting relevant context from your df_main using RAG
             def handle_message(user_query):
                 try:
-                    # 1) Gather relevant context from your DataFrame, e.g. last 5 matching comments
-                    relevant_comments = df[
-                        df['comment'].str.contains(user_query, case=False, na=False)
-                    ].head(5)['comment'].tolist()
-                    context_str = "\n".join(relevant_comments)
+                    # 1) Preprocess the user query
+                    processed_query = preprocess_text(user_query)
                     
-                    # 2) Build a system prompt
+                    # 2) Generate embedding for the query
+                    query_embedding = st.session_state.embedding_model.encode([processed_query], convert_to_numpy=True)
+                    faiss.normalize_L2(query_embedding)
+                    
+                    # 3) Search for top 5 relevant comments using FAISS
+                    top_k = 5
+                    distances, indices = st.session_state.faiss_index.search(query_embedding, top_k)
+                    
+                    # 4) Retrieve the relevant comments
+                    relevant_comments = st.session_state.df_main.iloc[indices[0]]['comment'].tolist()
+                    
+                    if not relevant_comments:
+                        st.warning("No relevant comments found to provide context.")
+                        context_str = "There are no relevant comments available to provide context for your query."
+                    else:
+                        context_str = "\n".join(relevant_comments)
+                    
+                    # 5) Build a system prompt incorporating the retrieved context
                     system_prompt = f"""
                     You are a knowledgeable assistant specialized in Moroccan politics.
                     The user asked: {user_query}
@@ -2321,37 +2429,25 @@ def main():
                     - Uses relevant examples from these comments
                     - Remains neutral and explains different viewpoints
                     """
-
-                    # 3) Construct messages for the OpenAI ChatCompletion
+                    
+                    # 6) Construct messages for the OpenAI ChatCompletion
                     messages_for_api = [
                         {"role": "system", "content": system_prompt},
                         {"role": "user", "content": user_query}
                     ]
-
-                    # 4) Call OpenAI
+                    
+                    # 7) Call OpenAI
                     response = openai.ChatCompletion.create(
                         model=st.session_state.get("selected_model", "gpt-3.5-turbo"),
                         messages=messages_for_api,
                         temperature=st.session_state.get("temperature", 0.7),
                         max_tokens=st.session_state.get("max_tokens", 500)
                     )
-
+                    
                     return response.choices[0].message["content"]
                 except Exception as e:
                     st.error(f"Error: {str(e)}")
                     return "Sorry, an error occurred."
-
-            # The front-end calls Streamlit via window.Streamlit.query({"type": "chat", "message": "..."})
-            def handle_frontend_query(query):
-                if query.get("type") == "chat":
-                    user_text = query.get("message", "")
-                    # We ignore "context" or "model" from the front-end; we rely on the sidebar
-                    assistant_answer = handle_message(user_text)
-                    return assistant_answer
-                return None
-
-            # Register that callback
-            st.session_state["handle_frontend_query"] = handle_frontend_query
 
             # --------------------------------------------------------------------------------
             # 6. (OPTIONAL) NATIVE STREAMLIT CHAT UI
