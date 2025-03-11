@@ -10,7 +10,7 @@ plotly==5.20.0
 wordcloud==1.9.3
 
 # NLP and Machine Learning
-transformers==4.38.1
+transformers==4.30.2
 sentence-transformers==2.2.2
 faiss-cpu==1.7.4
 huggingface-hub==0.19.4  # Ensures compatibility with sentence-transformers
