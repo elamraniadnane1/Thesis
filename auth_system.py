@@ -292,7 +292,7 @@ def login_page():
 
     # 2) Title + Container
     st.markdown("<div class='main-login-container'>", unsafe_allow_html=True)
-    st.markdown("<h1 class='login-title'>Civic Catalyst</h1>", unsafe_allow_html=True)
+    #st.markdown("<h1 class='login-title'>Civic Catalyst</h1>", unsafe_allow_html=True)
 
     if 'jwt_token' not in st.session_state:
         st.session_state.jwt_token = None
