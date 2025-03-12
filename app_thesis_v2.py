@@ -339,7 +339,7 @@ st.markdown(
     </style>
 
     <!-- 4) TITLE ELEMENT -->
-    <h1 class="fancy-title">🚀 Civic Catalyst AI Toolkit for Citizen Participation</h1>
+    <h1 class="fancy-title">🚀 Moroccan AI Toolkit for Citizen Participation - 2025</h1>
     """,
     unsafe_allow_html=True
 )
