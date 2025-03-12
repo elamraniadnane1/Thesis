@@ -202,24 +202,38 @@ st.markdown(
 
     /* 2) BODY ZOOM AT 90% */
     body {
-        zoom: 90%;
+        zoom: 100%;
     }
 
-    /* 3) TAB STYLING */
-    /* Import Lucide icons CSS */
+    /* 3) TAB STYLING - DARK MODE SUPPORT & BETTER VISIBILITY */
+    /* Import Lucide icons */
     @import url('https://cdn.jsdelivr.net/npm/lucide-static@0.16.29/font/lucide.min.css');
-    /* Import Poppins and Inter fonts (already partially above) */
+    /* Import Poppins & Inter fonts */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
-    
+
+    /* Root Theme Variables for Light/Dark Mode */
+    :root {
+        --tab-bg-light: rgba(243, 244, 246, 0.7);
+        --tab-bg-dark: rgba(50, 50, 50, 0.7);
+        --tab-text-light: #2B3E50;
+        --tab-text-dark: #ffffff;
+        --tab-active-light: linear-gradient(135deg, #3AAFA9 0%, #2B7A78 100%);
+        --tab-active-dark: linear-gradient(135deg, #00C6FF 0%, #0072FF 100%);
+        --tab-hover-light: rgba(58, 175, 169, 0.1);
+        --tab-hover-dark: rgba(0, 200, 255, 0.2);
+    }
+
+    /* Main Tabs Container */
     .stTabs {
         background: white;
         padding: 1rem;
         border-radius: 15px;
-        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
         margin-bottom: 2.5rem;
         position: relative;
     }
 
+    /* Tab List - Horizontal Scroll */
     .stTabs [data-baseweb="tab-list"] {
         display: flex;
         gap: 10px;
@@ -233,12 +247,13 @@ st.markdown(
         margin: 0 auto;
     }
 
+    /* Individual Tabs */
     .stTabs [data-baseweb="tab"] {
         min-width: 180px;
         height: 50px;
-        background: rgba(243, 244, 246, 0.7);
+        background: var(--tab-bg-light);
         border-radius: 10px;
-        color: #2B3E50;
+        color: var(--tab-text-light);
         font-weight: 500;
         transition: all 0.3s ease;
         padding: 0.5rem 1rem;
@@ -253,7 +268,24 @@ st.markdown(
         animation: slideIn 0.3s ease-out;
     }
 
-    /* Tab icons */
+    /* Dark Mode Adjustments */
+    @media (prefers-color-scheme: dark) {
+        .stTabs {
+            background: #1E1E1E;
+        }
+        .stTabs [data-baseweb="tab"] {
+            background: var(--tab-bg-dark);
+            color: var(--tab-text-dark);
+        }
+        .stTabs [aria-selected="true"] {
+            background: var(--tab-active-dark) !important;
+        }
+        .stTabs [data-baseweb="tab"]:hover {
+            background: var(--tab-hover-dark);
+        }
+    }
+
+    /* Tab Icons */
     .stTabs [data-baseweb="tab"]::before {
         font-family: 'lucide';
         font-size: 1.2rem;
@@ -262,41 +294,54 @@ st.markdown(
         transition: all 0.3s ease;
     }
 
-    /* Example icons for tab labels containing certain strings */
+    /* Custom Icons for Tabs */
     .stTabs [data-baseweb="tab"][aria-label*="Dashboard"]::before {
-        content: '\\e900';
+        content: '\\e900'; 
     }
     .stTabs [data-baseweb="tab"][aria-label*="Analytics"]::before {
-        content: '\\e901';
+        content: '\\e901'; 
     }
     .stTabs [data-baseweb="tab"][aria-label*="Posts"]::before {
-        content: '\\e902';
+        content: '\\e902'; 
     }
     .stTabs [data-baseweb="tab"][aria-label*="Users"]::before {
-        content: '\\e903';
+        content: '\\e903'; 
     }
     .stTabs [data-baseweb="tab"][aria-label*="Settings"]::before {
-        content: '\\e904';
+        content: '\\e904'; 
     }
 
-    /* Hover icon effect */
-    .stTabs [data-baseweb="tab"]:hover::before {
-        transform: scale(1.1);
-        opacity: 1;
+    /* Hover Effect */
+    .stTabs [data-baseweb="tab"]:hover {
+        background: var(--tab-hover-light);
+        transform: translateY(-2px);
     }
 
-    /* Active tab styling */
+    /* Active Tab Styling */
     .stTabs [aria-selected="true"]::before {
         opacity: 1;
         transform: scale(1.1);
     }
     .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, #3AAFA9 0%, #2B7A78 100%) !important;
+        background: var(--tab-active-light) !important;
         color: white !important;
         font-weight: 600;
         transform: scale(1.05);
         box-shadow: 0 4px 12px rgba(43, 122, 120, 0.2);
     }
+
+    /* Animations */
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateX(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
 
     /* Gradient fade for overflow indication */
     .stTabs [data-baseweb="tab-list"]::after {
