@@ -47,7 +47,7 @@ def load_svg():
     return svg_path.read_text()
 
 st.set_page_config(
-    page_title="Civic Catalyst AI Toolkit for Citizen Participation",
+    page_title="Fully Moroccan AI Toolkit for Citizen Participation",
     page_icon=load_svg(),
     layout="wide",
     initial_sidebar_state="expanded"
