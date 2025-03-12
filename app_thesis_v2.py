@@ -223,15 +223,34 @@ st.markdown(
         --tab-hover-dark: rgba(0, 200, 255, 0.2);
     }
 
-    /* Main Tabs Container */
+    /* Main Tabs Container - Larger Size */
     .stTabs {
         background: white;
-        padding: 1rem;
+        padding: 2rem; /* Increased padding */
         border-radius: 15px;
         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
         margin-bottom: 2.5rem;
         position: relative;
+        max-width: 95%; /* Increased width */
+        width: 100%; /* Full width */
+        margin-left: auto;
+        margin-right: auto;
     }
+
+    /* Ensure Table Takes Full Space */
+    .stTabs .stDataFrame {
+        width: 100% !important;
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* Increase height for large datasets */
+    .stTabs .stDataFrame table {
+        min-height: 600px;
+        max-height: 800px;
+        overflow-y: auto;
+    }
+
 
     /* Tab List - Horizontal Scroll */
     .stTabs [data-baseweb="tab-list"] {
