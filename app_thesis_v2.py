@@ -41,6 +41,17 @@ import faiss
 import numpy as np
 
 
+# Load the SVG file
+def load_svg():
+    svg_path = Path("icon.svg")
+    return svg_path.read_text()
+
+st.set_page_config(
+    page_title="Civic Catalyst AI Toolkit for Citizen Participation",
+    page_icon=load_svg(),
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
 # Set OpenAI API key from Streamlit secrets
 openai.api_key = st.secrets["openai"]["api_key"]
@@ -63,20 +74,7 @@ def logout():
     st.session_state['authentication_status'] = False  # Adjust the key based on your auth_system
     st.rerun()
 theme = st.get_option("theme.base")  # Returns "light" or "dark"
-# ------------------------------------------------------
-# 1. Custom CSS (Optional)
-# ------------------------------------------------------
-# Load the SVG file
-def load_svg():
-    svg_path = Path("icon.svg")
-    return svg_path.read_text()
 
-st.set_page_config(
-    page_title="Civic Catalyst AI Toolkit for Citizen Participation",
-    page_icon=load_svg(),
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
 
 # -----------------------------------------------------------------------------------
 # Initialize Embedding Model and FAISS Index for RAG
