@@ -6,7 +6,7 @@ import hashlib
 import os
 from pathlib import Path
 
-# Constants for JWT
+# 1) Constants for JWT
 JWT_SECRET = 'your-secret-key'  # In production, use a secure secret key
 JWT_ALGORITHM = 'HS256'
 JWT_EXPIRATION_DELTA = timedelta(hours=24)
@@ -118,63 +118,6 @@ def verify_jwt_token(token: str) -> tuple:
         st.error(f"Error verifying JWT token: {str(e)}")
         return False, None, None
 
-def login_page():
-    """Display the login interface."""
-    try:
-        if 'jwt_token' not in st.session_state:
-            st.session_state.jwt_token = None
-
-        if st.session_state.jwt_token is not None:
-            # Verify existing token
-            is_valid, username, role = verify_jwt_token(st.session_state.jwt_token)
-            if is_valid:
-                return True
-
-        st.title("Login")
-        
-        # Login form
-        with st.form("login_form"):
-            username = st.text_input("Username")
-            password = st.text_input("Password", type="password")
-            submitted = st.form_submit_button("Login")
-            
-            if submitted:
-                success, role = verify_user(username, password)
-                if success:
-                    token = create_jwt_token(username, role)
-                    if token:
-                        st.session_state.jwt_token = token
-                        st.success("Login successful!")
-                        st.rerun()
-                    else:
-                        st.error("Error creating session token")
-                else:
-                    st.error("Invalid username or password")
-        
-        # Registration section
-        with st.expander("New User? Register Here"):
-            with st.form("registration_form"):
-                new_username = st.text_input("New Username")
-                new_password = st.text_input("New Password", type="password")
-                confirm_password = st.text_input("Confirm Password", type="password")
-                register = st.form_submit_button("Register")
-                
-                if register:
-                    if new_password != confirm_password:
-                        st.error("Passwords do not match")
-                    elif len(new_password) < 6:
-                        st.error("Password must be at least 6 characters long")
-                    else:
-                        if create_user(new_username, new_password):
-                            st.success("Registration successful! Please login.")
-                        else:
-                            st.error("Username already exists or registration failed")
-
-        return False
-    except Exception as e:
-        st.error(f"Error in login page: {str(e)}")
-        return False
-
 def init_auth():
     """Initialize authentication system."""
     try:
@@ -201,3 +144,165 @@ def require_auth(func):
             st.error(f"Authentication error: {str(e)}")
             st.stop()
     return wrapper
+
+################################################################################
+# FANCY CIVIC CATALYST LOGIN PAGE
+################################################################################
+def login_page():
+    """
+    Display a fancy login interface for Civic Catalyst with modern design,
+    gradient backgrounds, and streamlined forms.
+    """
+
+    # 1) Inject custom CSS for a fancy look
+    st.markdown(
+        """
+        <style>
+        /* Custom CSS for a fancy, modern login page */
+
+        /* Body background - subtle gradient */
+        body {
+            background: linear-gradient(to right, #F0F4F8, #D9E4F5);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Center the main container */
+        .main-login-container {
+            max-width: 500px;
+            margin: 5% auto;
+            background: #ffffffd9; /* White with slight transparency */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 1rem;
+            padding: 2rem;
+        }
+
+        /* Title styling */
+        .login-title {
+            text-align: center;
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #00b09b, #96c93d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Subtle text shadows for labels */
+        label {
+            text-shadow: 0 1px 1px rgba(0,0,0,0.06);
+            font-weight: 600 !important;
+        }
+
+        /* Buttons */
+        .stButton>button {
+            background: linear-gradient(135deg, #3AAFA9 0%, #2B7A78 100%);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 1rem;
+            height: 3rem;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+        .stButton>button:hover {
+            background: linear-gradient(135deg, #2B7A78 0%, #3AAFA9 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(43,122,120,0.3);
+        }
+        .stButton>button:active {
+            transform: scale(0.98);
+        }
+
+        /* Input fields */
+        input[type="text"], input[type="password"] {
+            border: 1px solid #ccc !important;
+            padding: 0.6rem !important;
+            border-radius: 0.4rem;
+            font-size: 1rem !important;
+        }
+
+        /* Form container */
+        .login-form, .registration-form {
+            margin-bottom: 2rem;
+        }
+
+        /* Expanders for registration */
+        .st-expanderHeader {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-top: 1rem;
+            background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Align success/error messages center */
+        .stAlert {
+            text-align: center;
+        }
+
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+    # 2) Title + Container
+    st.markdown("<div class='main-login-container'>", unsafe_allow_html=True)
+    st.markdown("<h1 class='login-title'>Civic Catalyst Login</h1>", unsafe_allow_html=True)
+
+    if 'jwt_token' not in st.session_state:
+        st.session_state.jwt_token = None
+
+    # If user already has a valid token, skip login
+    if st.session_state.jwt_token is not None:
+        is_valid, username, role = verify_jwt_token(st.session_state.jwt_token)
+        if is_valid:
+            # Already logged in
+            st.markdown("<p style='text-align:center;'><b>You are already logged in.</b></p>", unsafe_allow_html=True)
+            st.markdown("</div>", unsafe_allow_html=True)  # close container
+            return True
+
+    # 3) LOGIN FORM
+    st.subheader("Login to Your Account")
+    with st.form("login_form", clear_on_submit=True):
+        username = st.text_input("Username", key="login_username")
+        password = st.text_input("Password", type="password", key="login_password")
+        submitted = st.form_submit_button("Login")
+
+        if submitted:
+            success, user_role = verify_user(username, password)
+            if success:
+                token = create_jwt_token(username, user_role)
+                if token:
+                    st.session_state.jwt_token = token
+                    st.success("Login successful! Redirecting...")
+                    st.experimental_rerun()
+                else:
+                    st.error("Error creating session token.")
+            else:
+                st.error("Invalid username or password.")
+
+    # 4) REGISTRATION SECTION
+    with st.expander("New User? Register Here", expanded=False):
+        st.write("Create a new account to explore the Civic Catalyst platform.")
+        with st.form("registration_form", clear_on_submit=True):
+            new_username = st.text_input("New Username", key="reg_username")
+            new_password = st.text_input("New Password", type="password", key="reg_password")
+            confirm_password = st.text_input("Confirm Password", type="password", key="reg_confirm")
+            register = st.form_submit_button("Register")
+
+            if register:
+                if new_password != confirm_password:
+                    st.error("Passwords do not match.")
+                elif len(new_password) < 6:
+                    st.error("Password must be at least 6 characters long.")
+                else:
+                    if create_user(new_username, new_password):
+                        st.success("Registration successful! Please login.")
+                    else:
+                        st.error("Username already exists or registration failed.")
+
+    st.markdown("</div>", unsafe_allow_html=True)  # End main container
+
+    return False
