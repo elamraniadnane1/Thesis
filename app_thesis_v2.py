@@ -797,8 +797,6 @@ def highlight_sentiment(row):
     return [f"background-color: {color}"] * len(row)
 @require_auth
 def main():
-    st.title("Civic Catalyst AI Toolkit for Citizen Participation")
-
 
     # Sidebar options
     with st.sidebar:
