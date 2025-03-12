@@ -68,11 +68,16 @@ if not login_page():
 # Define Logout Function
 # ------------------------------------------------------
 def logout():
-    """
-    Reset the authentication status and refresh the app to show the login page.
-    """
-    st.session_state['authentication_status'] = False  # Adjust the key based on your auth_system
-    st.rerun()
+    """Reset session state and force rerun to refresh the app."""
+    if 'jwt_token' in st.session_state:
+        del st.session_state['jwt_token']  # Remove authentication token
+    if 'authentication_status' in st.session_state:
+        del st.session_state['authentication_status']
+    if 'user' in st.session_state:
+        del st.session_state['user']
+
+    st.rerun()  # Refresh the app to reflect the logout
+
 theme = st.get_option("theme.base")  # Returns "light" or "dark"
 
 
@@ -798,9 +803,11 @@ def main():
 
     # Sidebar options
     with st.sidebar:
-        if st.button("Logout"):
+        if st.button("Logout", type="primary"):
             logout()
-            st.success("You have been logged out.")
+            
+            st.success("You have been logged out. Redirecting...")
+            st.experimental_rerun()  # Forces UI update
 
         st.write("---")
         st.header("App Configuration")
