@@ -174,36 +174,50 @@ def login_page():
 
         /* 2) MAIN CONTAINER - NEON GLOW & TRANSPARENCY */
         .main-login-container {
-        max-width: 500px;
-        margin: 5% auto;
-        background: rgba(255, 255, 255, 0.85);
-        backdrop-filter: blur(6px);
-        box-shadow: 0 0 15px rgba(0,0,0,0.1);
-        border-radius: 1rem;
-        padding: 2rem;
-        position: relative;
-        overflow: hidden;
+            max-width: 500px;
+            margin: 5% auto;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(6px);
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            border-radius: 1rem;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
         }
         .main-login-container::before {
-        content: "";
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: conic-gradient(
-            from 180deg,
-            #00b09b, #96c93d,
-            #96c93d, #00b09b
-        );
-        animation: rotateNeon 8s linear infinite;
-        transform: translate(-50%, -50%);
-        z-index: -1;
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(
+                from 180deg,
+                #00b09b, #96c93d,
+                #96c93d, #00b09b
+            );
+            animation: rotateNeon 8s linear infinite;
+            transform: translate(-50%, -50%);
+            z-index: -1;
         }
         @keyframes rotateNeon {
-        0% { transform: translate(-50%, -50%) rotate(0deg); }
-        100% { transform: translate(-50%, -50%) rotate(360deg); }
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
         }
+
+        /* Fancy Text Inside */
+        .login-message {
+            font-size: 22px;
+            font-weight: 600;
+            color: #2B3E50;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+
+        <div class="main-login-container">
+            <h2 class="login-message">🌟 Welcome to Civic Catalyst AI Toolkit! 🚀</h2>
+            <p>Your gateway to intelligent citizen participation.</p>
+        </div>
 
         /* 3) TITLE - ANIMATED TEXT GRADIENT */
         .login-title {
@@ -292,7 +306,7 @@ def login_page():
 
     # 2) Title + Container
     st.markdown("<div class='main-login-container'>", unsafe_allow_html=True)
-    #st.markdown("<h1 class='login-title'>Civic Catalyst</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 class='login-title'>Civic Catalyst</h1>", unsafe_allow_html=True)
 
     if 'jwt_token' not in st.session_state:
         st.session_state.jwt_token = None
