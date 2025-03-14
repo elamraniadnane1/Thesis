@@ -254,48 +254,42 @@ st.markdown(
     /* Tab List - Horizontal Scroll */
     .stTabs [data-baseweb="tab-list"] {
         display: flex;
-        gap: 12px; /* Reduced spacing for a compact look */
-        padding: 0.75rem;
-        overflow-x: auto;
-        scrollbar-width: thin;
-        white-space: nowrap;
-        -ms-overflow-style: -ms-autohiding-scrollbar;
+        gap: 12px;                  /* Spacing between tabs */
+        padding: 10px;             /* Single consistent padding value */
+        overflow-x: auto;          /* Horizontal scrolling */
+        overflow-y: hidden;        /* Prevent vertical scroll */
+        scrollbar-width: thin;     /* For Firefox - thin scrollbar */
+        white-space: nowrap;       /* Prevent tab wrapping */
+        -ms-overflow-style: none;  /* For older IE/Edge to hide default scrollbar style */
         position: relative;
         max-width: 95%;
         margin: 0 auto;
         width: auto;
-        justify-content: center;
+        justify-content: center;   /* or flex-start if you want them left-aligned */
         flex-wrap: nowrap;
         scroll-behavior: smooth;
         background: rgba(30, 30, 30, 0.9); /* Subtle dark background */
         border-radius: 12px;
-        padding: 10px;
         box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2); /* Soft shadow */
     }
-
-    /* Individual Tabs */
-    .stTabs [data-baseweb="tab"] {
-        min-width: 160px;
-        height: 50px; /* Slightly smaller for a compact look */
-        flex-grow: 1;
-        background: linear-gradient(135deg, #3AAFA9 0%, #2B7A78 100%);
-        border-radius: 8px;
-        color: white;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        padding: 0.5rem 1.5rem;
-        margin: 0;
-        position: relative;
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        gap: 8px;
-        box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
-        animation: slideIn 0.3s ease-out;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+    
+    /* Custom Scrollbar for WebKit browsers (Chrome, Safari, etc.) */
+    .stTabs [data-baseweb="tab-list"]::-webkit-scrollbar {
+        height: 6px;               /* Horizontal scrollbar thickness */
     }
+    .stTabs [data-baseweb="tab-list"]::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1); 
+        border-radius: 8px;
+    }
+    .stTabs [data-baseweb="tab-list"]::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.4);
+        border-radius: 8px;
+        border: 1px solid rgba(0,0,0,0.2);
+    }
+    
+    /* Optional: Hide scrollbar on older IE/Edge by removing or 
+       set -ms-overflow-style: scrollbar if you want it to show. */
+
 
     /* Tab Hover Effect */
     .stTabs [data-baseweb="tab"]:hover {
