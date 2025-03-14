@@ -251,36 +251,39 @@ st.markdown(
         overflow-y: auto;
     }
 
-
     /* Tab List - Horizontal Scroll */
     .stTabs [data-baseweb="tab-list"] {
         display: flex;
-        gap: 15px;
+        gap: 12px; /* Reduced spacing for a compact look */
         padding: 0.75rem;
         overflow-x: auto;
         scrollbar-width: thin;
         white-space: nowrap;
         -ms-overflow-style: -ms-autohiding-scrollbar;
         position: relative;
-        max-width: 100%;
+        max-width: 95%;
         margin: 0 auto;
-        width: auto; /* Allow dynamic width */
-        justify-content: center; /* Center the tabs */
-        flex-wrap: nowrap; /* Prevent wrapping */
-        
+        width: auto;
+        justify-content: center;
+        flex-wrap: nowrap;
+        scroll-behavior: smooth;
+        background: rgba(30, 30, 30, 0.9); /* Subtle dark background */
+        border-radius: 12px;
+        padding: 10px;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2); /* Soft shadow */
     }
 
     /* Individual Tabs */
     .stTabs [data-baseweb="tab"] {
-        min-width: 180px;
-        height: 250px;
-        flex-grow: 1; /* Allow expansion if space is available */
-        background: var(--tab-bg-light);
-        border-radius: 10px;
-        color: var(--tab-text-light);
-        font-weight: 500;
+        min-width: 160px;
+        height: 50px; /* Slightly smaller for a compact look */
+        flex-grow: 1;
+        background: linear-gradient(135deg, #3AAFA9 0%, #2B7A78 100%);
+        border-radius: 8px;
+        color: white;
+        font-weight: 600;
         transition: all 0.3s ease;
-        padding: 0.5rem 1rem;
+        padding: 0.5rem 1.5rem;
         margin: 0;
         position: relative;
         overflow: hidden;
@@ -289,8 +292,62 @@ st.markdown(
         justify-content: center;
         text-align: center;
         gap: 8px;
+        box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
         animation: slideIn 0.3s ease-out;
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
+
+    /* Tab Hover Effect */
+    .stTabs [data-baseweb="tab"]:hover {
+        background: linear-gradient(135deg, #0072FF 0%, #00C6FF 100%);
+        transform: scale(1.05);
+        box-shadow: 0px 4px 12px rgba(0, 198, 255, 0.3);
+    }
+
+    /* Active Tab Styling */
+    .stTabs [aria-selected="true"] {
+        background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%) !important;
+        color: white !important;
+        font-weight: 700;
+        transform: scale(1.08);
+        box-shadow: 0px 4px 15px rgba(255, 215, 0, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    /* Smooth Slide-in Animation */
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-5px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* Scrollbar Customization */
+    .stTabs [data-baseweb="tab-list"]::-webkit-scrollbar {
+        height: 5px;
+    }
+    .stTabs [data-baseweb="tab-list"]::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+    }
+    .stTabs [data-baseweb="tab-list"]::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 10px;
+    }
+    
+    /* Responsive Adjustments */
+    @media screen and (max-width: 768px) {
+        .stTabs [data-baseweb="tab"] {
+            min-width: 140px;
+            height: 45px;
+            font-size: 0.85rem;
+            padding: 0.4rem 1rem;
+        }
+    }
+
 
     /* Dark Mode Adjustments */
     @media (prefers-color-scheme: dark) {
