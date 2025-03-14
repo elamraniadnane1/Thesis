@@ -255,21 +255,26 @@ st.markdown(
     /* Tab List - Horizontal Scroll */
     .stTabs [data-baseweb="tab-list"] {
         display: flex;
-        gap: 10px;
+        gap: 15px;
         padding: 0.75rem;
         overflow-x: auto;
         scrollbar-width: thin;
         white-space: nowrap;
         -ms-overflow-style: -ms-autohiding-scrollbar;
         position: relative;
-        max-width: calc(5 * 200px);
+        max-width: 100%;
         margin: 0 auto;
+        width: auto; /* Allow dynamic width */
+        justify-content: center; /* Center the tabs */
+        flex-wrap: nowrap; /* Prevent wrapping */
+        
     }
 
     /* Individual Tabs */
     .stTabs [data-baseweb="tab"] {
         min-width: 180px;
-        height: 50px;
+        height: 250px;
+        flex-grow: 1; /* Allow expansion if space is available */
         background: var(--tab-bg-light);
         border-radius: 10px;
         color: var(--tab-text-light);
