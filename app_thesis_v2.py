@@ -897,18 +897,18 @@ def main():
         # Create Streamlit tabs for organized navigation
         # First, add the tabs with icons
         tabs = st.tabs([
-            "🔄 Data Preprocessing",
-            "😊 Sentiment Analysis",
-            "📊 Data Visualizations",
-            "🔍 Topic Modeling",
-            "⚠️ Terrorism Detection",
-            "🚫 Offensive Language Detection",
-            "🌐 Scraping",
-            "🤖 Chatbot",
-            "📈 Evaluation",
-            "⚡ Performance",
-            "📡 Monitoring",
-            "⬇️ Download"
+            "🔄 ",
+            "😊 ",
+            "📊 ",
+            "🔍 ",
+            "⚠️ ",
+            "🚫 ",
+            "🌐 ",
+            "🤖 ",
+            "📈 ",
+            "⚡ ",
+            "📡 ",
+            "⬇️ "
         ]) 
 
         with tabs[0]:
