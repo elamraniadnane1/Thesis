@@ -311,14 +311,22 @@ def login_page():
     if 'jwt_token' not in st.session_state:
         st.session_state.jwt_token = None
 
-    # If user already has a valid token, skip login
+    import time
+    import streamlit as st
+    
     if st.session_state.jwt_token is not None:
         is_valid, username, role = verify_jwt_token(st.session_state.jwt_token)
+        
         if is_valid:
-            # Already logged in
-            st.markdown("<p style='text-align:center;'><b>You are already logged in.</b></p>", unsafe_allow_html=True)
-            st.markdown("</div>", unsafe_allow_html=True)  # close container
+            message_placeholder = st.empty()
+            message_placeholder.markdown("<p style='text-align:center;'><b>You are already logged in.</b></p>", unsafe_allow_html=True)
+            
+            # Wait for 2 seconds and then clear the message
+            time.sleep(2)
+            message_placeholder.empty()  # Removes the message
+    
             return True
+
 
     # 3) LOGIN FORM
     st.subheader("Login to Your Account")
