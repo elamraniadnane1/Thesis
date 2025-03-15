@@ -155,72 +155,67 @@ def login_page():
     """
 
     st.markdown(
-        """
-        <style>
-        /* 1) ANIMATED BACKGROUND GRADIENT */
-        @keyframes backgroundGradient {
+    """
+    <style>
+    /* 1) ANIMATED BACKGROUND GRADIENT */
+    @keyframes backgroundGradient {
         0% { background-position: 0% 50%; }
         50% { background-position: 100% 50%; }
         100% { background-position: 0% 50%; }
-        }
-        body {
+    }
+    body {
         font-family: 'Poppins', sans-serif;
         background: linear-gradient(-45deg, #F0F4F8, #D9E4F5, #ACB9D7, #E4ECF7);
         background-size: 300% 300%;
         animation: backgroundGradient 15s ease infinite;
         margin: 0;
         padding: 0;
-        }
+    }
 
-        /* 2) MAIN CONTAINER - NEON GLOW & TRANSPARENCY */
-        .main-login-container {
-            max-width: 500px;
-            margin: 5% auto;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(6px);
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
-            border-radius: 1rem;
-            padding: 2rem;
-            position: relative;
-            overflow: hidden;
-            text-align: center;
-        }
-        .main-login-container::before {
-            content: "";
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(
-                from 180deg,
-                #00b09b, #96c93d,
-                #96c93d, #00b09b
-            );
-            animation: rotateNeon 8s linear infinite;
-            transform: translate(-50%, -50%);
-            z-index: -1;
-        }
-        @keyframes rotateNeon {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
-        }
+    /* 2) MAIN CONTAINER - NEON GLOW & TRANSPARENCY */
+    .main-login-container {
+        max-width: 500px;
+        margin: 5% auto;
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(6px);
+        box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        border-radius: 1rem;
+        padding: 2rem;
+        position: relative;
+        overflow: hidden;
+        text-align: center;
+    }
+    .main-login-container::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: conic-gradient(
+            from 180deg,
+            #00b09b, #96c93d,
+            #96c93d, #00b09b
+        );
+        animation: rotateNeon 8s linear infinite;
+        transform: translate(-50%, -50%);
+        z-index: -1;
+    }
+    @keyframes rotateNeon {
+        0% { transform: translate(-50%, -50%) rotate(0deg); }
+        100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
 
-        /* Fancy Text Inside */
-        .login-message {
-            font-size: 22px;
-            font-weight: 600;
-            color: #2B3E50;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
-        }
+    /* Fancy Text Inside */
+    .login-message {
+        font-size: 22px;
+        font-weight: 600;
+        color: #2B3E50;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+    }
 
-        <div class="main-login-container">
-            <h2 class="login-message">🌟 Welcome to Civic Catalyst AI Toolkit! 🚀</h2>
-            <p>Your gateway to intelligent citizen participation.</p>
-        </div>
-
-        /* 3) TITLE - ANIMATED TEXT GRADIENT */
-        .login-title {
+    /* 3) TITLE - ANIMATED TEXT GRADIENT */
+    .login-title {
         text-align: center;
         font-size: 2.3rem;
         font-weight: 700;
@@ -229,20 +224,20 @@ def login_page():
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         animation: hueShift 5s linear infinite;
-        }
-        @keyframes hueShift {
-        0% { filter: hue-rotate(0deg); }
+    }
+    @keyframes hueShift {
+        0%   { filter: hue-rotate(0deg); }
         100% { filter: hue-rotate(360deg); }
-        }
+    }
 
-        /* 4) LABELS - Subtle Shadow */
-        label {
+    /* 4) LABELS - Subtle Shadow */
+    label {
         text-shadow: 0 1px 1px rgba(0,0,0,0.06);
         font-weight: 600 !important;
-        }
+    }
 
-        /* 5) BUTTONS - GRADIENT, HOVER RAISE, NEON SHADOW */
-        .stButton>button {
+    /* 5) BUTTONS - GRADIENT, HOVER RAISE, NEON SHADOW */
+    .stButton>button {
         background: linear-gradient(135deg, #3AAFA9 0%, #2B7A78 100%);
         color: white;
         border: none;
@@ -253,60 +248,62 @@ def login_page():
         cursor: pointer;
         transition: all 0.2s ease-in-out;
         box-shadow: 0 3px 8px rgba(58, 175, 169, 0.3);
-        }
-        .stButton>button:hover {
+    }
+    .stButton>button:hover {
         background: linear-gradient(135deg, #2B7A78 0%, #3AAFA9 100%);
         transform: translateY(-3px);
         box-shadow: 0 6px 12px rgba(43, 122, 120, 0.3);
-        }
-        .stButton>button:active {
+    }
+    .stButton>button:active {
         transform: scale(0.96);
         box-shadow: 0 2px 5px rgba(43,122,120,0.2);
-        }
+    }
 
-        /* 6) INPUT FIELDS - Rounded + Focus Shadow */
-        input[type="text"], input[type="password"] {
+    /* 6) INPUT FIELDS - Rounded + Focus Shadow */
+    input[type="text"], input[type="password"] {
         border: 1px solid #ccc !important;
         padding: 0.6rem !important;
         border-radius: 0.4rem;
         font-size: 1rem !important;
         width: 100% !important;
         transition: box-shadow 0.3s ease;
-        }
-        input[type="text"]:focus, input[type="password"]:focus {
+    }
+    input[type="text"]:focus, input[type="password"]:focus {
         outline: none !important;
         box-shadow: 0 0 0 2px rgba(58,175,169,0.2);
-        }
+    }
 
-        /* 7) FORMS */
-        .login-form, .registration-form {
+    /* 7) FORMS */
+    .login-form, .registration-form {
         margin-bottom: 2rem;
-        }
+    }
 
-        /* 8) EXPANDER HEADERS */
-        .st-expanderHeader {
+    /* 8) EXPANDER HEADERS */
+    .st-expanderHeader {
         font-weight: 700;
         font-size: 1.1rem;
         margin-top: 1rem;
         background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        }
+    }
 
-        /* 9) ALERT MESSAGES (success/error) */
-        .stAlert {
+    /* 9) ALERT MESSAGES (success/error) */
+    .stAlert {
         text-align: center;
-        }
+    }
+    </style>
 
-        </style>
-        """,
-        unsafe_allow_html=True
+    <!-- HTML for the container + title in ONE snippet -->
+    <div class="main-login-container">
+        <h1 class="login-title">Civic Catalyst</h1>
+        <h2 class="login-message">🌟 Welcome to Civic Catalyst AI Toolkit! 🚀</h2>
+        <p>Your gateway to intelligent citizen participation.</p>
+    </div>
+    """,
+    unsafe_allow_html=True
 )
 
-
-    # 2) Title + Container
-    st.markdown("<div class='main-login-container'>", unsafe_allow_html=True)
-    st.markdown("<h1 class='login-title'>Civic Catalyst</h1>", unsafe_allow_html=True)
 
     if 'jwt_token' not in st.session_state:
         st.session_state.jwt_token = None
