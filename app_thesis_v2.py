@@ -162,49 +162,64 @@ else:
 
 st.markdown("""
 <style>
-/* Enhanced Streamlit styling with interactive animations, dynamic theming, improved accessibility, 
-   custom icons, and general UI enhancements (lightweight & performant) */
+/* =======================================================================================
+   ✨ Enhanced Streamlit Styling
+   - Interactive Animations (buttons, tabs, links)
+   - Light/Dark Mode via CSS variables
+   - Accessibility: High contrast, visible focus indicators
+   - Custom Icons & Hover Effects
+   - Additional UI Tweaks (layout spacing, borders, etc.)
+   ======================================================================================= */
 
-/* Interactive Animations */
-/* Smooth transitions on hover for interactive elements (buttons, tabs, links)&#8203;:contentReference[oaicite:0]{index=0}&#8203;:contentReference[oaicite:1]{index=1} */
-.stButton button, .stTabs [data-baseweb="tab"] {
-    transition: all 0.3s ease;  /* animate changes smoothly */
+/* ======================== */
+/* 1) BASE TRANSITIONS & ANIMATIONS */
+/* ======================== */
+
+/* Smooth transitions for interactive elements */
+.stButton button, .stTabs [data-baseweb="tab"], a, input, select, textarea {
+    transition: all 0.3s ease;
 }
+
+/* Hover & Active states for buttons */
 .stButton button:hover {
-    transform: translateY(-2px);  /* lift up on hover */
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);  /* subtle shadow on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 .stButton button:active {
-    transform: translateY(0);     /* remove lift on click */
+    transform: translateY(0);
     box-shadow: none;
 }
+/* Slight fade on link hover */
 a:hover {
-    opacity: 0.8;  /* slight fade on link hover */
+    opacity: 0.8;
 }
 
-/* Keyframe animation for subtle element entry (fade-in) */
+/* Subtle fade-in animation for newly rendered elements */
 @keyframes fadeIn {
     0%   {opacity: 0; transform: translateY(5px);}
     100% {opacity: 1; transform: translateY(0);}
 }
 .fade-in {
-    animation: fadeIn 0.5s ease-in-out;
+    animation: fadeIn 0.4s ease-in-out;
 }
 
-/* Dynamic Color Schemes */
-/* Use CSS variables and prefers-color-scheme to adapt to user light/dark mode&#8203;:contentReference[oaicite:2]{index=2} */
+/* ======================== */
+/* 2) DYNAMIC COLOR SCHEME */
+/* ======================== */
+
+/* Use CSS variables for color theming in light/dark mode */
 :root {
-    /* Default (light mode) color palette */
-    --primary-color: #11567f;       /* primary accent color */
-    --background-color: #FFFFFF;    /* page background */
-    --secondary-bg-color: #F0F2F6;  /* secondary background (e.g., tabs, sidebar) */
-    --text-color: #262730;          /* main text color */
-    --muted-text: #6E757C;          /* secondary text color */
-    --accent-color: #ff4b4b;        /* accent for hover/focus (improve visibility) */
+    /* Light Mode */
+    --primary-color: #11567f;
+    --background-color: #FFFFFF;
+    --secondary-bg-color: #F0F2F6;
+    --text-color: #262730;
+    --muted-text: #6E757C;
+    --accent-color: #ff4b4b;
 }
 @media (prefers-color-scheme: dark) {
     :root {
-        /* Dark mode overrides */
+        /* Dark Mode Overrides */
         --primary-color: #1A7AB3;
         --background-color: #0E1117;
         --secondary-bg-color: #20232a;
@@ -213,87 +228,130 @@ a:hover {
         --accent-color: #ff6f6f;
     }
 }
-/* Apply dynamic colors */
+
+/* ======================== */
+/* 3) GLOBAL APP ELEMENTS  */
+/* ======================== */
+
+/* Main app background & text color */
 .stApp {
-    background: var(--background-color);
-    color: var(--text-color);
+    background: var(--background-color) !important;
+    color: var(--text-color) !important;
 }
+
+/* Header, sidebar, and tab bar use the secondary background */
 .stApp header, .stSidebar, .stTabs [data-baseweb="tab-list"] {
-    background: var(--secondary-bg-color);
+    background: var(--secondary-bg-color) !important;
 }
+
+/* Markdown text styling */
 .stMarkdown, .stMarkdown p {
-    color: var(--text-color);
+    color: var(--text-color) !important;
 }
 .stMarkdown small, .stMarkdown .muted {
-    color: var(--muted-text);
-}
-.stButton button {
-    background: var(--primary-color);
-    color: #FFF;
-    border: none;
-    border-radius: 4px;
-}
-.stButton button:hover {
-    background: var(--primary-color);
-    /* (same color, hover effects handled above with shadow/transform) */
+    color: var(--muted-text) !important;
 }
 
-/* Improved Accessibility */
-/* Ensure high contrast text and visible focus indicators for keyboard navigation&#8203;:contentReference[oaicite:3]{index=3} */
-.stApp, .stApp * {
-    scrollbar-color: var(--primary-color) var(--secondary-bg-color);  /* custom scrollbar colors (if supported) */
+/* ======================== */
+/* 4) BUTTONS & FORMS       */
+/* ======================== */
+
+.stButton button {
+    background: var(--primary-color) !important;
+    color: #FFF !important;
+    border: none !important;
+    border-radius: 4px !important;
+    font-weight: 600 !important;
+    padding: 0.6rem 1.2rem !important;
 }
-/* Focus styles: visible outline for keyboard focus */
+
+.stTextInput>div>input:focus {
+    border: 1px solid var(--primary-color) !important;
+    box-shadow: 0 0 0 0.2rem rgba(17,86,127,0.25) !important;
+    outline: none !important;
+}
+
+/* ======================== */
+/* 5) ACCESSIBILITY         */
+/* ======================== */
+
+/* Custom scrollbar colors for browsers that support it (Firefox) */
+.stApp, .stApp * {
+    scrollbar-color: var(--primary-color) var(--secondary-bg-color);
+}
+
+/* Focus styles: visible outline for keyboard navigation */
 *:focus-visible {
-    outline: 2px solid var(--accent-color) !important;  /* highlight focused element */
+    outline: 2px solid var(--accent-color) !important;
     outline-offset: 2px;
 }
-/* Remove default focus outline on elements when not keyboard-navigated */
 *:focus:not(:focus-visible) {
-    outline: none;
+    outline: none !important;
 }
-/* Improve keyboard navigability: ensure interactive elements are focusable */
 button, [role="button"], a, input, select, textarea {
-    outline: none;  /* remove any default to unify style */
+    outline: none; /* unify custom focus style above */
 }
-/* Note: Add ARIA attributes in HTML for icons (e.g., aria-hidden="true" for decorative icons, aria-label for meaningful icons) for screen readers */
 
-/* Custom Icons & Hover Effects */
-/* Tabs: smooth hover effects and icon support */
+/* ======================== */
+/* 6) TABS (Icon + Text)    */
+/* ======================== */
+
+/* Tab container spacing */
+section, .stTabs [data-baseweb="tab-list"] {
+    margin-bottom: 1rem;
+}
+
+/* Individual tab styling */
 .stTabs [data-baseweb="tab"] {
-    color: var(--text-color);
+    color: var(--text-color) !important;
     border-radius: 4px 4px 0 0;
     padding: 0.5rem 1rem;
-    /* Allow multiline and icon+text arrangement */
-    white-space: pre-wrap;
+    white-space: pre-wrap;   /* allow multiline if needed */
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.25rem;
+    font-weight: 500;
 }
+
+/* Hover / cursor */
 .stTabs [data-baseweb="tab"]:hover {
-    background: var(--secondary-bg-color);
+    background: var(--secondary-bg-color) !important;
     cursor: pointer;
 }
-.stTabs [aria-selected="true"] {
-    background: var(--background-color);  /* active tab */
-    color: var(--text-color);
-    font-weight: 600;
-}
-/* Example: if tab labels include emoji icons (e.g., \"🏠 Home\"), they will align with text due to flex container above. */
 
-/* UI Enhancements */
-/* Consistent layout spacing and visual polish */
-section, .stTabs [data-baseweb="tab-list"] {
-    margin-bottom: 1rem;  /* space out sections and tab containers */
+/* Active tab styling */
+.stTabs [aria-selected="true"] {
+    background: var(--background-color) !important; 
+    color: var(--text-color) !important;
+    font-weight: 600 !important;
+    box-shadow: inset 0 -2px 0 var(--primary-color);
 }
+
+/* ======================== */
+/* 7) TABLES & CONTAINERS   */
+/* ======================== */
+
 .stAlert, .stTable, .stDataFrame, .stContainer {
     border-radius: 4px;
+    animation: fadeIn 0.3s ease-in-out; /* fade in effect */
 }
-/* Micro-interactions: e.g., highlight inputs on focus */
-.stTextInput>div>input:focus {
-    border: 1px solid var(--primary-color);
-    box-shadow: 0 0 0 0.2rem rgba(17,86,127,0.25);
+
+/* Optional: subtle differences between container types */
+.stDataFrame table {
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+/* ======================== */
+/* 8) MISC. UI POLISH       */
+/* ======================== */
+
+/* Subtle border or background for code blocks, if desired */
+code, pre, .highlight {
+    background-color: rgba(0,0,0,0.05);
+    border-radius: 4px;
+    padding: 2px 4px;
+    font-size: 90%;
 }
 </style>
 """, unsafe_allow_html=True)
