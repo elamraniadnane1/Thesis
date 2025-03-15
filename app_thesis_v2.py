@@ -160,314 +160,143 @@ else:
     """
     st.markdown(light_mode_css, unsafe_allow_html=True)
 
-st.markdown(
-    """
-    <style>
-    /* 1) FANCY TITLE - Google Font & Neon-Glow + Hue-Rotate Animation */
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap');
+st.markdown("""
+<style>
+/* Enhanced Streamlit styling with interactive animations, dynamic theming, improved accessibility, 
+   custom icons, and general UI enhancements (lightweight & performant) */
 
-    .fancy-title {
-        font-family: 'Poppins', sans-serif;
-        font-size: 40px;
-        font-weight: 700;
-        text-align: center;
-        color: #fff;
-        background: linear-gradient(45deg, #ff416c, #ff4b2b, #ff6a00);
-        padding: 15px;
-        border-radius: 12px;
-        text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
-        /* Two animations: glow (pulsing shadow) + hue-rotate (shifting colors) */
-        animation: glow 2s infinite alternate ease-in-out, hue-rotate 8s infinite linear;
-        display: inline-block;
-        margin: 0 auto;
-    }
+/* Interactive Animations */
+/* Smooth transitions on hover for interactive elements (buttons, tabs, links)&#8203;:contentReference[oaicite:0]{index=0}&#8203;:contentReference[oaicite:1]{index=1} */
+.stButton button, .stTabs [data-baseweb="tab"] {
+    transition: all 0.3s ease;  /* animate changes smoothly */
+}
+.stButton button:hover {
+    transform: translateY(-2px);  /* lift up on hover */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);  /* subtle shadow on hover */
+}
+.stButton button:active {
+    transform: translateY(0);     /* remove lift on click */
+    box-shadow: none;
+}
+a:hover {
+    opacity: 0.8;  /* slight fade on link hover */
+}
 
-    @keyframes glow {
-        0% {
-            box-shadow: 0 0 10px rgba(255, 75, 43, 0.6);
-        }
-        100% {
-            box-shadow: 0 0 20px rgba(255, 75, 43, 1);
-        }
-    }
+/* Keyframe animation for subtle element entry (fade-in) */
+@keyframes fadeIn {
+    0%   {opacity: 0; transform: translateY(5px);}
+    100% {opacity: 1; transform: translateY(0);}
+}
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
 
-    @keyframes hue-rotate {
-        0% {
-            filter: hue-rotate(0deg);
-        }
-        100% {
-            filter: hue-rotate(360deg);
-        }
-    }
-
-    /* 2) BODY ZOOM AT 90% */
-    body {
-        zoom: 100%;
-    }
-
-    /* 3) TAB STYLING - DARK MODE SUPPORT & BETTER VISIBILITY */
-    /* Import Lucide icons */
-    @import url('https://cdn.jsdelivr.net/npm/lucide-static@0.16.29/font/lucide.min.css');
-    /* Import Poppins & Inter fonts */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
-
-    /* Root Theme Variables for Light/Dark Mode */
+/* Dynamic Color Schemes */
+/* Use CSS variables and prefers-color-scheme to adapt to user light/dark mode&#8203;:contentReference[oaicite:2]{index=2} */
+:root {
+    /* Default (light mode) color palette */
+    --primary-color: #11567f;       /* primary accent color */
+    --background-color: #FFFFFF;    /* page background */
+    --secondary-bg-color: #F0F2F6;  /* secondary background (e.g., tabs, sidebar) */
+    --text-color: #262730;          /* main text color */
+    --muted-text: #6E757C;          /* secondary text color */
+    --accent-color: #ff4b4b;        /* accent for hover/focus (improve visibility) */
+}
+@media (prefers-color-scheme: dark) {
     :root {
-        --tab-bg-light: rgba(243, 244, 246, 0.7);
-        --tab-bg-dark: rgba(50, 50, 50, 0.7);
-        --tab-text-light: #2B3E50;
-        --tab-text-dark: #ffffff;
-        --tab-active-light: linear-gradient(135deg, #3AAFA9 0%, #2B7A78 100%);
-        --tab-active-dark: linear-gradient(135deg, #00C6FF 0%, #0072FF 100%);
-        --tab-hover-light: rgba(58, 175, 169, 0.1);
-        --tab-hover-dark: rgba(0, 200, 255, 0.2);
+        /* Dark mode overrides */
+        --primary-color: #1A7AB3;
+        --background-color: #0E1117;
+        --secondary-bg-color: #20232a;
+        --text-color: #FAFAFA;
+        --muted-text: #AEB6BF;
+        --accent-color: #ff6f6f;
     }
+}
+/* Apply dynamic colors */
+.stApp {
+    background: var(--background-color);
+    color: var(--text-color);
+}
+.stApp header, .stSidebar, .stTabs [data-baseweb="tab-list"] {
+    background: var(--secondary-bg-color);
+}
+.stMarkdown, .stMarkdown p {
+    color: var(--text-color);
+}
+.stMarkdown small, .stMarkdown .muted {
+    color: var(--muted-text);
+}
+.stButton button {
+    background: var(--primary-color);
+    color: #FFF;
+    border: none;
+    border-radius: 4px;
+}
+.stButton button:hover {
+    background: var(--primary-color);
+    /* (same color, hover effects handled above with shadow/transform) */
+}
 
-    /* Main Tabs Container - Larger Size */
-    .stTabs {
-        background: white;
-        padding: 2rem; /* Increased padding */
-        border-radius: 15px;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-        margin-bottom: 2.5rem;
-        position: relative;
-        max-width: 95%; /* Increased width */
-        width: 100%; /* Full width */
-        margin-left: auto;
-        margin-right: auto;
-    }
+/* Improved Accessibility */
+/* Ensure high contrast text and visible focus indicators for keyboard navigation&#8203;:contentReference[oaicite:3]{index=3} */
+.stApp, .stApp * {
+    scrollbar-color: var(--primary-color) var(--secondary-bg-color);  /* custom scrollbar colors (if supported) */
+}
+/* Focus styles: visible outline for keyboard focus */
+*:focus-visible {
+    outline: 2px solid var(--accent-color) !important;  /* highlight focused element */
+    outline-offset: 2px;
+}
+/* Remove default focus outline on elements when not keyboard-navigated */
+*:focus:not(:focus-visible) {
+    outline: none;
+}
+/* Improve keyboard navigability: ensure interactive elements are focusable */
+button, [role="button"], a, input, select, textarea {
+    outline: none;  /* remove any default to unify style */
+}
+/* Note: Add ARIA attributes in HTML for icons (e.g., aria-hidden="true" for decorative icons, aria-label for meaningful icons) for screen readers */
 
-    /* Ensure Table Takes Full Space */
-    .stTabs .stDataFrame {
-        width: 100% !important;
-        max-width: 100%;
-        height: auto;
-    }
+/* Custom Icons & Hover Effects */
+/* Tabs: smooth hover effects and icon support */
+.stTabs [data-baseweb="tab"] {
+    color: var(--text-color);
+    border-radius: 4px 4px 0 0;
+    padding: 0.5rem 1rem;
+    /* Allow multiline and icon+text arrangement */
+    white-space: pre-wrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+}
+.stTabs [data-baseweb="tab"]:hover {
+    background: var(--secondary-bg-color);
+    cursor: pointer;
+}
+.stTabs [aria-selected="true"] {
+    background: var(--background-color);  /* active tab */
+    color: var(--text-color);
+    font-weight: 600;
+}
+/* Example: if tab labels include emoji icons (e.g., \"🏠 Home\"), they will align with text due to flex container above. */
 
-    /* Increase height for large datasets */
-    .stTabs .stDataFrame table {
-        min-height: 600px;
-        max-height: 800px;
-        overflow-y: auto;
-    }
-
-    /* Tab List - Horizontal Scroll */
-    .stTabs [data-baseweb="tab-list"] {
-        display: flex;
-        gap: 12px;                  /* Spacing between tabs */
-        padding: 10px;             /* Single consistent padding value */
-        overflow-x: auto;          /* Horizontal scrolling */
-        overflow-y: hidden;        /* Prevent vertical scroll */
-        scrollbar-width: thin;     /* For Firefox - thin scrollbar */
-        white-space: nowrap;       /* Prevent tab wrapping */
-        -ms-overflow-style: none;  /* For older IE/Edge to hide default scrollbar style */
-        position: relative;
-        max-width: 95%;
-        margin: 0 auto;
-        width: auto;
-        justify-content: center;   /* or flex-start if you want them left-aligned */
-        flex-wrap: nowrap;
-        scroll-behavior: smooth;
-        background: rgba(30, 30, 30, 0.9); /* Subtle dark background */
-        border-radius: 12px;
-        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2); /* Soft shadow */
-    }
-    
-    /* Custom Scrollbar for WebKit browsers (Chrome, Safari, etc.) */
-    .stTabs [data-baseweb="tab-list"]::-webkit-scrollbar {
-        height: 6px;               /* Horizontal scrollbar thickness */
-    }
-    .stTabs [data-baseweb="tab-list"]::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.1); 
-        border-radius: 8px;
-    }
-    .stTabs [data-baseweb="tab-list"]::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.4);
-        border-radius: 8px;
-        border: 1px solid rgba(0,0,0,0.2);
-    }
-    
-    /* Optional: Hide scrollbar on older IE/Edge by removing or 
-       set -ms-overflow-style: scrollbar if you want it to show. */
-
-
-    /* Tab Hover Effect */
-    .stTabs [data-baseweb="tab"]:hover {
-        background: linear-gradient(135deg, #0072FF 0%, #00C6FF 100%);
-        transform: scale(1.05);
-        box-shadow: 0px 4px 12px rgba(0, 198, 255, 0.3);
-    }
-
-    /* Active Tab Styling */
-    .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%) !important;
-        color: white !important;
-        font-weight: 700;
-        transform: scale(1.08);
-        box-shadow: 0px 4px 15px rgba(255, 215, 0, 0.5);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-    }
-
-    /* Smooth Slide-in Animation */
-    @keyframes slideIn {
-        from {
-            opacity: 0;
-            transform: translateY(-5px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    /* Scrollbar Customization */
-    .stTabs [data-baseweb="tab-list"]::-webkit-scrollbar {
-        height: 5px;
-    }
-    .stTabs [data-baseweb="tab-list"]::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.1);
-    }
-    .stTabs [data-baseweb="tab-list"]::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.3);
-        border-radius: 10px;
-    }
-    
-    /* Responsive Adjustments */
-    @media screen and (max-width: 768px) {
-        .stTabs [data-baseweb="tab"] {
-            min-width: 140px;
-            height: 45px;
-            font-size: 0.85rem;
-            padding: 0.4rem 1rem;
-        }
-    }
-
-
-    /* Dark Mode Adjustments */
-    @media (prefers-color-scheme: dark) {
-        .stTabs {
-            background: #1E1E1E;
-        }
-        .stTabs [data-baseweb="tab"] {
-            background: var(--tab-bg-dark);
-            color: var(--tab-text-dark);
-        }
-        .stTabs [aria-selected="true"] {
-            background: var(--tab-active-dark) !important;
-        }
-        .stTabs [data-baseweb="tab"]:hover {
-            background: var(--tab-hover-dark);
-        }
-    }
-
-    /* Tab Icons */
-    .stTabs [data-baseweb="tab"]::before {
-        font-family: 'lucide';
-        font-size: 1.2rem;
-        margin-right: 0.5rem;
-        opacity: 0.8;
-        transition: all 0.3s ease;
-    }
-
-    /* Custom Icons for Tabs */
-    .stTabs [data-baseweb="tab"][aria-label*="Dashboard"]::before {
-        content: '\\e900'; 
-    }
-    .stTabs [data-baseweb="tab"][aria-label*="Analytics"]::before {
-        content: '\\e901'; 
-    }
-    .stTabs [data-baseweb="tab"][aria-label*="Posts"]::before {
-        content: '\\e902'; 
-    }
-    .stTabs [data-baseweb="tab"][aria-label*="Users"]::before {
-        content: '\\e903'; 
-    }
-    .stTabs [data-baseweb="tab"][aria-label*="Settings"]::before {
-        content: '\\e904'; 
-    }
-
-    /* Hover Effect */
-    .stTabs [data-baseweb="tab"]:hover {
-        background: var(--tab-hover-light);
-        transform: translateY(-2px);
-    }
-
-    /* Active Tab Styling */
-    .stTabs [aria-selected="true"]::before {
-        opacity: 1;
-        transform: scale(1.1);
-    }
-    .stTabs [aria-selected="true"] {
-        background: var(--tab-active-light) !important;
-        color: white !important;
-        font-weight: 600;
-        transform: scale(1.05);
-        box-shadow: 0 4px 12px rgba(43, 122, 120, 0.2);
-    }
-
-    /* Animations */
-    @keyframes slideIn {
-        from {
-            opacity: 0;
-            transform: translateX(-10px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
-    }
-
-
-    /* Gradient fade for overflow indication */
-    .stTabs [data-baseweb="tab-list"]::after {
-        content: '';
-        position: absolute;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        width: 50px;
-        background: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,1));
-        pointer-events: none;
-    }
-
-    /* Tab hover effect */
-    .stTabs [data-baseweb="tab"]:hover {
-        background: rgba(58, 175, 169, 0.1);
-        transform: translateY(-2px);
-    }
-
-    /* Slide-in animation */
-    @keyframes slideIn {
-        from {
-            opacity: 0;
-            transform: translateX(-10px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
-    }
-
-    /* Responsive adjustments for small screens */
-    @media screen and (max-width: 768px) {
-        .stTabs [data-baseweb="tab"] {
-            min-width: 160px;
-            height: 45px;
-            font-size: 0.8rem;
-            padding: 0.4rem 0.8rem;
-        }
-        .stTabs [data-baseweb="tab"]::before {
-            font-size: 1rem;
-            margin-right: 0.3rem;
-        }
-    }
-    </style>
-
-    <!-- 4) TITLE ELEMENT -->
-    <h1 class="fancy-title">🚀 Moroccan AI Toolkit for Citizen Participation - 2025</h1>
-    """,
-    unsafe_allow_html=True
-)
+/* UI Enhancements */
+/* Consistent layout spacing and visual polish */
+section, .stTabs [data-baseweb="tab-list"] {
+    margin-bottom: 1rem;  /* space out sections and tab containers */
+}
+.stAlert, .stTable, .stDataFrame, .stContainer {
+    border-radius: 4px;
+}
+/* Micro-interactions: e.g., highlight inputs on focus */
+.stTextInput>div>input:focus {
+    border: 1px solid var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(17,86,127,0.25);
+}
+</style>
+""", unsafe_allow_html=True)
 
 
 # ------------------------------------------------------
