@@ -877,7 +877,23 @@ def main():
         st.info("No file uploaded. Using the Hespress CSV file stored in our Database.")
         df = load_data(csv_file_path)
         st.session_state.df_main = df
-    
+
+    # Create Streamlit tabs for organized navigation
+        # First, add the tabs with icons
+        tabs = st.tabs([
+            "🔄 ",
+            "😊 ",
+            "📊 ",
+            "🔍 ",
+            "⚠️ ",
+            "🚫 ",
+            "🌐 ",
+            "🤖 ",
+            "📈 ",
+            "⚡ ",
+            "📡 ",
+            "⬇️ "
+        ]) 
 
     if df is not None:
         st.subheader("Custom Comment Analysis")
@@ -894,22 +910,7 @@ def main():
             else:
                 st.warning("Please enter a non-empty comment.") 
    
-        # Create Streamlit tabs for organized navigation
-        # First, add the tabs with icons
-        tabs = st.tabs([
-            "🔄 ",
-            "😊 ",
-            "📊 ",
-            "🔍 ",
-            "⚠️ ",
-            "🚫 ",
-            "🌐 ",
-            "🤖 ",
-            "📈 ",
-            "⚡ ",
-            "📡 ",
-            "⬇️ "
-        ]) 
+        
 
         with tabs[0]:
             st.subheader("Data Overview")
