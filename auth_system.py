@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 import hashlib
 import os
 from pathlib import Path
-
+import time 
 # 1) Constants for JWT
 JWT_SECRET = 'your-secret-key'  # In production, use a secure secret key
 JWT_ALGORITHM = 'HS256'
@@ -311,9 +311,7 @@ def login_page():
     if 'jwt_token' not in st.session_state:
         st.session_state.jwt_token = None
 
-    import time
-    import streamlit as st
-    
+
     if st.session_state.jwt_token is not None:
         is_valid, username, role = verify_jwt_token(st.session_state.jwt_token)
         
