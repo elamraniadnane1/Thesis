@@ -11,6 +11,14 @@ from wordcloud import WordCloud
 import base64
 from datetime import datetime
 import re
+import json
+
+# For better Arabic font handling in Matplotlib:
+import matplotlib
+# Use a font that supports Arabic glyphs. DejaVu Sans is often a fallback.
+matplotlib.rcParams['font.family'] = 'DejaVu Sans'
+matplotlib.rcParams['font.size'] = 14
+matplotlib.rcParams['axes.unicode_minus'] = False
 
 # Auth system (your own code from 'auth_system.py')
 from auth_system import require_auth, verify_jwt_token
@@ -26,6 +34,7 @@ def init_gpt():
     """
     if not openai.api_key:
         openai.api_key = st.secrets["openai"]["api_key"]
+
 
 ##############################################################################
 # 2) Arabic Text Normalization
@@ -49,6 +58,7 @@ def normalize_arabic(text: str) -> str:
     text = ' '.join(text.split())
 
     return text.strip()
+
 
 ##############################################################################
 # 3) GPT-based Helper Functions
@@ -91,12 +101,10 @@ def gpt_arabic_sentiment_with_polarity(text: str) -> tuple:
         )
         content = response["choices"][0]["message"]["content"].strip()
 
-        import json
         parsed = {}
         try:
             parsed = json.loads(content)
         except:
-            # fallback if GPT didn't produce valid JSON
             pass
 
         sentiment = parsed.get("sentiment", "NEU")
@@ -104,11 +112,11 @@ def gpt_arabic_sentiment_with_polarity(text: str) -> tuple:
         if sentiment not in ["POS", "NEG", "NEU"]:
             sentiment = "NEU"
         score = max(-1.0, min(1.0, score))
-
         return (sentiment, score)
     except Exception as e:
         st.warning(f"GPT Sentiment Error: {e}")
         return ("NEU", 0.0)
+
 
 def gpt_bullet_summary(text: str) -> str:
     """
@@ -140,6 +148,7 @@ def gpt_bullet_summary(text: str) -> str:
     except Exception as e:
         st.warning(f"GPT Bullet Summary Error: {e}")
         return "تعذّر توليد الملخص."
+
 
 def gpt_extract_pros_cons(text: str) -> dict:
     """
@@ -196,6 +205,7 @@ def gpt_extract_pros_cons(text: str) -> dict:
         st.warning(f"GPT Pros/Cons Error: {e}")
         return {"pros": [], "cons": []}
 
+
 def gpt_extract_topics(text: str) -> list:
     """
     Use GPT to do basic "topic extraction" from Arabic text.
@@ -248,61 +258,57 @@ def chunk_text(text: str, chunk_size: int = 2000) -> list:
         start = end
     return chunks
 
-def gpt_translate_arabic_to_english(text: str) -> str:
+def gpt_translate_arabic(text: str, target_language: str = "English") -> str:
     """
-    Translate the given Arabic text to English using GPT,
+    Translate the given Arabic text to either English or French using GPT,
     chunking if necessary to avoid token limit errors.
-    Also optionally limit total length or sample the text
-    if data is extremely large.
+    Also optionally limit total length or sample the text if data is extremely large.
+
+    :param text: the Arabic source text
+    :param target_language: "English" or "French"
+    :return: translated text in the target language
     """
 
     text = text.strip()
     if not text:
         return ""
 
-    # Optional: If text is extremely large, we can sample or cut:
-    max_overall_length = 6000  # e.g., 6000 characters total
+    # If text is extremely large, let's limit or sample:
+    max_overall_length = 6000
     if len(text) > max_overall_length:
-        # For example, take random sample of lines or substring
-        # to reduce usage
         lines = text.split('\n')
         random.shuffle(lines)
-        lines = lines[:200]  # or we can do partial
+        lines = lines[:200]
         text = "\n".join(lines)[:max_overall_length]
 
-    # Now chunk
-    chunk_size = 1500  # smaller chunk to reduce token usage
-    text_chunks = chunk_text(text, chunk_size=chunk_size)
+    text_chunks = chunk_text(text, chunk_size=1500)
     translated_chunks = []
 
+    # Prepare system and user prompts
+    system_prompt = f"You translate Arabic text to {target_language}."
     for chunk in text_chunks:
         user_msg = f"""
-You are a helpful assistant specialized in translation.
-Please translate this Arabic text to English, and return ONLY the translated text with no explanations:
+Translate the following Arabic text into {target_language} without additional commentary:
 {chunk}
 """
         try:
             response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                 messages=[
-                    {
-                        "role": "system",
-                        "content": "You translate Arabic text to English.",
-                    },
+                    {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_msg},
                 ],
-                max_tokens=800,
+                max_tokens=1000,
                 temperature=0.0,
             )
             chunk_translation = response["choices"][0]["message"]["content"].strip()
             translated_chunks.append(chunk_translation)
         except Exception as e:
             st.warning(f"GPT Translate Error on chunk: {e}")
-            # We can skip or break here if desired
             continue
 
-    # Join all translated parts
     return " ".join(translated_chunks)
+
 
 ##############################################################################
 # 5) Load CSV Data
@@ -326,7 +332,6 @@ def load_remacto_comments(csv_path: str) -> pd.DataFrame:
         st.error(f"Error loading REMACTO Comments CSV: {e}")
         return pd.DataFrame()
 
-
 def load_remacto_projects(csv_path: str) -> pd.DataFrame:
     """
     REMACTO Projects CSV:
@@ -345,24 +350,25 @@ def load_remacto_projects(csv_path: str) -> pd.DataFrame:
         st.error(f"Error loading REMACTO Projects CSV: {e}")
         return pd.DataFrame()
 
+
 ##############################################################################
-# 6) Wordcloud (with GPT-based translation to English)
+# 6) Wordcloud (with GPT-based translation to chosen language)
 ##############################################################################
-def plot_wordcloud(texts: list, title: str = "Word Cloud"):
+def plot_wordcloud(texts: list, title: str, target_language: str = "English"):
     """
     1) Merge the list of Arabic texts into one string.
-    2) Use GPT to translate that text to English in manageable chunks.
-    3) Generate a WordCloud from the English text.
+    2) Use GPT to translate that text to either English or French in manageable chunks.
+    3) Generate a WordCloud from the translated text.
     """
     joined_text_ar = "\n".join(texts).strip()
     if not joined_text_ar:
         st.warning("No text found to generate wordcloud.")
         return
 
-    with st.spinner("Translating text to English for WordCloud (may sample if data is huge)..."):
-        translated_text_en = gpt_translate_arabic_to_english(joined_text_ar)
+    with st.spinner(f"Translating text to {target_language} for WordCloud (may sample if data is huge)..."):
+        translated_text = gpt_translate_arabic(joined_text_ar, target_language)
 
-    if not translated_text_en.strip():
+    if not translated_text.strip():
         st.warning("Translation returned empty. Cannot generate WordCloud.")
         return
 
@@ -371,13 +377,14 @@ def plot_wordcloud(texts: list, title: str = "Word Cloud"):
         height=400,
         background_color="white",
         collocations=False
-    ).generate(translated_text_en)
+    ).generate(translated_text)
 
     fig, ax = plt.subplots(figsize=(8, 4))
     ax.imshow(wc, interpolation="bilinear")
     ax.set_title(title, fontsize=16)
     ax.axis("off")
     st.pyplot(fig)
+
 
 ##############################################################################
 # 7) Store Citizen Inputs
@@ -406,6 +413,7 @@ def store_user_input_in_csv(username: str, input_type: str, content: str):
         df_combined = pd.concat([df_existing, df_new], ignore_index=True)
         df_combined.to_csv(csv_file, index=False)
 
+
 ##############################################################################
 # 8) Main Dashboard
 ##############################################################################
@@ -414,7 +422,17 @@ def main():
     # 1) Initialize GPT
     init_gpt()
 
-    st.title("👤 User View (REMACTO Dashboard) - Enhanced w/ Chunked Translation")
+    # ---------------------------------------------------------------------
+    # Option to choose the translation language for WordCloud
+    # ---------------------------------------------------------------------
+    st.sidebar.header("WordCloud Language")
+    chosen_language = st.sidebar.selectbox(
+        "Select WordCloud translation language:",
+        ["English", "French"]
+    )
+
+    # Title & Description
+    st.title("👤 User View (REMACTO Dashboard) - Enhanced w/ Language Option")
     st.write("Welcome to your personal dashboard! Engage with projects, share feedback, see analytics, etc.")
 
     token = st.session_state.get("jwt_token", None)
@@ -435,7 +453,7 @@ def main():
             df_comments = load_remacto_comments(comments_csv_path)
             df_projects = load_remacto_projects(projects_csv_path)
 
-            # Main tabs
+            # Create main tabs
             tabs = st.tabs(
                 [
                     "📊 Comments Analysis",
@@ -518,17 +536,16 @@ def main():
                     df_analysis = pd.DataFrame(analysis_data)
                     st.dataframe(df_analysis)
 
-                    # -----------------------------------------------------------------
-                    # Additional Visualization: Polarity Distribution + Sentiments
-                    # -----------------------------------------------------------------
+                    # Polarity Distribution
                     st.write("#### Polarity Distribution (Histogram)")
                     fig_pol, ax_pol = plt.subplots()
                     ax_pol.hist(df_analysis["polarity_score"], bins=10, color="skyblue")
-                    ax_pol.set_title("Polarity Score Distribution")
+                    ax_pol.set_title("Polarity Score Distribution", fontproperties=None)
                     ax_pol.set_xlabel("Polarity Score (-1 = negative, +1 = positive)")
                     ax_pol.set_ylabel("Count")
                     st.pyplot(fig_pol)
 
+                    # Sentiment Distribution
                     st.write("#### Sentiment Distribution (Challenge)")
                     sentiment_counts = df_analysis["challenge_sentiment"].value_counts()
                     fig1, ax1 = plt.subplots()
@@ -541,13 +558,9 @@ def main():
                     ax1.axis("equal")
                     st.pyplot(fig1)
 
-                    # -----------------------------------------------------------------
-                    # Meaningful Visualization: Sentiment by Axis (Stacked Bar)
-                    # -----------------------------------------------------------------
+                    # Sentiment by Axis (Stacked Bar)
                     st.write("#### Sentiment by Axis (Stacked Bar Chart)")
-                    # We'll group df_analysis by axis and sentiment
                     cross_tab = pd.crosstab(df_analysis["axis"], df_analysis["challenge_sentiment"])
-                    # Make a stacked bar
                     fig_stack, ax_stack = plt.subplots(figsize=(6, 4))
                     cross_tab.plot(kind='bar', stacked=True, ax=ax_stack)
                     ax_stack.set_title("Number of Comments by Axis and Sentiment")
@@ -556,11 +569,13 @@ def main():
                     plt.xticks(rotation=45, ha='right')
                     st.pyplot(fig_stack)
 
-                    # -----------------------------------------------------------------
-                    # Wordcloud (translated to English)
-                    # -----------------------------------------------------------------
-                    st.write("#### Word Cloud of All Challenges (Translated to English)")
-                    plot_wordcloud(filtered_comments["challenge"].astype(str).tolist(), "Challenges Word Cloud (English)")
+                    # WordCloud (in chosen language)
+                    st.write(f"#### Word Cloud of All Challenges (Translated to {chosen_language})")
+                    plot_wordcloud(
+                        filtered_comments["challenge"].astype(str).tolist(),
+                        f"Challenges Word Cloud ({chosen_language})",
+                        target_language=chosen_language
+                    )
 
             # -----------------------------------------------------------------
             # TAB 2: Projects
@@ -633,12 +648,10 @@ def main():
                 """)
 
                 if not df_comments.empty:
-                    # Axis distribution
                     axis_counts = df_comments["axis"].value_counts()
                     st.write("### Axis Distribution (Bar Chart)")
                     st.bar_chart(axis_counts)
 
-                    # Channel distribution
                     channel_counts = df_comments["channel"].value_counts()
                     st.write("### Channels Used (Pie Chart)")
                     fig2, ax2 = plt.subplots()
@@ -646,10 +659,12 @@ def main():
                     ax2.axis("equal")
                     st.pyplot(fig2)
 
-                    # Word Cloud of solutions (translated)
-                    st.write("### Word Cloud of Proposed Solutions (Translated to English)")
-                    plot_wordcloud(df_comments["proposed_solution"].astype(str).tolist(), "Proposed Solutions Word Cloud (English)")
-
+                    st.write(f"### Word Cloud of Proposed Solutions (Translated to {chosen_language})")
+                    plot_wordcloud(
+                        df_comments["proposed_solution"].astype(str).tolist(),
+                        f"Proposed Solutions Word Cloud ({chosen_language})",
+                        target_language=chosen_language
+                    )
                 else:
                     st.info("No comments data available for extra visualization.")
 
