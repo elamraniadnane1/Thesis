@@ -1,252 +1,293 @@
+# File: user_dashboard.py
+
 import streamlit as st
 import pandas as pd
+import openai
 from datetime import datetime
+
+# Import your auth decorators and verification methods
 from auth_system import require_auth, verify_jwt_token
 
+##############################################################################
+# 1) Initialize the GPT API
+##############################################################################
+def init_gpt():
+    """
+    Initialize OpenAI GPT with the key from Streamlit secrets.
+    Ensure you have your openai api_key in secrets.toml:
+      [openai]
+      api_key = "<YOUR-OPENAI-API-KEY>"
+    """
+    openai.api_key = st.secrets["openai"]["api_key"]
+
+##############################################################################
+# 2) Helper Functions to Call GPT for Sentiment & Summaries
+##############################################################################
+
+def gpt_arabic_sentiment(text: str) -> str:
+    """
+    A very simple GPT-based sentiment classifier for short Arabic text.
+    We'll prompt GPT with instructions to return "POS", "NEG", or "NEU".
+    This is a minimal example; you can refine the system/user instructions further.
+    """
+    if not text.strip():
+        return "NEU"
+
+    prompt = f"""
+    أنت محلل مختص في فهم شعور التعليقات بالعربية. صنّف النص التالي لأحد التصنيفات الثلاثة:
+    - POS (إيجابي)
+    - NEG (سلبي)
+    - NEU (محايد)
+
+    النص: {text}
+
+    أجب فقط برمز التصنيف: POS أو NEG أو NEU
+    """
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo", 
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant for Arabic sentiment analysis."},
+                {"role": "user", "content": prompt}
+            ],
+            max_tokens=10,
+            temperature=0.0
+        )
+        # Extract the text
+        classification = response["choices"][0]["message"]["content"].strip()
+        # We expect classification to be something like "POS", "NEG", or "NEU"
+        # If it returns something else, handle fallback
+        if classification not in ["POS", "NEG", "NEU"]:
+            classification = "NEU"
+        return classification
+    except Exception as e:
+        st.warning(f"GPT Sentiment Error: {e}")
+        return "NEU"
+
+
+def gpt_arabic_summary(text: str) -> str:
+    """
+    Use GPT to produce a brief Arabic summary of a comment or challenge/solution statement.
+    Adjust the prompt for your domain or style. 
+    """
+    if not text.strip():
+        return "لا يوجد نص للخلاصة."
+
+    prompt = f"""
+    لخص النص التالي باللغة العربية في جملة واحدة أو اثنتين:
+
+    النص: 
+    {text}
+
+    الرجاء تقديم خلاصة موجزة وواضحة.
+    """
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant specialized in Arabic summarization."},
+                {"role": "user", "content": prompt}
+            ],
+            max_tokens=100,
+            temperature=0.0
+        )
+        summary = response["choices"][0]["message"]["content"].strip()
+        return summary
+    except Exception as e:
+        st.warning(f"GPT Summary Error: {e}")
+        return "تعذّر توليد خلاصة."
+
+
+##############################################################################
+# 3) Load CSV Data (REMACTO Comments & REMACTO Projects)
+##############################################################################
+def load_remacto_comments(csv_path: str) -> pd.DataFrame:
+    """
+    Load the REMACTO Comments CSV. 
+    Format (as given):
+      رقم الفكرة,القناة,المحور,ما هي التحديات / الإشكاليات المطروحة ؟,ما هو الحل المقترح ؟
+    """
+    try:
+        df = pd.read_csv(csv_path)
+        df.columns = [
+            "idea_id",
+            "channel",
+            "axis",
+            "challenge",
+            "proposed_solution"
+        ]
+        return df
+    except Exception as e:
+        st.error(f"Error loading REMACTO Comments CSV: {e}")
+        return pd.DataFrame()
+
+
+def load_remacto_projects(csv_path: str) -> pd.DataFrame:
+    """
+    Load the REMACTO Projects CSV. 
+    Format (as given):
+      titles,CT,Collectivité territorial,المواضيع
+    """
+    try:
+        df = pd.read_csv(csv_path)
+        df.columns = [
+            "title",
+            "CT",
+            "collectivite_territoriale",
+            "themes"
+        ]
+        return df
+    except Exception as e:
+        st.error(f"Error loading REMACTO Projects CSV: {e}")
+        return pd.DataFrame()
+
+##############################################################################
+# 4) Main User Dashboard
+##############################################################################
 @require_auth
 def main():
     """
-    This page serves as a personal dashboard for an authenticated citizen/user.
-    It includes multiple sections demonstrating how you can enhance citizen 
-    participation and engagement with municipal projects, proposals, feedback, 
-    and more.
+    Enhanced user view that:
+    - Displays REMACTO Comments and Projects data
+    - Uses GPT-based sentiment analysis for Arabic text
+    - Summarizes each challenge or solution with GPT
+    - Allows user to see or filter by sentiment or axis
+    - Demonstrates how GPT can be leveraged for required tasks
     """
-    
+
+    # Step 1: Initialize GPT with your API key
+    init_gpt()
+
     st.title("👤 User View (My Dashboard)")
-    st.write("Welcome to your personal dashboard! Engage with ongoing projects, share feedback, track proposals, and more.")
+    st.write("Welcome to your personal dashboard! Engage with ongoing proposals, get GPT-based insights, and more.")
 
     # Retrieve the current JWT token from session_state
-    token = st.session_state.get('jwt_token', None)
+    token = st.session_state.get("jwt_token", None)
     
     if token:
         is_valid, username, role = verify_jwt_token(token)
         if is_valid:
             st.success(f"You are logged in as: **{username}** (Role: **{role}**)")
+
+            # ----------------------------------------------------------------------------
+            # 4A) Load the REMACTO CSV data
+            # ----------------------------------------------------------------------------
+            # TODO: Adjust the paths to your local files as needed:
+            comments_csv_path = r"C:\Users\DELL\OneDrive\Desktop\Thesis\REMACTO Comments.csv"
+            projects_csv_path = r"C:\Users\DELL\OneDrive\Desktop\Thesis\REMACTO Projects.csv"
+
+            df_comments = load_remacto_comments(comments_csv_path)
+            df_projects = load_remacto_projects(projects_csv_path)
+
+            if df_comments.empty:
+                st.warning("No REMACTO Comments found or CSV not loaded.")
+            if df_projects.empty:
+                st.warning("No REMACTO Projects found or CSV not loaded.")
             
-            # --------------------------------------------------------------------------------
-            # 1) Profile & User Info
-            # --------------------------------------------------------------------------------
-            with st.expander("👤 Profile Information", expanded=False):
+            # ----------------------------------------------------------------------------
+            # 4B) Explore & Summarize REMACTO Comments
+            # ----------------------------------------------------------------------------
+            with st.expander("🔎 Explore & Summarize Citizen Comments", expanded=True):
                 """
-                In a real-world app, you would query your DB or CSV for user-specific details 
-                like full name, municipality, subscription preferences, etc.
+                Below are the recorded ideas/challenges from the REMACTO system. 
+                We'll let GPT classify the sentiment of the proposed solutions 
+                or challenges, and also provide short summaries in Arabic.
                 """
-                # Example placeholder:
-                user_profile = {
-                    "Full Name": "John Doe",
-                    "City": "Casablanca",
-                    "Email": f"{username}@example.com",
-                    "Interests": ["Green Spaces", "Education", "Transportation"]
-                }
-                st.write("#### Basic Profile")
-                for key, value in user_profile.items():
-                    st.write(f"**{key}:** {value}")
-                
-                # Example to let the user update some preferences:
-                st.write("#### Update Your Notifications Settings")
-                email_notifs = st.checkbox("Receive Email Notifications", value=True)
-                sms_notifs = st.checkbox("Receive SMS Notifications", value=False)
-                if st.button("Save Notification Preferences"):
-                    # In production, update the DB or CSV with new settings
-                    st.success("Your notification preferences have been saved.")
+                if not df_comments.empty:
+                    st.write("### Raw Comments Data (First 10 Rows)")
+                    st.dataframe(df_comments.head(10))
 
-            # --------------------------------------------------------------------------------
-            # 2) Activity Overview & Timeline
-            # --------------------------------------------------------------------------------
-            with st.expander("🗓️ Activity Timeline", expanded=True):
-                """
-                Show the user’s recent actions or interactions. In production, you'd
-                fetch this data from your logs or DB. Below is just a placeholder.
-                """
-                timeline_data = [
-                    {"Date": "2023-09-01", "Action": "Logged In", "Details": "Successful login from web"},
-                    {"Date": "2023-09-02", "Action": "Commented", "Details": "Gave feedback on Project #123"},
-                    {"Date": "2023-09-05", "Action": "Proposed Idea", "Details": "Suggested new recycling bins"},
-                    {"Date": "2023-09-07", "Action": "Voted", "Details": "Upvoted a local park improvement proposal"},
-                ]
-                df_timeline = pd.DataFrame(timeline_data)
-                st.dataframe(df_timeline)
-                
-                st.write("Below is a simple bar chart of your actions over time:")
-                action_counts = df_timeline["Action"].value_counts()
-                st.bar_chart(action_counts)
+                    st.write("### GPT-Based Sentiment & Summaries")
+                    # We'll let user choose how many rows to process (for performance)
+                    num_rows = st.slider("Number of Comments to Analyze", 1, min(50, len(df_comments)), 5)
+                    
+                    # We'll create placeholders for results
+                    analysis_results = []
+                    for idx in range(num_rows):
+                        row = df_comments.iloc[idx]
+                        challenge_text = str(row["challenge"])
+                        solution_text  = str(row["proposed_solution"])
 
-            # --------------------------------------------------------------------------------
-            # 3) Ongoing Municipal Projects (User-Specific or Global)
-            # --------------------------------------------------------------------------------
-            with st.expander("🏗️ Ongoing Projects in Your Municipality", expanded=False):
-                """
-                You can display a curated list of projects relevant to the user's city,
-                or all active projects. Possibly filter by user interest (like `Green Spaces`).
-                """
-                projects = [
-                    {"Project ID": 101, "Name": "Green Park Expansion", "Status": "In-Progress", "Your Involvement": "Voted + Commented"},
-                    {"Project ID": 102, "Name": "New Community Library", "Status": "Planning", "Your Involvement": "No Activity"},
-                    {"Project ID": 123, "Name": "Local Sports Field Renovation", "Status": "Ongoing", "Your Involvement": "Commented"},
-                ]
-                df_projects = pd.DataFrame(projects)
-                st.table(df_projects)
+                        # 1) Sentiment for the challenge
+                        challenge_sentiment = gpt_arabic_sentiment(challenge_text)
+                        # 2) Summaries
+                        challenge_summary = gpt_arabic_summary(challenge_text)
+                        solution_summary  = gpt_arabic_summary(solution_text)
 
-                # Show a progress bar for each project (demo purpose)
-                for _, row in df_projects.iterrows():
-                    st.write(f"**{row['Name']}** (Status: {row['Status']})")
-                    # Artificial "progress" example:
-                    if row['Status'] == "Planning":
-                        st.progress(0.2)
-                    elif row['Status'] == "In-Progress" or row['Status'] == "Ongoing":
-                        st.progress(0.6)
+                        analysis_results.append({
+                            "idea_id": row["idea_id"],
+                            "axis": row["axis"],
+                            "challenge": challenge_text[:80] + ("..." if len(challenge_text) > 80 else ""),
+                            "challenge_sentiment": challenge_sentiment,
+                            "challenge_summary": challenge_summary,
+                            "proposed_solution_summary": solution_summary
+                        })
+                    
+                    df_analysis = pd.DataFrame(analysis_results)
+                    st.write("### Analysis Results")
+                    st.dataframe(df_analysis)
+
+                    # Possibly let user filter by sentiment
+                    selected_sentiment = st.selectbox("Filter by Challenge Sentiment", ["All", "POS", "NEG", "NEU"])
+                    if selected_sentiment != "All":
+                        df_filtered = df_analysis[df_analysis["challenge_sentiment"] == selected_sentiment]
                     else:
-                        st.progress(1.0)
+                        df_filtered = df_analysis
+                    st.write(f"Showing {len(df_filtered)} row(s) matching sentiment '{selected_sentiment}'")
+                    st.dataframe(df_filtered)
 
-                # Let user subscribe to a project’s updates
-                project_subscribe = st.selectbox("Subscribe to a Project for Updates:", [p["Name"] for p in projects])
-                if st.button("Subscribe"):
-                    # Save subscription in DB
-                    st.success(f"You are now subscribed to updates for: {project_subscribe}")
-
-            # --------------------------------------------------------------------------------
-            # 4) Citizen Proposals & Voting
-            # --------------------------------------------------------------------------------
-            with st.expander("🌱 Submit a New Proposal", expanded=False):
-                """
-                Citizens can propose new ideas or improvements. Typically, you'd store these 
-                proposals in your database. People can then upvote/downvote or comment on them.
-                """
-                st.write("Have an idea to improve your city? Submit it here:")
-                proposal_title = st.text_input("Proposal Title", placeholder="e.g., Create More Cycling Lanes")
-                proposal_desc = st.text_area("Proposal Description", height=100,
-                                             placeholder="Describe your idea, potential benefits, target areas, etc.")
-                if st.button("Submit Proposal"):
-                    # Save to DB or CSV
-                    st.success("Thank you! Your proposal has been submitted. It will be reviewed by the council.")
-
-            with st.expander("🔼 Proposals Voting", expanded=False):
-                """
-                Show existing proposals and let the user upvote/downvote or comment. 
-                This fosters participation and direct feedback from citizens.
-                """
-                proposals_data = [
-                    {"Proposal ID": 1, "Title": "New Recycling Stations", "Upvotes": 35, "Downvotes": 3},
-                    {"Proposal ID": 2, "Title": "Monthly Street Market", "Upvotes": 21, "Downvotes": 5},
-                    {"Proposal ID": 3, "Title": "Renovate Abandoned Building", "Upvotes": 42, "Downvotes": 10},
-                ]
-                df_proposals = pd.DataFrame(proposals_data)
-                st.dataframe(df_proposals[["Proposal ID", "Title", "Upvotes", "Downvotes"]])
-
-                # Let the user pick a proposal to vote on
-                selected_proposal = st.selectbox("Select a Proposal to Vote On:", df_proposals["Title"])
-                vote_col1, vote_col2 = st.columns(2)
-                with vote_col1:
-                    if st.button("Upvote"):
-                        st.success(f"You upvoted: {selected_proposal}")
-                with vote_col2:
-                    if st.button("Downvote"):
-                        st.warning(f"You downvoted: {selected_proposal}")
-
-            # --------------------------------------------------------------------------------
-            # 5) Personal Sentiment & Topic Tracking
-            # --------------------------------------------------------------------------------
-            with st.expander("💬 Your Comments Sentiment Summary", expanded=False):
-                """
-                If you track each user's comments in a DB, you could run a sentiment 
-                analysis on them (using your existing pipeline) and show them how 
-                they typically comment or engage.
-                """
-                sample_comments = [
-                    {"Date": "2023-09-02", "Comment": "هاذ المشروع زوين بزاف!", "Sentiment": "Positive"},
-                    {"Date": "2023-09-03", "Comment": "هاد الفكرة ما عندها حتى معنى!", "Sentiment": "Negative"},
-                ]
-                df_comments = pd.DataFrame(sample_comments)
-                st.write("### Your Recent Comments & Detected Sentiment")
-                st.table(df_comments)
-
-                # Quick stats
-                pos_count = df_comments[df_comments["Sentiment"] == "Positive"].shape[0]
-                neg_count = df_comments[df_comments["Sentiment"] == "Negative"].shape[0]
-                total_comments = len(df_comments)
-                if total_comments:
-                    pos_percentage = round((pos_count / total_comments)*100, 1)
-                    neg_percentage = round((neg_count / total_comments)*100, 1)
-                    st.write(f"Positive Comments: {pos_count} ({pos_percentage}%)")
-                    st.write(f"Negative Comments: {neg_count} ({neg_percentage}%)")
                 else:
-                    st.write("You haven't commented yet.")
+                    st.info("No comments to display/analysis.")
 
-            # --------------------------------------------------------------------------------
-            # 6) Feedback to Municipalities or Admins
-            # --------------------------------------------------------------------------------
-            with st.expander("🗣️ Provide Feedback to Municipal Leaders", expanded=False):
+            # ----------------------------------------------------------------------------
+            # 4C) Explore & Summarize REMACTO Projects
+            # ----------------------------------------------------------------------------
+            with st.expander("🏗️ Explore Municipal Projects", expanded=False):
                 """
-                This feature allows a direct communication channel. 
-                Could be a dedicated form or chat that sends data to the municipality.
+                These are the known projects from REMACTO Projects CSV. 
+                We can also run GPT summarization for 'title' or 'themes' 
+                for demonstration.
                 """
-                st.write("Have questions, concerns, or private feedback about city projects? Let us know.")
-                feedback_msg = st.text_area("Enter your feedback", height=100)
-                urgency_level = st.select_slider("Urgency Level", ["Low", "Medium", "High"])
-                if st.button("Send Feedback"):
-                    # In production, you'd store or email this to the city
-                    st.success("Your feedback has been sent to the municipal team.")
+                if not df_projects.empty:
+                    st.write("### Projects Data")
+                    st.dataframe(df_projects)
+
+                    # Provide GPT summarization for the 'themes' column
+                    st.write("### Summaries of 'themes' via GPT")
+                    project_summaries = []
+                    max_rows = st.slider("Number of Projects to Summarize", 1, len(df_projects), 5)
+                    for idx in range(max_rows):
+                        proj_row = df_projects.iloc[idx]
+                        theme_text = str(proj_row["themes"])
+                        summary = gpt_arabic_summary(theme_text)
+                        project_summaries.append({
+                            "title": proj_row["title"],
+                            "themes": theme_text,
+                            "themes_summary": summary
+                        })
+                    st.dataframe(pd.DataFrame(project_summaries))
+
+                else:
+                    st.info("No projects to display.")
             
-            # --------------------------------------------------------------------------------
-            # 7) Advanced Tools (e.g., ChatGPT-based Analysis, if desired)
-            # --------------------------------------------------------------------------------
-            with st.expander("🤖 AI Insights & Summaries", expanded=False):
-                """
-                Optionally, you might let the user ask for an AI-generated summary of 
-                proposals or comments. This is where you could integrate your GPT 
-                or other LLM logic at a user level.
-                """
-                st.write("Ask the AI for a summary of top concerns or ideas in your municipality:")
-                user_query = st.text_area("Your question to the AI", placeholder="E.g., What are people saying about public parks?")
-                if st.button("Get AI Summary"):
-                    st.info("Calling LLM with your question...")
-                    # In production, you would call your OpenAI / GPT function with user_query
-                    # and relevant context from the user’s city or data. This is just a placeholder:
-                    fake_response = "Most citizens appreciate green areas, but worry about ongoing maintenance costs."
-                    st.success(f"AI Summary:\n{fake_response}")
+            # ----------------------------------------------------------------------------
+            # Additional user-level features could go here
+            # e.g., personal timeline, proposals, comments, etc. 
+            # This is just a minimal demonstration focusing on using GPT 
+            # for analyzing the loaded CSV data.
+            # ----------------------------------------------------------------------------
 
-            # --------------------------------------------------------------------------------
-            # 8) Documents & Data Access
-            # --------------------------------------------------------------------------------
-            with st.expander("📂 Shared Documents & Data", expanded=False):
-                """
-                Display or allow download of relevant documents or data pertaining to 
-                city projects. This fosters transparency and open data access.
-                """
-                st.write("Below are public resources or city planning documents you may find useful:")
-                sample_docs = {
-                    "2023 Budget Overview": "budget_2023.pdf",
-                    "Community Survey Results": "survey_results.csv",
-                }
-                for doc_title, doc_file in sample_docs.items():
-                    st.write(f"**{doc_title}**")
-                    # Provide a download button
-                    st.download_button(
-                        label=f"Download {doc_title}",
-                        data="Some file bytes here",  # In a real scenario, you'd open/read the file
-                        file_name=doc_file
-                    )
-
-            # --------------------------------------------------------------------------------
-            # 9) Achievements / Badges (Gamification)
-            # --------------------------------------------------------------------------------
-            with st.expander("🏆 Your Civic Achievements", expanded=False):
-                """
-                Simple gamification: awarding badges for participation (e.g., 'First Comment', 
-                'Frequent Voter', 'Top Contributor'). This encourages more engagement.
-                """
-                achievements = [
-                    {"Badge": "First Comment", "Earned On": "2023-09-02"},
-                    {"Badge": "Frequent Voter", "Earned On": "2023-09-07"},
-                ]
-                st.table(pd.DataFrame(achievements))
-
-                st.write("Keep engaging with proposals and comments to earn new badges!")
+            # Provide a logout button
+            st.write("---")
+            if st.button("Logout Now"):
+                st.session_state.jwt_token = None
+                st.experimental_rerun()
 
         else:
             st.warning("Token is invalid or expired. Please log in again.")
     else:
         st.info("No token found in session. Please go back and log in.")
+
 
 if __name__ == "__main__":
     main()
