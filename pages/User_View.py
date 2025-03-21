@@ -748,31 +748,85 @@ def main():
             # -----------------------------------------------------------------
             # TAB 3: Proposals & Feedback
             # -----------------------------------------------------------------
+            # -----------------------------------------------------------------
             with tabs[2]:
-                st.header(L["proposal_header"])
+                st.header("📝 Submit a New Proposal or Feedback (Extended)")
 
-                st.subheader(L["proposal_title_label"])
-                proposal_title = st.text_input(L["proposal_title_label"], placeholder="e.g. مسارات خاصة للدراجات في المدينة")
+                st.write("""
+                In this section, you can choose a **Collectivité Territoriale (CT)**, 
+                then a specific **commune**, and finally a **project** to give 
+                more targeted feedback or a new proposal.
+                """)
 
-                st.subheader(L["proposal_description_label"])
-                proposal_description = st.text_area(L["proposal_description_label"], placeholder="Describe your idea in detail...")
+                # 1) Choose CT
+                ct_list = df_projects["CT"].dropna().unique().tolist()
+                selected_ct = st.selectbox("Select Region (CT)", ["-- Choose a Region --"] + ct_list)
 
-                if st.button(L["proposal_submit_button"]):
-                    if proposal_title.strip() and proposal_description.strip():
-                        content = f"Title: {proposal_title}\nDescription: {proposal_description}"
-                        store_user_input_in_csv(username, "proposal", content)
-                        st.success("Proposal submitted successfully!")
+                if selected_ct != "-- Choose a Region --":
+                    # 2) Filter projects by that CT
+                    df_ct = df_projects[df_projects["CT"] == selected_ct]
+
+                    # 3) List possible communes for that region
+                    communes = df_ct["collectivite_territoriale"].dropna().unique().tolist()
+                    selected_commune = st.selectbox("Select Commune", ["-- Choose a Commune --"] + communes)
+
+                    if selected_commune != "-- Choose a Commune --":
+                        # 4) Filter to show the projects in that commune
+                        df_commune = df_ct[df_ct["collectivite_territoriale"] == selected_commune]
+                        projects_list = df_commune["title"].dropna().unique().tolist()
+
+                        selected_project = st.selectbox("Select Project to Provide Feedback On:", ["-- Choose a Project --"] + projects_list)
+
+                        if selected_project != "-- Choose a Project --":
+                            # 5) Provide a text area for user to see the details or 'themes'
+                            project_row = df_commune[df_commune["title"] == selected_project].iloc[0]
+                            st.write(f"**Project Title**: {project_row['title']}")
+                            st.write(f"**Themes**: {project_row['themes']}")
+
+                            st.write("Feel free to comment on how to improve or any suggestions you have for this specific project.")
+                            
+                            st.subheader("New Proposal (Optional)")
+                            proposal_title = st.text_input("Proposal Title", placeholder="e.g. Create more green spaces")
+                            proposal_description = st.text_area("Proposal Description", placeholder="Describe your idea in detail...")
+
+                            if st.button("Submit Proposal"):
+                                if proposal_title.strip() and proposal_description.strip():
+                                    # Store the proposal with region/commune/project context
+                                    content = (
+                                        f"CT: {selected_ct}\n"
+                                        f"Commune: {selected_commune}\n"
+                                        f"Project: {selected_project}\n"
+                                        f"Proposal Title: {proposal_title}\n"
+                                        f"Proposal Description: {proposal_description}"
+                                    )
+                                    store_user_input_in_csv(username, "proposal", content)
+                                    st.success("Proposal submitted successfully!")
+                                else:
+                                    st.warning("Please provide both proposal title and description.")
+
+                            st.subheader("Feedback (Optional)")
+                            feedback_text = st.text_area("Any specific feedback about this project?",
+                                                        placeholder="Write your feedback here...")
+                            if st.button("Send Feedback"):
+                                if feedback_text.strip():
+                                    feedback_content = (
+                                        f"CT: {selected_ct}\n"
+                                        f"Commune: {selected_commune}\n"
+                                        f"Project: {selected_project}\n"
+                                        f"Feedback: {feedback_text}"
+                                    )
+                                    store_user_input_in_csv(username, "feedback", feedback_content)
+                                    st.success("Your feedback has been recorded.")
+                                else:
+                                    st.warning("Please enter some feedback.")
+
+                        else:
+                            st.info("Please select a specific project to provide feedback or propose an idea.")
                     else:
-                        st.warning("Please provide both title and description.")
+                        st.info("Please select a commune from this region.")
+                else:
+                    st.info("Please start by choosing a Collectivité Territoriale (CT).")
 
-                st.subheader(L["feedback_label"])
-                feedback_text = st.text_area(L["feedback_label"], placeholder="Any feedback or concerns about the city projects?")
-                if st.button(L["feedback_button"]):
-                    if feedback_text.strip():
-                        store_user_input_in_csv(username, "feedback", feedback_text)
-                        st.success("Your feedback has been recorded.")
-                    else:
-                        st.warning("Please enter some feedback.")
 
             # -----------------------------------------------------------------
             # TAB 4: Extra Visualizations
