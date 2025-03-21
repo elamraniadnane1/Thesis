@@ -2,6 +2,8 @@
 
 import streamlit as st
 import time
+import os
+
 from auth_system import (
     init_auth,
     verify_user,
@@ -9,6 +11,56 @@ from auth_system import (
     create_user,
     verify_jwt_token,
 )
+
+def update_secrets_toml(new_key: str) -> bool:
+    """
+    Update the 'api_key' in secrets.toml with the new_key provided.
+    Returns True if updated successfully, False if not.
+    """
+    secrets_path = "secrets.toml"
+    if not os.path.exists(secrets_path):
+        # If the file doesn't exist, create a minimal file
+        try:
+            with open(secrets_path, "w", encoding="utf-8") as f:
+                f.write("[openai]\napi_key = \"\"\n")
+        except Exception as e:
+            st.error(f"Could not create secrets.toml: {e}")
+            return False
+
+    # Now read the existing lines
+    try:
+        with open(secrets_path, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+    except Exception as e:
+        st.error(f"Could not read secrets.toml: {e}")
+        return False
+
+    # We'll rewrite lines, changing only the line that contains 'api_key ='
+    found_key_line = False
+    new_lines = []
+    for line in lines:
+        stripped = line.strip()
+        if stripped.startswith("api_key ="):
+            # Replace with the new key
+            new_line = f'api_key = "{new_key}"\n'
+            new_lines.append(new_line)
+            found_key_line = True
+        else:
+            new_lines.append(line)
+
+    # If we never found an api_key line, we can append one
+    if not found_key_line:
+        new_lines.append(f'api_key = "{new_key}"\n')
+
+    # Write back the updated file
+    try:
+        with open(secrets_path, "w", encoding="utf-8") as f:
+            f.writelines(new_lines)
+        return True
+    except Exception as e:
+        st.error(f"Could not write secrets.toml: {e}")
+        return False
+
 
 def login_page():
     """
@@ -166,28 +218,50 @@ def login_page():
         unsafe_allow_html=True
     )
 
-    # Initialize session token if not present
+    # 1) Initialize token if not present
     if 'jwt_token' not in st.session_state:
         st.session_state.jwt_token = None
 
-    # Check if there's a valid token
+    # 2) Check if there's a valid token
     if st.session_state.jwt_token is not None:
         is_valid, username, role = verify_jwt_token(st.session_state.jwt_token)
         if is_valid:
             # Already logged in
             st.success(f"You are already logged in as **{username}** (Role: **{role}**).")
             
-            # Provide a logout button to clear the token and rerun
+            # Provide a logout button
             if st.button("Logout"):
                 st.session_state.jwt_token = None
                 st.experimental_rerun()
 
-            # If we want to *skip* showing the login form altogether when user is logged in:
+            # [OPTIONAL] Provide a quick stop if you don't want the user 
+            # to see the login form once they're in:
             st.stop()
         else:
-            # If token is invalid, clear it
+            # Token invalid => clear it
             st.session_state.jwt_token = None
 
+    # 3) Show GPT Key Config Section
+    st.subheader("Optional: Provide Your GPT API Key")
+    st.write("""
+        By default, the app reads `secrets.toml` for the `[openai] api_key`. 
+        Enter a new key below to overwrite it in real time 
+        (works only if `secrets.toml` is writable).
+    """)
+    new_gpt_key = st.text_input("OpenAI GPT API Key", type="password", placeholder="sk-...")
+    if st.button("Save GPT Key"):
+        if new_gpt_key.strip():
+            updated = update_secrets_toml(new_gpt_key)
+            if updated:
+                st.success("GPT API key updated in secrets.toml successfully!")
+            else:
+                st.error("Failed to update the GPT API key. See logs above.")
+        else:
+            st.warning("Please enter a non-empty key.")
+
+    st.markdown("---")
+
+    # 4) LOGIN FORM
     st.subheader("Login to Your Account")
     with st.form("login_form", clear_on_submit=True):
         username = st.text_input("Username", key="login_username")
@@ -195,7 +269,6 @@ def login_page():
         submitted = st.form_submit_button("Login")
 
         if submitted:
-            # Attempt user verification
             success, user_role = verify_user(username, password)
             if success:
                 token = create_jwt_token(username, user_role)
@@ -208,7 +281,7 @@ def login_page():
             else:
                 st.error("Invalid username or password.")
 
-    # Registration section
+    # 5) REGISTRATION
     with st.expander("New User? Register Here", expanded=False):
         st.write("Create a new account to explore the Civic Catalyst platform.")
         with st.form("registration_form", clear_on_submit=True):
@@ -216,8 +289,7 @@ def login_page():
             new_password = st.text_input("New Password", type="password", key="reg_password")
             confirm_password = st.text_input("Confirm Password", type="password", key="reg_confirm")
             
-            # Optional: let user choose role (admin/user)
-            # Remove or hide this if you want to keep it strictly "user" in normal registration:
+            # Optionally let the user pick a role:
             role_choice = st.selectbox(
                 "Select Role (Admins have special privileges)",
                 options=["user", "admin"],
@@ -234,20 +306,20 @@ def login_page():
                 else:
                     created = create_user(new_username, new_password, role=role_choice)
                     if created:
-                        st.success(f"Registration successful as '{role_choice}'! You can now log in.")
+                        st.success(f"Registration successful! (Role = {role_choice}) You can now log in.")
                     else:
                         st.error("Username already exists or registration failed.")
 
-    # Return False if user is not logged in
-    return False
+    return False  # Indicate user not logged in if code reaches here
 
 
 def main():
     """
     Run this file as a standalone app:
       streamlit run Login.py
-    If used in a multipage environment, you might call `login_page()` 
-    from your main code. 
+
+    If used in a multipage environment, 
+    you might call `login_page()` from your main code. 
     """
     st.title("Welcome to Civic Catalyst")
     st.write("Use the form below to log in or register.")
@@ -255,8 +327,7 @@ def main():
     # Make sure authentication system is initialized
     init_auth()
     
-    # If the user is already logged in, login_page() returns True 
-    # but we don't strictly need that here. We can do:
+    # Actually run the login page
     login_page()
 
 
