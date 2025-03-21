@@ -620,95 +620,117 @@ def main():
             # -----------------------------------------------------------------
             # TAB 1: Comments Analysis
             # -----------------------------------------------------------------
+            # ------------------------- TAB 1: Comments Analysis -------------------------
             with tabs[0]:
-                st.header(L["header_comments"])
+                st.header("💬 Citizen Comments Analysis")
+
                 if df_comments.empty:
-                    st.warning(L["no_comments_msg"])
+                    st.warning("⚠️ No REMACTO Comments available.")
                 else:
-                    st.write(f"### {L['original_data_label']}")
+                    st.write("### 📋 Original Data (first 10 rows):")
                     st.dataframe(df_comments.head(10))
 
-                    st.write(f"#### {L['label_normalize']}")
+                    st.write("#### 🧹 Apply Basic Arabic Normalization (Optional)")
                     do_normalize = st.checkbox("Normalize Text?")
                     df_comments_proc = df_comments.copy()
 
                     if do_normalize:
                         df_comments_proc["challenge"] = df_comments_proc["challenge"].apply(normalize_arabic)
                         df_comments_proc["proposed_solution"] = df_comments_proc["proposed_solution"].apply(normalize_arabic)
-                        st.success(L["norm_success"])
+                        st.success("✅ Text normalization applied.")
 
                     # Filter by axis
                     unique_axes = df_comments_proc["axis"].unique()
-                    selected_axis = st.selectbox("Filter by Axis:", ["All"] + list(unique_axes))
+                    selected_axis = st.selectbox("📍 Filter by Axis:", ["All"] + list(unique_axes))
                     if selected_axis != "All":
                         filtered_comments = df_comments_proc[df_comments_proc["axis"] == selected_axis]
                     else:
                         filtered_comments = df_comments_proc
 
-                    st.write(f"Total {len(filtered_comments)} comments after axis filter: {selected_axis}")
+                    st.write(f"Total {len(filtered_comments)} comments after filtering by axis: **{selected_axis}**")
 
-                    # GPT-based Analysis
-                    st.write(f"### {L['analysis_section']}")
-                    num_rows = st.slider("Number of Rows to Analyze", 1, min(50, len(filtered_comments)), 5)
+                    # Check for reprocessing
+                    CACHE_FILE = "cached_gpt_analysis.csv"
+                    HASH_FILE = "comments_hash.txt"
+                    COMMENTS_CSV = "REMACTO Comments.csv"
 
-                    analysis_data = []
-                    with st.spinner("Analyzing with GPT..."):
-                        for i in range(num_rows):
-                            row = filtered_comments.iloc[i]
-                            challenge_text = row["challenge"]
-                            solution_text = row["proposed_solution"]
+                    def generate_file_hash(path):
+                        with open(path, "rb") as f:
+                            return hashlib.md5(f.read()).hexdigest()
 
-                            # 1) Sentiment + Polarity
-                            sentiment, polarity_score = gpt_arabic_sentiment_with_polarity(challenge_text)
+                    def save_current_hash(path, hash_path):
+                        with open(hash_path, "w") as f:
+                            f.write(generate_file_hash(path))
 
-                            # 2) Bullet Summary
-                            bullet_challenge = gpt_bullet_summary(challenge_text)
+                    def should_reprocess_csv(path, hash_path):
+                        if not os.path.exists(hash_path):
+                            return True
+                        with open(hash_path, "r") as f:
+                            old_hash = f.read().strip()
+                        return old_hash != generate_file_hash(path)
 
-                            # 3) Pros & Cons
-                            pros_cons = gpt_extract_pros_cons(solution_text)
-                            pros_join = "; ".join(pros_cons["pros"]) if pros_cons["pros"] else ""
-                            cons_join = "; ".join(pros_cons["cons"]) if pros_cons["cons"] else ""
+                    should_reprocess = should_reprocess_csv(COMMENTS_CSV, HASH_FILE)
 
-                            # 4) Topics
-                            topics = gpt_extract_topics(challenge_text)
-                            topics_join = "; ".join(topics)
+                    # Perform GPT processing or load from cache
+                    if should_reprocess or not os.path.exists(CACHE_FILE):
+                        st.warning("🧠 New data detected. Running fresh GPT analysis...")
 
-                            analysis_data.append({
-                                "idea_id": row["idea_id"],
-                                "axis": row["axis"],
-                                "channel": row["channel"],
-                                "challenge_sentiment": sentiment,
-                                "polarity_score": polarity_score,
-                                "challenge_summary_bullets": bullet_challenge,
-                                "solution_pros": pros_join,
-                                "solution_cons": cons_join,
-                                "extracted_topics": topics_join,
-                            })
+                        analysis_data = []
+                        with st.spinner("🔍 Analyzing comments with GPT..."):
+                            for i, row in df_comments_proc.iterrows():
+                                challenge = row["challenge"]
+                                solution = row["proposed_solution"]
 
-                    df_analysis = pd.DataFrame(analysis_data)
-                    st.dataframe(df_analysis)
+                                sentiment, polarity = gpt_arabic_sentiment_with_polarity(challenge)
+                                summary = gpt_bullet_summary(challenge)
+                                pros_cons = gpt_extract_pros_cons(solution)
+                                topics = gpt_extract_topics(challenge)
 
-                    # Polarity distribution
-                    st.write("#### Polarity Distribution (Histogram)")
-                    fig_pol, ax_pol = plt.subplots()
-                    ax_pol.hist(df_analysis["polarity_score"], bins=10, color="skyblue")
-                    ax_pol.set_title("Polarity Score Distribution")
-                    ax_pol.set_xlabel("Score (-1 = negative, +1 = positive)")
-                    ax_pol.set_ylabel("Count")
-                    st.pyplot(fig_pol)
+                                analysis_data.append({
+                                    "idea_id": row["idea_id"],
+                                    "axis": row["axis"],
+                                    "channel": row["channel"],
+                                    "sentiment": sentiment,
+                                    "polarity_score": polarity,
+                                    "summary": summary,
+                                    "pros": "; ".join(pros_cons.get("pros", [])),
+                                    "cons": "; ".join(pros_cons.get("cons", [])),
+                                    "topics": "; ".join(topics),
+                                })
 
-                    # Pie chart of sentiment distribution
-                    sentiment_counts = df_analysis["challenge_sentiment"].value_counts()
-                    st.write("#### Sentiment Distribution")
-                    fig_sent, ax_sent = plt.subplots()
-                    ax_sent.pie(sentiment_counts.values, labels=sentiment_counts.index, autopct="%1.1f%%")
-                    ax_sent.axis("equal")
-                    st.pyplot(fig_sent)
+                        df_analysis = pd.DataFrame(analysis_data)
+                        df_analysis.to_csv(CACHE_FILE, index=False)
+                        save_current_hash(COMMENTS_CSV, HASH_FILE)
+                        st.success("✅ GPT Analysis Complete and Cached.")
+                    else:
+                        st.success("✅ Using cached GPT analysis.")
+                        df_analysis = pd.read_csv(CACHE_FILE)
 
-                    # Wordcloud of challenges, translated to user-chosen language for display
-                    st.write(f"#### Word Cloud (Challenges) in {lang}")
+                    # Slider for row display
+                    num_rows = st.slider("🔢 Number of Rows to Display", 1, min(50, len(df_analysis)), 5)
+                    st.dataframe(df_analysis.head(num_rows))
+
+                    # Visualization 1: Polarity Histogram
+                    st.write("#### 📉 Polarity Score Distribution")
+                    fig1, ax1 = plt.subplots()
+                    ax1.hist(df_analysis["polarity_score"], bins=10, color="skyblue")
+                    ax1.set_title("Polarity Score Distribution")
+                    ax1.set_xlabel("Score (-1 = negative, +1 = positive)")
+                    ax1.set_ylabel("Count")
+                    st.pyplot(fig1)
+
+                    # Visualization 2: Sentiment Pie Chart
+                    st.write("#### 🥧 Sentiment Distribution")
+                    sentiment_counts = df_analysis["sentiment"].value_counts()
+                    fig2, ax2 = plt.subplots()
+                    ax2.pie(sentiment_counts, labels=sentiment_counts.index, autopct="%1.1f%%", startangle=140)
+                    ax2.axis("equal")
+                    st.pyplot(fig2)
+
+                    # Visualization 3: Word Cloud
+                    st.write(f"#### ☁️ Word Cloud (Challenges) in {lang}")
                     plot_wordcloud(
-                        filtered_comments["challenge"].astype(str).tolist(),
+                        df_comments_proc["challenge"].astype(str).tolist(),
                         f"Challenges Word Cloud ({lang})",
                         target_language="English" if lang in ["English", "Darija"] else lang
                     )
