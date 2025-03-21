@@ -191,6 +191,7 @@ def login_page():
                     st.success(f"Site language set to: {chosen_language}")
                     st.experimental_rerun()
                 st.stop()
+    
             else:
                 # If language is already set, show a note
                 st.info(f"Your chosen language is: {st.session_state.site_language}")
