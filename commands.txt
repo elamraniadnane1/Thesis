@@ -1,2 +1,1 @@
-python -m streamlit run sentiment_analysis_example.py
 python -m streamlit run Admin_View.py

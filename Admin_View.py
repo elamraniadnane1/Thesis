@@ -57,7 +57,7 @@ st.set_page_config(
 openai.api_key = st.secrets["openai"]["api_key"]
 
 # Import the authentication system
-from auth_system import init_auth, login_page, require_auth
+from auth_system import init_auth, login_page, require_auth, require_admin
 # Initialize authentication
 init_auth()
 # Check authentication before showing the main app
@@ -805,8 +805,11 @@ def highlight_sentiment(row):
     elif row["sentiment"] == "NEU":
         color = "#f9f9c5"  # light yellow
     return [f"background-color: {color}"] * len(row)
-@require_auth
+
+
+@require_admin
 def main():
+
 
     # Sidebar options
     with st.sidebar:
