@@ -3,60 +3,53 @@
 import streamlit as st
 import pandas as pd
 import openai
+import os
+import numpy as np
+import matplotlib.pyplot as plt
+from wordcloud import WordCloud
+import base64
 from datetime import datetime
 
-# Import your auth decorators and verification methods
+# Auth system (your own code or from 'auth_system.py')
 from auth_system import require_auth, verify_jwt_token
 
 ##############################################################################
-# 1) Initialize the GPT API
+# 1) GPT Initialization
 ##############################################################################
 def init_gpt():
-    """
-    Initialize OpenAI GPT with the key from Streamlit secrets.
-    Ensure you have your openai api_key in secrets.toml:
-      [openai]
-      api_key = "<YOUR-OPENAI-API-KEY>"
-    """
+    """Initialize OpenAI GPT with API key from Streamlit secrets."""
     openai.api_key = st.secrets["openai"]["api_key"]
 
 ##############################################################################
-# 2) Helper Functions to Call GPT for Sentiment & Summaries
+# 2) GPT-based Helper Functions
 ##############################################################################
 
 def gpt_arabic_sentiment(text: str) -> str:
     """
-    A very simple GPT-based sentiment classifier for short Arabic text.
-    We'll prompt GPT with instructions to return "POS", "NEG", or "NEU".
-    This is a minimal example; you can refine the system/user instructions further.
+    Classify Arabic text as POS (إيجابي), NEG (سلبي), or NEU (محايد) using GPT.
+    Minimal prompt – you can refine further if you like.
     """
     if not text.strip():
         return "NEU"
 
-    prompt = f"""
-    أنت محلل مختص في فهم شعور التعليقات بالعربية. صنّف النص التالي لأحد التصنيفات الثلاثة:
-    - POS (إيجابي)
-    - NEG (سلبي)
-    - NEU (محايد)
-
+    system_msg = "You are a helpful assistant for Arabic sentiment analysis."
+    user_msg = f"""
+    أنت محلل شعوري مختص. صنف النص التالي باعتباره إيجابياً (POS)،
+    أو سلبياً (NEG)، أو محايداً (NEU).
     النص: {text}
-
-    أجب فقط برمز التصنيف: POS أو NEG أو NEU
+    أجب حصراً برمز واحد من بين: POS, NEG, NEU
     """
     try:
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo", 
+            model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": "You are a helpful assistant for Arabic sentiment analysis."},
-                {"role": "user", "content": prompt}
+                {"role": "system", "content": system_msg},
+                {"role": "user", "content": user_msg},
             ],
             max_tokens=10,
-            temperature=0.0
+            temperature=0.0,
         )
-        # Extract the text
         classification = response["choices"][0]["message"]["content"].strip()
-        # We expect classification to be something like "POS", "NEG", or "NEU"
-        # If it returns something else, handle fallback
         if classification not in ["POS", "NEG", "NEU"]:
             classification = "NEU"
         return classification
@@ -65,31 +58,36 @@ def gpt_arabic_sentiment(text: str) -> str:
         return "NEU"
 
 
-def gpt_arabic_summary(text: str) -> str:
+def gpt_arabic_summary(text: str, brief: bool = True) -> str:
     """
-    Use GPT to produce a brief Arabic summary of a comment or challenge/solution statement.
-    Adjust the prompt for your domain or style. 
+    Summarize Arabic text. If brief=True, produce a short (1-2 sentences) summary.
     """
     if not text.strip():
         return "لا يوجد نص للخلاصة."
 
-    prompt = f"""
-    لخص النص التالي باللغة العربية في جملة واحدة أو اثنتين:
+    if brief:
+        user_msg = f"""
+        لخص النص التالي في جملة أو جملتين:
+        {text}
+        """
+    else:
+        user_msg = f"""
+        لخص النص التالي بشكل عام، وأذكر النقاط الإيجابية والسلبية إن وجدت:
+        {text}
+        """
 
-    النص: 
-    {text}
-
-    الرجاء تقديم خلاصة موجزة وواضحة.
-    """
     try:
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": "You are a helpful assistant specialized in Arabic summarization."},
-                {"role": "user", "content": prompt}
+                {
+                    "role": "system",
+                    "content": "You are a helpful assistant specialized in Arabic summarization.",
+                },
+                {"role": "user", "content": user_msg},
             ],
-            max_tokens=100,
-            temperature=0.0
+            max_tokens=200,
+            temperature=0.0,
         )
         summary = response["choices"][0]["message"]["content"].strip()
         return summary
@@ -98,13 +96,73 @@ def gpt_arabic_summary(text: str) -> str:
         return "تعذّر توليد خلاصة."
 
 
+def gpt_extract_pros_cons(text: str) -> dict:
+    """
+    Attempt to extract top pros and cons from a text using GPT. 
+    Return a dict with {'pros': [...], 'cons': [...]}
+    If none found, return empty arrays.
+    """
+    if not text.strip():
+        return {"pros": [], "cons": []}
+
+    user_msg = f"""
+    اقرأ النص التالي بالعربية، واستخرج النقاط الإيجابية (Pros) والنقاط السلبية (Cons).
+    النص:
+    {text}
+
+    صيغة الجواب المقترحة:
+    Pros:
+    - ...
+    - ...
+    Cons:
+    - ...
+    - ...
+    """
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {
+                    "role": "system",
+                    "content": "You are an assistant that extracts pros and cons from Arabic text.",
+                },
+                {"role": "user", "content": user_msg},
+            ],
+            max_tokens=300,
+            temperature=0.0,
+        )
+        content = response["choices"][0]["message"]["content"].strip()
+        # We'll do a basic parse: look for lines after 'Pros:' and 'Cons:'
+        pros = []
+        cons = []
+        lines = content.splitlines()
+        current_section = None
+        for line in lines:
+            line = line.strip()
+            if "Pros:" in line:
+                current_section = "pros"
+                continue
+            elif "Cons:" in line:
+                current_section = "cons"
+                continue
+            elif line.startswith("-"):
+                if current_section == "pros":
+                    pros.append(line.lstrip("-").strip())
+                elif current_section == "cons":
+                    cons.append(line.lstrip("-").strip())
+
+        return {"pros": pros, "cons": cons}
+    except Exception as e:
+        st.warning(f"GPT Pros/Cons Error: {e}")
+        return {"pros": [], "cons": []}
+
+
 ##############################################################################
-# 3) Load CSV Data (REMACTO Comments & REMACTO Projects)
+# 3) Load CSV Data
 ##############################################################################
 def load_remacto_comments(csv_path: str) -> pd.DataFrame:
     """
-    Load the REMACTO Comments CSV. 
-    Format (as given):
+    REMACTO Comments CSV:
       رقم الفكرة,القناة,المحور,ما هي التحديات / الإشكاليات المطروحة ؟,ما هو الحل المقترح ؟
     """
     try:
@@ -114,7 +172,7 @@ def load_remacto_comments(csv_path: str) -> pd.DataFrame:
             "channel",
             "axis",
             "challenge",
-            "proposed_solution"
+            "proposed_solution",
         ]
         return df
     except Exception as e:
@@ -124,8 +182,7 @@ def load_remacto_comments(csv_path: str) -> pd.DataFrame:
 
 def load_remacto_projects(csv_path: str) -> pd.DataFrame:
     """
-    Load the REMACTO Projects CSV. 
-    Format (as given):
+    REMACTO Projects CSV:
       titles,CT,Collectivité territorial,المواضيع
     """
     try:
@@ -134,7 +191,7 @@ def load_remacto_projects(csv_path: str) -> pd.DataFrame:
             "title",
             "CT",
             "collectivite_territoriale",
-            "themes"
+            "themes",
         ]
         return df
     except Exception as e:
@@ -142,146 +199,302 @@ def load_remacto_projects(csv_path: str) -> pd.DataFrame:
         return pd.DataFrame()
 
 ##############################################################################
-# 4) Main User Dashboard
+# 4) Utility: Wordcloud
 ##############################################################################
+def plot_wordcloud(texts: list, title: str = "Word Cloud"):
+    """
+    Generate a word cloud from a list of Arabic strings.
+    We'll use a simple approach - you might want 
+    to remove stopwords, etc., in production.
+    """
+    joined_text = " ".join(texts)
+    # Adjust font_path to a local .ttf if you want Arabic wordcloud shaping
+    # For demonstration, we do a basic approach
+    wc = WordCloud(
+        width=800,
+        height=400,
+        background_color="white",
+        collocations=False,
+    ).generate(joined_text)
+
+    fig, ax = plt.subplots(figsize=(8, 4))
+    ax.imshow(wc, interpolation="bilinear")
+    ax.set_title(title, fontsize=16)
+    ax.axis("off")
+    st.pyplot(fig)
+
+##############################################################################
+# 5) Store Citizen Inputs
+##############################################################################
+def store_user_input_in_csv(username: str, input_type: str, content: str):
+    """
+    Append a row to 'user_inputs.csv' with columns:
+      [timestamp, username, input_type, content]
+    This ensures we keep a record of each user's input.
+    """
+    timestamp = datetime.now().isoformat()
+    row = {
+        "timestamp": timestamp,
+        "username": username,
+        "input_type": input_type,
+        "content": content,
+    }
+    csv_file = "user_inputs.csv"
+
+    # If the file doesn't exist, create with headers
+    file_exists = os.path.exists(csv_file)
+    df_new = pd.DataFrame([row])
+
+    if not file_exists:
+        df_new.to_csv(csv_file, index=False)
+    else:
+        df_existing = pd.read_csv(csv_file)
+        df_combined = pd.concat([df_existing, df_new], ignore_index=True)
+        df_combined.to_csv(csv_file, index=False)
+
 @require_auth
 def main():
     """
-    Enhanced user view that:
-    - Displays REMACTO Comments and Projects data
-    - Uses GPT-based sentiment analysis for Arabic text
-    - Summarizes each challenge or solution with GPT
-    - Allows user to see or filter by sentiment or axis
-    - Demonstrates how GPT can be leveraged for required tasks
+    A comprehensive user dashboard implementing 
+    multiple required features with maximum visualizations 
+    to foster citizen participation.
     """
-
-    # Step 1: Initialize GPT with your API key
+    # 1) Initialize GPT
     init_gpt()
 
-    st.title("👤 User View (My Dashboard)")
-    st.write("Welcome to your personal dashboard! Engage with ongoing proposals, get GPT-based insights, and more.")
+    st.title("👤 User View (REMACTO Dashboard)")
+    st.write("Welcome to your personal dashboard! Engage with projects, share feedback, see analytics, etc.")
 
-    # Retrieve the current JWT token from session_state
+    # Retrieve the current JWT token from session
     token = st.session_state.get("jwt_token", None)
-    
     if token:
         is_valid, username, role = verify_jwt_token(token)
         if is_valid:
             st.success(f"You are logged in as: **{username}** (Role: **{role}**)")
 
-            # ----------------------------------------------------------------------------
-            # 4A) Load the REMACTO CSV data
-            # ----------------------------------------------------------------------------
-            # TODO: Adjust the paths to your local files as needed:
-            comments_csv_path = r"REMACTO Comments.csv"
-            projects_csv_path = r"REMACTO Projects.csv"
+            # Let the user logout if desired
+            if st.button("Logout"):
+                st.session_state.jwt_token = None
+                st.experimental_rerun()
+
+            # Paths to your CSV
+            comments_csv_path = r"C:\Users\DELL\OneDrive\Desktop\Thesis\REMACTO Comments.csv"
+            projects_csv_path = r"C:\Users\DELL\OneDrive\Desktop\Thesis\REMACTO Projects.csv"
 
             df_comments = load_remacto_comments(comments_csv_path)
             df_projects = load_remacto_projects(projects_csv_path)
 
-            if df_comments.empty:
-                st.warning("No REMACTO Comments found or CSV not loaded.")
-            if df_projects.empty:
-                st.warning("No REMACTO Projects found or CSV not loaded.")
-            
-            # ----------------------------------------------------------------------------
-            # 4B) Explore & Summarize REMACTO Comments
-            # ----------------------------------------------------------------------------
-            with st.expander("🔎 Explore & Summarize Citizen Comments", expanded=True):
-                """
-                Below are the recorded ideas/challenges from the REMACTO system. 
-                We'll let GPT classify the sentiment of the proposed solutions 
-                or challenges, and also provide short summaries in Arabic.
-                """
-                if not df_comments.empty:
-                    st.write("### Raw Comments Data (First 10 Rows)")
+            # Tabs for organization
+            tabs = st.tabs(
+                [
+                    "📊 Comments Analysis",
+                    "🏗️ Projects",
+                    "⚙️ Proposals & Feedback",
+                    "📈 Additional Visualizations",
+                    "🗃️ View User Inputs",
+                ]
+            )
+
+            # -----------------------------------------------------------------
+            # TAB 1: Comments Analysis
+            # -----------------------------------------------------------------
+            with tabs[0]:
+                st.header("Citizen Comments (REMACTO)")
+
+                if df_comments.empty:
+                    st.warning("No REMACTO Comments available.")
+                else:
                     st.dataframe(df_comments.head(10))
 
+                    # Filter by axis
+                    unique_axes = df_comments["axis"].unique()
+                    selected_axis = st.selectbox(
+                        "Filter by Axis", 
+                        options=["All"] + list(unique_axes)
+                    )
+                    if selected_axis != "All":
+                        filtered_comments = df_comments[df_comments["axis"] == selected_axis]
+                    else:
+                        filtered_comments = df_comments
+
+                    st.write(f"Total {len(filtered_comments)} comments after filtering by axis: {selected_axis}")
+
+                    # GPT-based Analysis
                     st.write("### GPT-Based Sentiment & Summaries")
-                    # We'll let user choose how many rows to process (for performance)
-                    num_rows = st.slider("Number of Comments to Analyze", 1, min(50, len(df_comments)), 5)
-                    
-                    # We'll create placeholders for results
-                    analysis_results = []
-                    for idx in range(num_rows):
-                        row = df_comments.iloc[idx]
-                        challenge_text = str(row["challenge"])
-                        solution_text  = str(row["proposed_solution"])
+                    num_rows = st.slider("Number of Rows to Analyze", 1, min(50, len(filtered_comments)), 5)
 
-                        # 1) Sentiment for the challenge
-                        challenge_sentiment = gpt_arabic_sentiment(challenge_text)
-                        # 2) Summaries
-                        challenge_summary = gpt_arabic_summary(challenge_text)
-                        solution_summary  = gpt_arabic_summary(solution_text)
+                    # We'll store results to display and do some aggregated stats
+                    analysis_data = []
+                    with st.spinner("Analyzing comments with GPT..."):
+                        for i in range(num_rows):
+                            row = filtered_comments.iloc[i]
+                            challenge_text = row["challenge"]
+                            sol_text = row["proposed_solution"]
 
-                        analysis_results.append({
-                            "idea_id": row["idea_id"],
-                            "axis": row["axis"],
-                            "challenge": challenge_text[:80] + ("..." if len(challenge_text) > 80 else ""),
-                            "challenge_sentiment": challenge_sentiment,
-                            "challenge_summary": challenge_summary,
-                            "proposed_solution_summary": solution_summary
-                        })
+                            sent = gpt_arabic_sentiment(challenge_text)
+                            summary_challenge = gpt_arabic_summary(challenge_text, brief=True)
+                            summary_solution  = gpt_arabic_summary(sol_text, brief=True)
+
+                            # Optionally extract pros/cons from the proposed solution
+                            pc = gpt_extract_pros_cons(sol_text)
+
+                            analysis_data.append({
+                                "idea_id": row["idea_id"],
+                                "axis": row["axis"],
+                                "challenge_sentiment": sent,
+                                "challenge_summary": summary_challenge,
+                                "solution_summary": summary_solution,
+                                "solution_pros": "; ".join(pc["pros"]) if pc["pros"] else "",
+                                "solution_cons": "; ".join(pc["cons"]) if pc["cons"] else "",
+                            })
                     
-                    df_analysis = pd.DataFrame(analysis_results)
-                    st.write("### Analysis Results")
+                    df_analysis = pd.DataFrame(analysis_data)
                     st.dataframe(df_analysis)
 
-                    # Possibly let user filter by sentiment
-                    selected_sentiment = st.selectbox("Filter by Challenge Sentiment", ["All", "POS", "NEG", "NEU"])
-                    if selected_sentiment != "All":
-                        df_filtered = df_analysis[df_analysis["challenge_sentiment"] == selected_sentiment]
-                    else:
-                        df_filtered = df_analysis
-                    st.write(f"Showing {len(df_filtered)} row(s) matching sentiment '{selected_sentiment}'")
-                    st.dataframe(df_filtered)
+                    # Visualization: Pie chart of sentiments
+                    st.write("#### Sentiment Distribution (Challenge)")
+                    sentiment_counts = df_analysis["challenge_sentiment"].value_counts()
+                    fig1, ax1 = plt.subplots()
+                    ax1.pie(
+                        sentiment_counts.values,
+                        labels=sentiment_counts.index,
+                        autopct="%1.1f%%",
+                        startangle=140
+                    )
+                    ax1.axis("equal")
+                    st.pyplot(fig1)
 
+                    # Store the "comments" or "solution" texts for a word cloud
+                    st.write("#### Word Cloud of Challenges")
+                    plot_wordcloud(filtered_comments["challenge"].astype(str).tolist(), "Challenges Word Cloud")
+
+            # -----------------------------------------------------------------
+            # TAB 2: Projects
+            # -----------------------------------------------------------------
+            with tabs[1]:
+                st.header("Municipal Projects (REMACTO)")
+
+                if df_projects.empty:
+                    st.warning("No REMACTO Projects available.")
                 else:
-                    st.info("No comments to display/analysis.")
-
-            # ----------------------------------------------------------------------------
-            # 4C) Explore & Summarize REMACTO Projects
-            # ----------------------------------------------------------------------------
-            with st.expander("🏗️ Explore Municipal Projects", expanded=False):
-                """
-                These are the known projects from REMACTO Projects CSV. 
-                We can also run GPT summarization for 'title' or 'themes' 
-                for demonstration.
-                """
-                if not df_projects.empty:
-                    st.write("### Projects Data")
                     st.dataframe(df_projects)
 
-                    # Provide GPT summarization for the 'themes' column
-                    st.write("### Summaries of 'themes' via GPT")
+                    # Summarize the 'themes' for each project
+                    st.write("### Summaries of Project Themes")
+                    max_rows_proj = st.slider("Number of Projects to Summarize", 1, len(df_projects), 5)
                     project_summaries = []
-                    max_rows = st.slider("Number of Projects to Summarize", 1, len(df_projects), 5)
-                    for idx in range(max_rows):
-                        proj_row = df_projects.iloc[idx]
-                        theme_text = str(proj_row["themes"])
-                        summary = gpt_arabic_summary(theme_text)
-                        project_summaries.append({
-                            "title": proj_row["title"],
-                            "themes": theme_text,
-                            "themes_summary": summary
-                        })
-                    st.dataframe(pd.DataFrame(project_summaries))
+                    with st.spinner("Summarizing project themes..."):
+                        for idx in range(max_rows_proj):
+                            row = df_projects.iloc[idx]
+                            theme_text = row["themes"]
+                            summary = gpt_arabic_summary(theme_text, brief=False)
+                            project_summaries.append({
+                                "title": row["title"],
+                                "themes": theme_text,
+                                "themes_summary": summary,
+                            })
+                    st.write(pd.DataFrame(project_summaries))
 
+                    # Visualization: Bar chart of how many times each CT or axis appears
+                    st.write("### Projects by Collectivité Territoriale (CT)")
+                    ct_counts = df_projects["CT"].value_counts()
+                    st.bar_chart(ct_counts)
+
+            # -----------------------------------------------------------------
+            # TAB 3: Proposals & Feedback
+            # -----------------------------------------------------------------
+            with tabs[2]:
+                st.header("Submit a New Proposal or Feedback")
+
+                st.write("Use the forms below to propose new ideas or provide feedback about existing projects. Your input is stored for analysis.")
+
+                st.subheader("➕ Submit a Proposal")
+                proposal_title = st.text_input("Proposal Title", placeholder="e.g. مسارات خاصة للدراجات في المدينة")
+                proposal_description = st.text_area("Proposal Description", placeholder="Describe your idea in detail...")
+
+                if st.button("Submit Proposal"):
+                    if proposal_title.strip() and proposal_description.strip():
+                        # store in a local CSV
+                        store_user_input_in_csv(username, "proposal", f"Title: {proposal_title}\nDesc: {proposal_description}")
+                        st.success("Your proposal has been submitted successfully!")
+                    else:
+                        st.warning("Please provide both title and description.")
+
+                st.subheader("💬 Provide Feedback")
+                feedback_text = st.text_area("Your Feedback", placeholder="Any feedback or concerns about the city projects?")
+                if st.button("Send Feedback"):
+                    if feedback_text.strip():
+                        store_user_input_in_csv(username, "feedback", feedback_text)
+                        st.success("Thank you! Your feedback has been recorded.")
+                    else:
+                        st.warning("Please enter some feedback.")
+
+            # -----------------------------------------------------------------
+            # TAB 4: Additional Visualizations
+            # -----------------------------------------------------------------
+            with tabs[3]:
+                st.header("Additional Visualizations & Analysis")
+
+                st.write("""
+                    Here we demonstrate further visualizations that can help 
+                    stakeholders see data at a glance and ensure maximum 
+                    transparency and citizen engagement.
+                """)
+
+                if not df_comments.empty:
+                    # 1) Axis distribution from comments
+                    axis_counts = df_comments["axis"].value_counts()
+                    st.write("### Axis Distribution (Bar Chart)")
+                    st.bar_chart(axis_counts)
+
+                    # 2) Channel distribution (e.g., 'اللقاء', etc.)
+                    channel_counts = df_comments["channel"].value_counts()
+                    st.write("### Channels Used (Pie Chart)")
+                    fig2, ax2 = plt.subplots()
+                    ax2.pie(channel_counts.values, labels=channel_counts.index, autopct="%1.1f%%")
+                    ax2.axis("equal")
+                    st.pyplot(fig2)
+
+                    # 3) Time-based approach? 
+                    # If there's no real date, we can't do timeline. 
+                    # But let's imagine we had a date column.
+                    st.write("*(No date column in the CSV, skipping timeline charts...)*")
+
+                    # 4) Another word cloud for solutions
+                    st.write("### Word Cloud of Proposed Solutions")
+                    plot_wordcloud(df_comments["proposed_solution"].astype(str).tolist(), "Proposed Solutions Word Cloud")
                 else:
-                    st.info("No projects to display.")
-            
-            # ----------------------------------------------------------------------------
-            # Additional user-level features could go here
-            # e.g., personal timeline, proposals, comments, etc. 
-            # This is just a minimal demonstration focusing on using GPT 
-            # for analyzing the loaded CSV data.
-            # ----------------------------------------------------------------------------
+                    st.info("No comments to visualize here...")
 
-            # Provide a logout button
-            st.write("---")
-            if st.button("Logout Now"):
-                st.session_state.jwt_token = None
-                st.experimental_rerun()
+            # -----------------------------------------------------------------
+            # TAB 5: View User Inputs
+            # -----------------------------------------------------------------
+            with tabs[4]:
+                st.header("🗃️ All Stored Inputs from Citizens")
+
+                # We'll load from user_inputs.csv if it exists
+                if not os.path.exists("user_inputs.csv"):
+                    st.info("No user inputs stored yet. Interact with the proposals/feedback forms first.")
+                else:
+                    df_user_inputs = pd.read_csv("user_inputs.csv")
+                    st.dataframe(df_user_inputs)
+
+                    # Filter by current user or show all if admin
+                    if role != "admin":
+                        # Show only the current user's inputs
+                        df_user_specific = df_user_inputs[df_user_inputs["username"] == username]
+                        st.write(f"Displaying inputs only for you, **{username}**:")
+                        st.dataframe(df_user_specific)
+
+                    # Optionally, we can export these inputs as CSV
+                    st.write("### Export Citizen Inputs as CSV")
+                    csv_data = df_user_inputs.to_csv(index=False).encode("utf-8")
+                    st.download_button(
+                        label="Download CSV",
+                        data=csv_data,
+                        file_name="user_inputs_all.csv",
+                        mime="text/csv"
+                    )
 
         else:
             st.warning("Token is invalid or expired. Please log in again.")
@@ -289,5 +502,6 @@ def main():
         st.info("No token found in session. Please go back and log in.")
 
 
+# If running as a standalone
 if __name__ == "__main__":
     main()
