@@ -1,10 +1,10 @@
-# File: Login.py
+# File: login.py
 
 import streamlit as st
-import time
-import os
 import openai
+import os
 
+# Your authentication methods from auth_system.py
 from auth_system import (
     init_auth,
     verify_user,
@@ -15,9 +15,11 @@ from auth_system import (
 
 def login_page():
     """
-    Display a Streamlit-based login/registration page.
-    After a successful login, prompt the user to choose
-    a site language (Arabic, French, English, or Moroccan Darija).
+    Displays a Streamlit-based login/registration page.
+    1) Optionally override GPT API key at runtime.
+    2) Provide a login form (username, password) with st.form_submit_button.
+    3) After successful login, prompt user for site language outside the form.
+    4) Store the chosen language in session_state.
     """
 
     st.markdown(
@@ -169,137 +171,129 @@ def login_page():
         unsafe_allow_html=True
     )
 
-    # 1) If we don't have 'jwt_token' in session, create it
-    if 'jwt_token' not in st.session_state:
-        st.session_state.jwt_token = None
+    # If there's no jwt_token, initialize it
+    if "jwt_token" not in st.session_state:
+        st.session_state["jwt_token"] = None
 
-    # 2) Check if there's a valid token
-    if st.session_state.jwt_token is not None:
-        is_valid, username, role = verify_jwt_token(st.session_state.jwt_token)
+    # Check if user is already logged in
+    if st.session_state["jwt_token"] is not None:
+        is_valid, username, role = verify_jwt_token(st.session_state["jwt_token"])
         if is_valid:
             st.success(f"You are already logged in as **{username}** (Role: **{role}**).")
 
-            # -- If no site_language is chosen yet, prompt for it
-            if 'site_language' not in st.session_state:
+            # If no site_language, prompt
+            if "site_language" not in st.session_state:
                 st.write("Please choose your preferred site language:")
                 chosen_language = st.selectbox("Select Language", ["Arabic", "French", "English", "Darija"])
+                # Normal button outside the form
                 if st.button("Apply Language"):
-                    st.session_state.site_language = chosen_language
+                    st.session_state["site_language"] = chosen_language
                     st.success(f"Site language set to: {chosen_language}")
-                    # Possibly do st.experimental_rerun() or st.stop() here
-                    st.stop()
-
-            # If the user already has a site_language, show them a quick summary
+                    st.experimental_rerun()
+                st.stop()
             else:
-                st.info(f"Your chosen language is currently: {st.session_state.site_language}")
+                # If language is already set, show a note
+                st.info(f"Your chosen language is: {st.session_state.site_language}")
 
-            # Provide a logout button
             if st.button("Logout"):
-                st.session_state.jwt_token = None
-                if 'site_language' in st.session_state:
-                    del st.session_state['site_language']
+                st.session_state["jwt_token"] = None
+                if "site_language" in st.session_state:
+                    del st.session_state["site_language"]
                 st.experimental_rerun()
 
-            # If you want to hide the login form entirely once logged in:
+            # Hide login forms if user is logged in
             st.stop()
         else:
             # Clear invalid token
-            st.session_state.jwt_token = None
+            st.session_state["jwt_token"] = None
 
-    # 3) Prompt user for GPT Key (stores in local environment at runtime, not saved)
+    # ============= GPT KEY OVERRIDE (Optional) =============
     st.subheader("Optional: Provide Your GPT API Key")
     st.write("""
         If you'd like to override the default GPT API key, enter it below.
-        This key will be stored **locally** in the current session 
-        as `openai.api_key` (not persisted to disk).
+        This key will be stored **only in the current session** (not saved to disk).
     """)
-
-    new_gpt_key = st.text_input(
-        "OpenAI GPT API Key",
-        type="password",
-        placeholder="sk-..."
-    )
+    new_gpt_key = st.text_input("OpenAI GPT API Key", type="password", placeholder="sk-...")
     if st.button("Use This GPT Key"):
         if new_gpt_key.strip():
-            # Temporarily store the user-provided key
             openai.api_key = new_gpt_key
             st.success("OpenAI API key set for this session!")
         else:
             st.warning("Please enter a valid OpenAI key.")
-
     st.markdown("---")
 
-    # 4) LOGIN FORM
+    # ============= LOGIN FORM =============
     st.subheader("Login to Your Account")
     with st.form("login_form", clear_on_submit=True):
         username = st.text_input("Username", key="login_username")
         password = st.text_input("Password", type="password", key="login_password")
-        submitted = st.form_submit_button("Login")
 
-        if submitted:
-            success, user_role = verify_user(username, password)
-            if success:
-                token = create_jwt_token(username, user_role)
-                if token:
-                    st.session_state.jwt_token = token
-                    st.success("Login successful! Please select your site language.")
-                    # Immediately prompt for the language:
-                    chosen_language = st.selectbox("Select Language", ["Arabic", "French", "English", "Darija"], key="lang_on_login")
-                    if st.button("Apply Language", key="apply_lang_on_login"):
-                        st.session_state.site_language = chosen_language
-                        st.success(f"Site language set to {chosen_language}. Redirecting to main page...")
-                        st.experimental_rerun()
-                    st.stop()  # Stop so user can pick language
-                else:
-                    st.error("Error creating session token.")
+        # Use form_submit_button for the main login action
+        login_submitted = st.form_submit_button("Login")
+
+    if login_submitted:
+        success, user_role = verify_user(username, password)
+        if success:
+            # Create the JWT token
+            token = create_jwt_token(username, user_role)
+            if token:
+                st.session_state["jwt_token"] = token
+                st.success("Login successful! Please select your site language below.")
+
+                # Show language selection (outside the form)
+                chosen_language = st.selectbox("Select Language", ["Arabic", "French", "English", "Darija"], key="language_after_login")
+
+                # A normal button to confirm language
+                apply_lang = st.button("Apply Language", key="apply_language_button")
+                if apply_lang:
+                    st.session_state["site_language"] = chosen_language
+                    st.success(f"Site language set to {chosen_language}. Reloading...")
+                    st.experimental_rerun()
+                st.stop()
             else:
-                st.error("Invalid username or password.")
+                st.error("Error creating session token.")
+        else:
+            st.error("Invalid username or password.")
 
-    # 5) REGISTRATION
+    # ============= REGISTRATION SECTION =============
     with st.expander("New User? Register Here", expanded=False):
         st.write("Create a new account to explore the Civic Catalyst platform.")
         with st.form("registration_form", clear_on_submit=True):
             new_username = st.text_input("New Username", key="reg_username")
             new_password = st.text_input("New Password", type="password", key="reg_password")
             confirm_password = st.text_input("Confirm Password", type="password", key="reg_confirm")
-            
-            role_choice = st.selectbox(
-                "Select Role (Admins have special privileges)",
-                options=["user", "admin"],
-                index=0
-            )
-            
-            register_btn = st.form_submit_button("Register")
 
-            if register_btn:
-                if new_password != confirm_password:
-                    st.error("Passwords do not match.")
-                elif len(new_password) < 6:
-                    st.error("Password must be at least 6 characters long.")
+            role_choice = st.selectbox("Select Role", ["user", "admin"], index=0)
+            register_submitted = st.form_submit_button("Register")
+
+        if register_submitted:
+            if new_password != confirm_password:
+                st.error("Passwords do not match.")
+            elif len(new_password) < 6:
+                st.error("Password must be at least 6 characters long.")
+            else:
+                created = create_user(new_username, new_password, role=role_choice)
+                if created:
+                    st.success(f"Registration successful! (Role = {role_choice}). You can now log in.")
                 else:
-                    created = create_user(new_username, new_password, role=role_choice)
-                    if created:
-                        st.success(f"Registration successful! (Role = {role_choice}). You can now log in.")
-                    else:
-                        st.error("Username already exists or registration failed.")
+                    st.error("Username already exists or registration failed.")
 
-    return False  # Indicate user is not fully logged in if code reaches here
+    return False
 
 
 def main():
     """
-    Run this file as a standalone:
-      streamlit run Login.py
+    You can run this file as:
+      streamlit run login.py
 
-    If used in a multipage environment, 
-    you might call `login_page()` from another script.
+    Or use the login_page() function in your multi-page app.
     """
     st.title("Welcome to Civic Catalyst")
     st.write("Use the form below to log in or register.")
     
-    # Initialize auth system
+    # Initialize your authentication system (create CSV if needed, etc.)
     init_auth()
-    
+
     # Run the login page
     login_page()
 
