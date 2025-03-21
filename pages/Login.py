@@ -16,8 +16,8 @@ from auth_system import (
 def login_page():
     """
     Display a Streamlit-based login/registration page.
-    This page handles both user & admin logins (the 'role' is determined
-    during user creation or from the auth CSV).
+    After a successful login, prompt the user to choose
+    a site language (Arabic, French, English, or Moroccan Darija).
     """
 
     st.markdown(
@@ -169,7 +169,7 @@ def login_page():
         unsafe_allow_html=True
     )
 
-    # 1) Initialize session token if not present
+    # 1) If we don't have 'jwt_token' in session, create it
     if 'jwt_token' not in st.session_state:
         st.session_state.jwt_token = None
 
@@ -178,19 +178,40 @@ def login_page():
         is_valid, username, role = verify_jwt_token(st.session_state.jwt_token)
         if is_valid:
             st.success(f"You are already logged in as **{username}** (Role: **{role}**).")
+
+            # -- If no site_language is chosen yet, prompt for it
+            if 'site_language' not in st.session_state:
+                st.write("Please choose your preferred site language:")
+                chosen_language = st.selectbox("Select Language", ["Arabic", "French", "English", "Darija"])
+                if st.button("Apply Language"):
+                    st.session_state.site_language = chosen_language
+                    st.success(f"Site language set to: {chosen_language}")
+                    # Possibly do st.experimental_rerun() or st.stop() here
+                    st.stop()
+
+            # If the user already has a site_language, show them a quick summary
+            else:
+                st.info(f"Your chosen language is currently: {st.session_state.site_language}")
+
+            # Provide a logout button
             if st.button("Logout"):
                 st.session_state.jwt_token = None
+                if 'site_language' in st.session_state:
+                    del st.session_state['site_language']
                 st.experimental_rerun()
-            st.stop()  # Hide login form entirely if user is logged in
+
+            # If you want to hide the login form entirely once logged in:
+            st.stop()
         else:
+            # Clear invalid token
             st.session_state.jwt_token = None
 
-    # 3) Prompt user for GPT Key (stores in local environment at runtime)
+    # 3) Prompt user for GPT Key (stores in local environment at runtime, not saved)
     st.subheader("Optional: Provide Your GPT API Key")
     st.write("""
         If you'd like to override the default GPT API key, enter it below.
         This key will be stored **locally** in the current session 
-        as `openai.api_key` (won't be saved to any file).
+        as `openai.api_key` (not persisted to disk).
     """)
 
     new_gpt_key = st.text_input(
@@ -200,7 +221,7 @@ def login_page():
     )
     if st.button("Use This GPT Key"):
         if new_gpt_key.strip():
-            # Store the user-provided key in openai.api_key
+            # Temporarily store the user-provided key
             openai.api_key = new_gpt_key
             st.success("OpenAI API key set for this session!")
         else:
@@ -221,8 +242,14 @@ def login_page():
                 token = create_jwt_token(username, user_role)
                 if token:
                     st.session_state.jwt_token = token
-                    st.success("Login successful! Redirecting...")
-                    st.experimental_rerun()
+                    st.success("Login successful! Please select your site language.")
+                    # Immediately prompt for the language:
+                    chosen_language = st.selectbox("Select Language", ["Arabic", "French", "English", "Darija"], key="lang_on_login")
+                    if st.button("Apply Language", key="apply_lang_on_login"):
+                        st.session_state.site_language = chosen_language
+                        st.success(f"Site language set to {chosen_language}. Redirecting to main page...")
+                        st.experimental_rerun()
+                    st.stop()  # Stop so user can pick language
                 else:
                     st.error("Error creating session token.")
             else:
@@ -256,7 +283,7 @@ def login_page():
                     else:
                         st.error("Username already exists or registration failed.")
 
-    return False  # Indicate user is not logged in if code reaches here
+    return False  # Indicate user is not fully logged in if code reaches here
 
 
 def main():
