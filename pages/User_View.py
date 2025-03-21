@@ -537,6 +537,51 @@ def main():
     # Shortcut to the dictionary for the chosen language
     L = ui_texts[lang]
 
+     # ======================== SIDEBAR (ARABIC) ========================
+    st.sidebar.title("لوحة جانبية (Side Bar)")
+    
+    # A big welcome text for illiterate/literate
+    st.sidebar.markdown("### 🤝 مرحباً بكم في المنصة!")
+    st.sidebar.markdown("""
+    هذه اللوحة الجانبية تقدم مجموعة من الأدوات:
+    - الإرشادات الصوتية
+    - تكبير الخط
+    - استخدام الأيقونات البصرية
+    """)
+    
+    # 1) Accessibility Expanders
+    with st.sidebar.expander("🦻 إعدادات الوصول"):
+        # Option: Increase font size
+        font_size = st.selectbox("حجم الخط:", ["صغير", "متوسط", "كبير"])
+        st.write("يمكنك اختيار حجم الخط المناسب.")
+        # Option: Provide a toggle for "High Contrast Mode"
+        high_contrast = st.checkbox("وضع تباين عالٍ")
+        st.write("هذا الوضع يرفع من وضوح العناصر للأشخاص ذوي القدرة المحدودة على الرؤية.")
+    
+    # 2) Audio Guidance / TTS for illiterate users
+    with st.sidebar.expander("🔊 مساعدة صوتية (TTS)"):
+        st.write("للمستخدمين الذين لا يقرؤون العربية بسهولة، يمكنهم الاستماع إلى النصوص الأساسية.")
+        # Placeholder: We can have a button to "Play Audio" or "Stop Audio"
+        if st.button("تشغيل المساعدة الصوتية"):
+            st.info("🚧 يجري تشغيل المساعدة الصوتية... (نموذج تجريبي)")
+        if st.button("إيقاف"):
+            st.info("🚧 تم إيقاف المساعدة الصوتية.")
+    
+    # 3) Icons / Visual Aids
+    st.sidebar.markdown("### 🏷️ رموز بصرية مساعدة:")
+    st.sidebar.write("يمكنك ملاحظة استخدام الأيقونات لتسهيل التعرف على الأقسام:")
+    st.sidebar.write("- 📊 للبيانات العامة")
+    st.sidebar.write("- 📝 للإقتراحات")
+    st.sidebar.write("- 💭 للملاحظات")
+    st.sidebar.write("- 🔓 لتسجيل الخروج")
+    
+    # 4) Possibly a "Language Switcher" in Arabic (though we have a site_language from login)
+    with st.sidebar.expander("🌐 تغيير اللغة"):
+        chosen_lang = st.selectbox("اختر لغة العرض", ["Arabic", "English", "French", "Darija"], index=0)
+        if st.button("تطبيق اللغة"):
+            st.session_state.site_language = chosen_lang
+            st.experimental_rerun()
+
     # Title & Description
     st.title(L["title"])
     st.write("Welcome to your personal dashboard! Engage with projects, share feedback, see analytics, etc.")
