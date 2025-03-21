@@ -11,17 +11,23 @@ import base64
 from datetime import datetime
 import re
 
-
 # Auth system (your own code from 'auth_system.py')
 from auth_system import require_auth, verify_jwt_token
+
 
 ##############################################################################
 # 1) GPT Initialization
 ##############################################################################
 def init_gpt():
-    """Initialize OpenAI GPT with API key from Streamlit secrets."""
-    openai.api_key = st.secrets["openai"]["api_key"]
-    
+    """
+    Initialize OpenAI GPT with the key stored in st.secrets.
+    If you are allowing the user to override via runtime assignment
+    (like in your login page), you might need to conditionally
+    set openai.api_key = st.secrets["openai"]["api_key"] only if
+    openai.api_key isn't already set.
+    """
+    if not openai.api_key:
+        openai.api_key = st.secrets["openai"]["api_key"]
 
 
 ##############################################################################
@@ -32,18 +38,17 @@ def normalize_arabic(text: str) -> str:
     Simple normalization: remove diacritics, extra spaces, etc.
     For demonstration; you can expand with more robust steps if needed.
     """
-    # 1) Remove diacritics
     # Arabic diacritics pattern
     arabic_diacritics = re.compile(r'[\u0617-\u061A\u064B-\u0652]')
     text = re.sub(arabic_diacritics, '', text)
 
-    # 2) Remove tatweel / kashida
+    # Remove tatweel / kashida
     text = re.sub(r'ـ+', '', text)
 
-    # 3) Remove punctuation (basic approach)
+    # Remove punctuation (basic approach)
     text = re.sub(r'[^\w\s]', '', text)
 
-    # 4) Trim extra spaces
+    # Trim extra spaces
     text = ' '.join(text.split())
 
     return text.strip()
@@ -52,18 +57,11 @@ def normalize_arabic(text: str) -> str:
 ##############################################################################
 # 3) GPT-based Helper Functions
 ##############################################################################
-
 def gpt_arabic_sentiment_with_polarity(text: str) -> tuple:
     """
-    Classify Arabic text with a sentiment label (POS/NEG/NEU) 
-    and return also a numeric polarity from -1.0 (very negative) to +1.0 (very positive).
-
-    We'll prompt GPT for a short JSON-like reply:
-    {
-      "sentiment": "POS" or "NEG" or "NEU",
-      "score": 0.7
-    }
-    (score is in range [-1, +1], with negative for negative sentiment).
+    Classify Arabic text with a sentiment label (POS/NEG/NEU)
+    plus a numeric polarity from -1.0 to +1.0.
+    Returns (sentiment_label, polarity_score).
     """
     text = text.strip()
     if not text:
@@ -73,17 +71,18 @@ def gpt_arabic_sentiment_with_polarity(text: str) -> tuple:
     user_msg = f"""
     حلل الشعور في النص أدناه وأعطِ استنتاجاً من فضلك:
     1) التصنيف: اختر من بين 'POS' إيجابي، 'NEG' سلبي، أو 'NEU' محايد
-    2) درجة رقمية تعبر عن قطبية الشعور بين -1.0 (سلبي جدًا) إلى +1.0 (إيجابي جدًا).
+    2) درجة رقمية بين -1.0 إلى +1.0 للتعبير عن مستوى الإيجابية أو السلبية
 
-    أجب في شكل JSON فقط بدون توضيح إضافي:
+    رجاء أجب بصيغة JSON فقط بالشكل:
     {{
-      "sentiment": "POS" / "NEG" / "NEU",
+      "sentiment": "POS"/"NEG"/"NEU",
       "score": float
     }}
 
     النص:
     {text}
     """
+
     try:
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
@@ -96,25 +95,20 @@ def gpt_arabic_sentiment_with_polarity(text: str) -> tuple:
         )
         content = response["choices"][0]["message"]["content"].strip()
 
-        # Attempt to parse JSON
         import json
         parsed = {}
         try:
             parsed = json.loads(content)
         except:
-            # fallback if GPT doesn't return perfect JSON
-            # let's do some quick string searching
-            # Or default to NEU, 0.0
+            # If GPT didn't return perfect JSON, fallback
             pass
 
         sentiment = parsed.get("sentiment", "NEU")
-        score = parsed.get("score", 0.0)
-        # Validate the sentiment
+        score = float(parsed.get("score", 0.0))
+
         if sentiment not in ["POS", "NEG", "NEU"]:
             sentiment = "NEU"
-        # Ensure score is in [-1, +1]
-        score = max(-1.0, min(1.0, float(score)))
-
+        score = max(-1.0, min(1.0, score))
         return (sentiment, score)
     except Exception as e:
         st.warning(f"GPT Sentiment Error: {e}")
@@ -123,7 +117,7 @@ def gpt_arabic_sentiment_with_polarity(text: str) -> tuple:
 
 def gpt_bullet_summary(text: str) -> str:
     """
-    Generate bullet-point summary in Arabic for text.
+    Generate bullet-point summary in Arabic for the given text.
     """
     if not text.strip():
         return "لا يوجد نص للخلاصة."
@@ -133,7 +127,7 @@ def gpt_bullet_summary(text: str) -> str:
     النص:
     {text}
 
-    الرجاء أن تكون الإجابة عبارة عن نقاط (– ...)
+    الرجاء أن تكون الإجابة عبارة عن نقاط:
     """
     try:
         response = openai.ChatCompletion.create(
@@ -157,8 +151,8 @@ def gpt_bullet_summary(text: str) -> str:
 
 def gpt_extract_pros_cons(text: str) -> dict:
     """
-    Attempt to extract top pros and cons from a text using GPT. 
-    Return a dict with {'pros': [...], 'cons': [...]}
+    Attempt to extract top pros and cons from a text using GPT.
+    Return a dict with {'pros': [...], 'cons': [...]}.
     """
     if not text.strip():
         return {"pros": [], "cons": []}
@@ -171,12 +165,9 @@ def gpt_extract_pros_cons(text: str) -> dict:
     الصيغة المطلوبة:
     Pros:
     - ...
-    - ...
     Cons:
     - ...
-    - ...
     """
-
     try:
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
@@ -191,17 +182,18 @@ def gpt_extract_pros_cons(text: str) -> dict:
             temperature=0.0,
         )
         content = response["choices"][0]["message"]["content"].strip()
-        
+
         pros = []
         cons = []
         lines = content.splitlines()
         current_section = None
         for line in lines:
             line = line.strip()
-            if line.lower().startswith("pros"):
+            low_line = line.lower()
+            if low_line.startswith("pros"):
                 current_section = "pros"
                 continue
-            elif line.lower().startswith("cons"):
+            elif low_line.startswith("cons"):
                 current_section = "cons"
                 continue
             elif line.startswith("-"):
@@ -218,21 +210,18 @@ def gpt_extract_pros_cons(text: str) -> dict:
 
 def gpt_extract_topics(text: str) -> list:
     """
-    Use GPT to do basic "topic modeling" (similarity). 
-    We'll ask GPT to produce a short list of key topics from the text.
+    Use GPT to do basic "topic extraction" from Arabic text.
+    Returns a list of discovered topics.
     """
     if not text.strip():
         return []
 
     user_msg = f"""
-    استخرج المواضيع (Topics) الأساسية المذكورة أو المشار إليها في النص أدناه.
+    استخرج المواضيع (Topics) الأساسية المذكورة أو المشار إليها في النص أدناه:
     النص:
     {text}
 
-    أجب بقائمة من المواضيع (كلمات أساسية أو عبارات مختصرة).
-    مثال:
-    1) البيئة
-    2) النقل
+    أجب بقائمة مواضيع (كلمات رئيسية أو عبارات مختصرة).
     """
     try:
         response = openai.ChatCompletion.create(
@@ -249,13 +238,13 @@ def gpt_extract_topics(text: str) -> list:
         )
         content = response["choices"][0]["message"]["content"].strip()
 
-        # We'll parse line by line for bullet or numeric prefixes
+        # We'll parse line by line
         topics = []
         for line in content.splitlines():
             line = line.strip("-•123456789). ").strip()
             if line:
                 topics.append(line)
-        # remove duplicates
+        # Remove duplicates while preserving order
         topics = list(dict.fromkeys(topics))
         return topics
     except Exception as e:
@@ -264,7 +253,44 @@ def gpt_extract_topics(text: str) -> list:
 
 
 ##############################################################################
-# 4) Load CSV Data
+# 4) Translate Arabic to English for WordCloud
+##############################################################################
+def gpt_translate_arabic_to_english(text: str) -> str:
+    """
+    Translate the given Arabic text to English using GPT.
+    For a large text, this may cause high token usage or exceed limits.
+    """
+    text = text.strip()
+    if not text:
+        return ""
+
+    user_msg = f"""
+You are a helpful assistant specialized in translation.
+Please translate this Arabic text to English, and return ONLY the translated text with no explanations:
+{text}
+"""
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {
+                    "role": "system",
+                    "content": "You translate Arabic text to English.",
+                },
+                {"role": "user", "content": user_msg},
+            ],
+            max_tokens=1000,
+            temperature=0.0,
+        )
+        translation = response["choices"][0]["message"]["content"].strip()
+        return translation
+    except Exception as e:
+        st.warning(f"GPT Translate Error: {e}")
+        return ""
+
+
+##############################################################################
+# 5) Load CSV Data
 ##############################################################################
 def load_remacto_comments(csv_path: str) -> pd.DataFrame:
     """
@@ -306,17 +332,24 @@ def load_remacto_projects(csv_path: str) -> pd.DataFrame:
 
 
 ##############################################################################
-# 5) Wordcloud
+# 6) Wordcloud (with GPT-based translation to English)
 ##############################################################################
 def plot_wordcloud(texts: list, title: str = "Word Cloud"):
     """
-    Generate a word cloud from a list of Arabic strings.
-    We'll do minimal preprocessing here. For advanced usage, 
-    consider removing Arabic stopwords or diacritics first.
+    1) Merge the list of Arabic texts into one string.
+    2) Use GPT to translate that string to English.
+    3) Generate a WordCloud from the English text.
     """
-    joined_text = " ".join(texts)
-    if not joined_text.strip():
-        st.warning("No text to generate wordcloud.")
+    joined_text_ar = " ".join(texts).strip()
+    if not joined_text_ar:
+        st.warning("No text found to generate wordcloud.")
+        return
+
+    with st.spinner("Translating text to English for WordCloud..."):
+        translated_text_en = gpt_translate_arabic_to_english(joined_text_ar)
+
+    if not translated_text_en.strip():
+        st.warning("Translation returned empty. Cannot generate WordCloud.")
         return
 
     wc = WordCloud(
@@ -324,9 +357,7 @@ def plot_wordcloud(texts: list, title: str = "Word Cloud"):
         height=400,
         background_color="white",
         collocations=False,
-        # For advanced usage, you can specify a font_path for Arabic shaping:
-        # font_path="path/to/arabic_font.ttf",
-    ).generate(joined_text)
+    ).generate(translated_text_en)
 
     fig, ax = plt.subplots(figsize=(8, 4))
     ax.imshow(wc, interpolation="bilinear")
@@ -336,13 +367,12 @@ def plot_wordcloud(texts: list, title: str = "Word Cloud"):
 
 
 ##############################################################################
-# 6) Store Citizen Inputs
+# 7) Store Citizen Inputs
 ##############################################################################
 def store_user_input_in_csv(username: str, input_type: str, content: str):
     """
     Append a row to 'user_inputs.csv' with columns:
       [timestamp, username, input_type, content]
-    This ensures we keep a record of each user's input.
     """
     timestamp = datetime.now().isoformat()
     row = {
@@ -353,7 +383,6 @@ def store_user_input_in_csv(username: str, input_type: str, content: str):
     }
     csv_file = "user_inputs.csv"
 
-    # If the file doesn't exist, create with headers
     file_exists = os.path.exists(csv_file)
     df_new = pd.DataFrame([row])
 
@@ -366,17 +395,16 @@ def store_user_input_in_csv(username: str, input_type: str, content: str):
 
 
 ##############################################################################
-# 7) Main Dashboard
+# 8) Main Dashboard
 ##############################################################################
 @require_auth
 def main():
     # 1) Initialize GPT
     init_gpt()
 
-    st.title("👤 User View (REMACTO Dashboard) - Enhanced")
+    st.title("👤 User View (REMACTO Dashboard) - Enhanced w/ English WordCloud")
     st.write("Welcome to your personal dashboard! Engage with projects, share feedback, see analytics, etc.")
 
-    # Retrieve the current JWT token from session
     token = st.session_state.get("jwt_token", None)
     if token:
         is_valid, username, role = verify_jwt_token(token)
@@ -388,7 +416,7 @@ def main():
                 st.session_state.jwt_token = None
                 st.experimental_rerun()
 
-            # CSV paths (adjust if needed)
+            # CSV paths
             comments_csv_path = "REMACTO Comments.csv"
             projects_csv_path = "REMACTO Projects.csv"
 
@@ -414,7 +442,7 @@ def main():
                 if df_comments.empty:
                     st.warning("No REMACTO Comments available.")
                 else:
-                    st.write("### Original Data (first 10)")
+                    st.write("### Original Data (first 10 rows):")
                     st.dataframe(df_comments.head(10))
 
                     # Optional: Normalization
@@ -425,7 +453,7 @@ def main():
                     if do_normalize:
                         df_comments_proc["challenge"] = df_comments_proc["challenge"].apply(normalize_arabic)
                         df_comments_proc["proposed_solution"] = df_comments_proc["proposed_solution"].apply(normalize_arabic)
-                        st.success("Text normalization applied!")
+                        st.success("Text normalization applied to challenges/solutions.")
 
                     # Filter by axis
                     unique_axes = df_comments_proc["axis"].unique()
@@ -453,12 +481,13 @@ def main():
 
                             # 2) Bullet Summary for challenge
                             bullet_challenge = gpt_bullet_summary(challenge_text)
+
                             # 3) Pros & Cons for solution
                             pros_cons = gpt_extract_pros_cons(solution_text)
                             pros_join = "; ".join(pros_cons["pros"]) if pros_cons["pros"] else ""
                             cons_join = "; ".join(pros_cons["cons"]) if pros_cons["cons"] else ""
 
-                            # 4) Basic topic extraction from the challenge
+                            # 4) Basic topic extraction
                             topics = gpt_extract_topics(challenge_text)
                             topics_join = "; ".join(topics)
 
@@ -499,9 +528,9 @@ def main():
                     ax1.axis("equal")
                     st.pyplot(fig1)
 
-                    # Wordcloud
-                    st.write("#### Word Cloud of All Challenges")
-                    plot_wordcloud(filtered_comments["challenge"].astype(str).tolist(), "Challenges Word Cloud")
+                    # Wordcloud (translated to English)
+                    st.write("#### Word Cloud of All Challenges (Translated to English)")
+                    plot_wordcloud(filtered_comments["challenge"].astype(str).tolist(), "Challenges Word Cloud (English)")
 
             # -----------------------------------------------------------------
             # TAB 2: Projects
@@ -587,9 +616,9 @@ def main():
                     ax2.axis("equal")
                     st.pyplot(fig2)
 
-                    # Word Cloud of solutions
-                    st.write("### Word Cloud of Proposed Solutions")
-                    plot_wordcloud(df_comments["proposed_solution"].astype(str).tolist(), "Proposed Solutions Word Cloud")
+                    # Word Cloud of solutions (translated)
+                    st.write("### Word Cloud of Proposed Solutions (Translated to English)")
+                    plot_wordcloud(df_comments["proposed_solution"].astype(str).tolist(), "Proposed Solutions Word Cloud (English)")
 
                 else:
                     st.info("No comments data available for extra visualization.")
@@ -611,7 +640,6 @@ def main():
                         st.write(f"Showing inputs for your user: **{username}**")
                         st.dataframe(df_user_specific)
 
-                    # Export
                     st.write("### Export Citizen Inputs as CSV")
                     csv_data = df_user_inputs.to_csv(index=False).encode("utf-8")
                     st.download_button(
