@@ -6,6 +6,7 @@ import openai
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+import random
 from wordcloud import WordCloud
 import base64
 from datetime import datetime
@@ -14,21 +15,17 @@ import re
 # Auth system (your own code from 'auth_system.py')
 from auth_system import require_auth, verify_jwt_token
 
-
 ##############################################################################
 # 1) GPT Initialization
 ##############################################################################
 def init_gpt():
     """
     Initialize OpenAI GPT with the key stored in st.secrets.
-    If you are allowing the user to override via runtime assignment
-    (like in your login page), you might need to conditionally
-    set openai.api_key = st.secrets["openai"]["api_key"] only if
-    openai.api_key isn't already set.
+    If you allow user overrides at runtime, you might conditionally set
+    openai.api_key = st.secrets["openai"]["api_key"] only if openai.api_key isn't set.
     """
     if not openai.api_key:
         openai.api_key = st.secrets["openai"]["api_key"]
-
 
 ##############################################################################
 # 2) Arabic Text Normalization
@@ -36,11 +33,11 @@ def init_gpt():
 def normalize_arabic(text: str) -> str:
     """
     Simple normalization: remove diacritics, extra spaces, etc.
-    For demonstration; you can expand with more robust steps if needed.
+    You can expand with more robust steps if needed.
     """
-    # Arabic diacritics pattern
-    arabic_diacritics = re.compile(r'[\u0617-\u061A\u064B-\u0652]')
-    text = re.sub(arabic_diacritics, '', text)
+    # Remove Arabic diacritics
+    diacritics_pattern = re.compile(r'[\u0617-\u061A\u064B-\u0652]')
+    text = re.sub(diacritics_pattern, '', text)
 
     # Remove tatweel / kashida
     text = re.sub(r'ـ+', '', text)
@@ -52,7 +49,6 @@ def normalize_arabic(text: str) -> str:
     text = ' '.join(text.split())
 
     return text.strip()
-
 
 ##############################################################################
 # 3) GPT-based Helper Functions
@@ -71,9 +67,9 @@ def gpt_arabic_sentiment_with_polarity(text: str) -> tuple:
     user_msg = f"""
     حلل الشعور في النص أدناه وأعطِ استنتاجاً من فضلك:
     1) التصنيف: اختر من بين 'POS' إيجابي، 'NEG' سلبي، أو 'NEU' محايد
-    2) درجة رقمية بين -1.0 إلى +1.0 للتعبير عن مستوى الإيجابية أو السلبية
+    2) درجة رقمية بين -1.0 إلى +1.0
 
-    رجاء أجب بصيغة JSON فقط بالشكل:
+    أجب بصيغة JSON:
     {{
       "sentiment": "POS"/"NEG"/"NEU",
       "score": float
@@ -100,20 +96,19 @@ def gpt_arabic_sentiment_with_polarity(text: str) -> tuple:
         try:
             parsed = json.loads(content)
         except:
-            # If GPT didn't return perfect JSON, fallback
+            # fallback if GPT didn't produce valid JSON
             pass
 
         sentiment = parsed.get("sentiment", "NEU")
         score = float(parsed.get("score", 0.0))
-
         if sentiment not in ["POS", "NEG", "NEU"]:
             sentiment = "NEU"
         score = max(-1.0, min(1.0, score))
+
         return (sentiment, score)
     except Exception as e:
         st.warning(f"GPT Sentiment Error: {e}")
         return ("NEU", 0.0)
-
 
 def gpt_bullet_summary(text: str) -> str:
     """
@@ -123,11 +118,9 @@ def gpt_bullet_summary(text: str) -> str:
         return "لا يوجد نص للخلاصة."
 
     prompt = f"""
-    لخص النقاط الأساسية في النص التالي باللغة العربية عبر نقاط مختصرة (bullet points):
+    لخص النقاط الأساسية في النص التالي باللغة العربية عبر نقاط (bullet points):
     النص:
     {text}
-
-    الرجاء أن تكون الإجابة عبارة عن نقاط:
     """
     try:
         response = openai.ChatCompletion.create(
@@ -146,23 +139,22 @@ def gpt_bullet_summary(text: str) -> str:
         return summary
     except Exception as e:
         st.warning(f"GPT Bullet Summary Error: {e}")
-        return "تعذّر توليد الملخص على شكل نقاط."
-
+        return "تعذّر توليد الملخص."
 
 def gpt_extract_pros_cons(text: str) -> dict:
     """
     Attempt to extract top pros and cons from a text using GPT.
-    Return a dict with {'pros': [...], 'cons': [...]}.
+    Returns {'pros': [...], 'cons': [...]}
     """
     if not text.strip():
         return {"pros": [], "cons": []}
 
     user_msg = f"""
-    اقرأ النص التالي بالعربية، واستخرج أهم النقاط الإيجابية (Pros) والنقاط السلبية (Cons) في شكل قائمة:
+    اقرأ النص التالي بالعربية، واستخرج أهم النقاط الإيجابية (Pros) والنقاط السلبية (Cons):
     النص:
     {text}
 
-    الصيغة المطلوبة:
+    الصيغة:
     Pros:
     - ...
     Cons:
@@ -172,10 +164,7 @@ def gpt_extract_pros_cons(text: str) -> dict:
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
-                {
-                    "role": "system",
-                    "content": "You extract pros and cons from Arabic text.",
-                },
+                {"role": "system", "content": "You extract pros and cons from Arabic text."},
                 {"role": "user", "content": user_msg},
             ],
             max_tokens=300,
@@ -187,16 +176,16 @@ def gpt_extract_pros_cons(text: str) -> dict:
         cons = []
         lines = content.splitlines()
         current_section = None
+
         for line in lines:
-            line = line.strip()
-            low_line = line.lower()
+            low_line = line.lower().strip()
             if low_line.startswith("pros"):
                 current_section = "pros"
                 continue
             elif low_line.startswith("cons"):
                 current_section = "cons"
                 continue
-            elif line.startswith("-"):
+            elif line.strip().startswith("-"):
                 if current_section == "pros":
                     pros.append(line.lstrip("-").strip())
                 elif current_section == "cons":
@@ -207,7 +196,6 @@ def gpt_extract_pros_cons(text: str) -> dict:
         st.warning(f"GPT Pros/Cons Error: {e}")
         return {"pros": [], "cons": []}
 
-
 def gpt_extract_topics(text: str) -> list:
     """
     Use GPT to do basic "topic extraction" from Arabic text.
@@ -217,34 +205,25 @@ def gpt_extract_topics(text: str) -> list:
         return []
 
     user_msg = f"""
-    استخرج المواضيع (Topics) الأساسية المذكورة أو المشار إليها في النص أدناه:
-    النص:
+    استخرج المواضيع الأساسية المذكورة في النص:
     {text}
-
-    أجب بقائمة مواضيع (كلمات رئيسية أو عبارات مختصرة).
     """
     try:
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
-                {
-                    "role": "system",
-                    "content": "You extract key topics from Arabic text.",
-                },
+                {"role": "system", "content": "You extract key topics from Arabic text."},
                 {"role": "user", "content": user_msg},
             ],
             max_tokens=150,
             temperature=0.0,
         )
         content = response["choices"][0]["message"]["content"].strip()
-
-        # We'll parse line by line
         topics = []
         for line in content.splitlines():
             line = line.strip("-•123456789). ").strip()
             if line:
                 topics.append(line)
-        # Remove duplicates while preserving order
         topics = list(dict.fromkeys(topics))
         return topics
     except Exception as e:
@@ -253,41 +232,77 @@ def gpt_extract_topics(text: str) -> list:
 
 
 ##############################################################################
-# 4) Translate Arabic to English for WordCloud
+# 4) Handling Large Arabic Text for GPT Translation
 ##############################################################################
+def chunk_text(text: str, chunk_size: int = 2000) -> list:
+    """
+    Break a large string into smaller chunks (each up to chunk_size characters).
+    This helps avoid large token usage errors in GPT.
+    """
+    chunks = []
+    start = 0
+    while start < len(text):
+        end = start + chunk_size
+        chunk = text[start:end]
+        chunks.append(chunk)
+        start = end
+    return chunks
+
 def gpt_translate_arabic_to_english(text: str) -> str:
     """
-    Translate the given Arabic text to English using GPT.
-    For a large text, this may cause high token usage or exceed limits.
+    Translate the given Arabic text to English using GPT,
+    chunking if necessary to avoid token limit errors.
+    Also optionally limit total length or sample the text
+    if data is extremely large.
     """
+
     text = text.strip()
     if not text:
         return ""
 
-    user_msg = f"""
+    # Optional: If text is extremely large, we can sample or cut:
+    max_overall_length = 6000  # e.g., 6000 characters total
+    if len(text) > max_overall_length:
+        # For example, take random sample of lines or substring
+        # to reduce usage
+        lines = text.split('\n')
+        random.shuffle(lines)
+        lines = lines[:200]  # or we can do partial
+        text = "\n".join(lines)[:max_overall_length]
+
+    # Now chunk
+    chunk_size = 1500  # smaller chunk to reduce token usage
+    text_chunks = chunk_text(text, chunk_size=chunk_size)
+    translated_chunks = []
+
+    for chunk in text_chunks:
+        user_msg = f"""
 You are a helpful assistant specialized in translation.
 Please translate this Arabic text to English, and return ONLY the translated text with no explanations:
-{text}
+{chunk}
 """
-    try:
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {
-                    "role": "system",
-                    "content": "You translate Arabic text to English.",
-                },
-                {"role": "user", "content": user_msg},
-            ],
-            max_tokens=1000,
-            temperature=0.0,
-        )
-        translation = response["choices"][0]["message"]["content"].strip()
-        return translation
-    except Exception as e:
-        st.warning(f"GPT Translate Error: {e}")
-        return ""
+        try:
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {
+                        "role": "system",
+                        "content": "You translate Arabic text to English.",
+                    },
+                    {"role": "user", "content": user_msg},
+                ],
+                max_tokens=800,
+                temperature=0.0,
+            )
+            chunk_translation = response["choices"][0]["message"]["content"].strip()
+            translated_chunks.append(chunk_translation)
+        except Exception as e:
+            st.warning(f"GPT Translate Error on chunk: {e}")
+            # We can skip or break here if desired
+            continue
 
+    # Join all translated parts
+    return " ".join(translated_chunks)
 
 ##############################################################################
 # 5) Load CSV Data
@@ -295,7 +310,7 @@ Please translate this Arabic text to English, and return ONLY the translated tex
 def load_remacto_comments(csv_path: str) -> pd.DataFrame:
     """
     REMACTO Comments CSV:
-      رقم الفكرة,القناة,المحور,ما هي التحديات / الإشكاليات المطروحة ؟,ما هو الحل المقترح ؟
+    رقم الفكرة,القناة,المحور,ما هي التحديات / الإشكاليات المطروحة ؟,ما هو الحل المقترح ؟
     """
     try:
         df = pd.read_csv(csv_path)
@@ -315,7 +330,7 @@ def load_remacto_comments(csv_path: str) -> pd.DataFrame:
 def load_remacto_projects(csv_path: str) -> pd.DataFrame:
     """
     REMACTO Projects CSV:
-      titles,CT,Collectivité territorial,المواضيع
+    titles,CT,Collectivité territorial,المواضيع
     """
     try:
         df = pd.read_csv(csv_path)
@@ -330,22 +345,21 @@ def load_remacto_projects(csv_path: str) -> pd.DataFrame:
         st.error(f"Error loading REMACTO Projects CSV: {e}")
         return pd.DataFrame()
 
-
 ##############################################################################
 # 6) Wordcloud (with GPT-based translation to English)
 ##############################################################################
 def plot_wordcloud(texts: list, title: str = "Word Cloud"):
     """
     1) Merge the list of Arabic texts into one string.
-    2) Use GPT to translate that string to English.
+    2) Use GPT to translate that text to English in manageable chunks.
     3) Generate a WordCloud from the English text.
     """
-    joined_text_ar = " ".join(texts).strip()
+    joined_text_ar = "\n".join(texts).strip()
     if not joined_text_ar:
         st.warning("No text found to generate wordcloud.")
         return
 
-    with st.spinner("Translating text to English for WordCloud..."):
+    with st.spinner("Translating text to English for WordCloud (may sample if data is huge)..."):
         translated_text_en = gpt_translate_arabic_to_english(joined_text_ar)
 
     if not translated_text_en.strip():
@@ -356,7 +370,7 @@ def plot_wordcloud(texts: list, title: str = "Word Cloud"):
         width=800,
         height=400,
         background_color="white",
-        collocations=False,
+        collocations=False
     ).generate(translated_text_en)
 
     fig, ax = plt.subplots(figsize=(8, 4))
@@ -364,7 +378,6 @@ def plot_wordcloud(texts: list, title: str = "Word Cloud"):
     ax.set_title(title, fontsize=16)
     ax.axis("off")
     st.pyplot(fig)
-
 
 ##############################################################################
 # 7) Store Citizen Inputs
@@ -393,7 +406,6 @@ def store_user_input_in_csv(username: str, input_type: str, content: str):
         df_combined = pd.concat([df_existing, df_new], ignore_index=True)
         df_combined.to_csv(csv_file, index=False)
 
-
 ##############################################################################
 # 8) Main Dashboard
 ##############################################################################
@@ -402,7 +414,7 @@ def main():
     # 1) Initialize GPT
     init_gpt()
 
-    st.title("👤 User View (REMACTO Dashboard) - Enhanced w/ English WordCloud")
+    st.title("👤 User View (REMACTO Dashboard) - Enhanced w/ Chunked Translation")
     st.write("Welcome to your personal dashboard! Engage with projects, share feedback, see analytics, etc.")
 
     token = st.session_state.get("jwt_token", None)
@@ -506,7 +518,9 @@ def main():
                     df_analysis = pd.DataFrame(analysis_data)
                     st.dataframe(df_analysis)
 
-                    # Polarity Distribution
+                    # -----------------------------------------------------------------
+                    # Additional Visualization: Polarity Distribution + Sentiments
+                    # -----------------------------------------------------------------
                     st.write("#### Polarity Distribution (Histogram)")
                     fig_pol, ax_pol = plt.subplots()
                     ax_pol.hist(df_analysis["polarity_score"], bins=10, color="skyblue")
@@ -515,7 +529,6 @@ def main():
                     ax_pol.set_ylabel("Count")
                     st.pyplot(fig_pol)
 
-                    # Sentiment Pie
                     st.write("#### Sentiment Distribution (Challenge)")
                     sentiment_counts = df_analysis["challenge_sentiment"].value_counts()
                     fig1, ax1 = plt.subplots()
@@ -528,7 +541,24 @@ def main():
                     ax1.axis("equal")
                     st.pyplot(fig1)
 
+                    # -----------------------------------------------------------------
+                    # Meaningful Visualization: Sentiment by Axis (Stacked Bar)
+                    # -----------------------------------------------------------------
+                    st.write("#### Sentiment by Axis (Stacked Bar Chart)")
+                    # We'll group df_analysis by axis and sentiment
+                    cross_tab = pd.crosstab(df_analysis["axis"], df_analysis["challenge_sentiment"])
+                    # Make a stacked bar
+                    fig_stack, ax_stack = plt.subplots(figsize=(6, 4))
+                    cross_tab.plot(kind='bar', stacked=True, ax=ax_stack)
+                    ax_stack.set_title("Number of Comments by Axis and Sentiment")
+                    ax_stack.set_xlabel("Axis")
+                    ax_stack.set_ylabel("Count of Comments")
+                    plt.xticks(rotation=45, ha='right')
+                    st.pyplot(fig_stack)
+
+                    # -----------------------------------------------------------------
                     # Wordcloud (translated to English)
+                    # -----------------------------------------------------------------
                     st.write("#### Word Cloud of All Challenges (Translated to English)")
                     plot_wordcloud(filtered_comments["challenge"].astype(str).tolist(), "Challenges Word Cloud (English)")
 
