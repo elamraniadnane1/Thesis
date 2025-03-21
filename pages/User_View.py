@@ -386,8 +386,8 @@ def main():
                 st.experimental_rerun()
 
             # CSV paths (adjust if needed)
-            comments_csv_path = r"C:\Users\DELL\OneDrive\Desktop\Thesis\REMACTO Comments.csv"
-            projects_csv_path = r"C:\Users\DELL\OneDrive\Desktop\Thesis\REMACTO Projects.csv"
+            comments_csv_path = "REMACTO Comments.csv"
+            projects_csv_path = "REMACTO Projects.csv"
 
             df_comments = load_remacto_comments(comments_csv_path)
             df_projects = load_remacto_projects(projects_csv_path)
