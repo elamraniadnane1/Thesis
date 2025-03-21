@@ -9,6 +9,7 @@ from wordcloud import WordCloud
 import base64
 from datetime import datetime
 import re
+import hashlib
 import json
 
 # For better Arabic font handling in Matplotlib:
