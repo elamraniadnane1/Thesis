@@ -202,6 +202,7 @@ def login_page():
         if new_gpt_key.strip():
             # Store the user-provided key in openai.api_key
             openai.api_key = new_gpt_key
+            key=openai.api_key
             st.success("OpenAI API key set for this session!")
         else:
             st.warning("Please enter a valid OpenAI key.")

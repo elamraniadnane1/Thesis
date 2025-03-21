@@ -10,6 +10,7 @@ from wordcloud import WordCloud
 import base64
 from datetime import datetime
 import re
+from Login import key
 
 # Auth system (your own code from 'auth_system.py')
 from auth_system import require_auth, verify_jwt_token
@@ -19,7 +20,9 @@ from auth_system import require_auth, verify_jwt_token
 ##############################################################################
 def init_gpt():
     """Initialize OpenAI GPT with API key from Streamlit secrets."""
-    openai.api_key = st.secrets["openai"]["api_key"]
+    #openai.api_key = st.secrets["openai"]["api_key"]
+    
+
 
 ##############################################################################
 # 2) Arabic Text Normalization
