@@ -16,6 +16,7 @@ def login_page():
     This page handles both user & admin logins (the 'role' is determined
     during user creation or from the auth CSV).
     """
+
     st.markdown(
         """
         <style>
@@ -165,25 +166,28 @@ def login_page():
         unsafe_allow_html=True
     )
 
-    # Initialize token if not present
+    # Initialize session token if not present
     if 'jwt_token' not in st.session_state:
         st.session_state.jwt_token = None
 
-    # If a token already exists and is valid, skip the login steps
+    # Check if there's a valid token
     if st.session_state.jwt_token is not None:
         is_valid, username, role = verify_jwt_token(st.session_state.jwt_token)
         if is_valid:
             # Already logged in
-            message_placeholder = st.empty()
-            message_placeholder.markdown(
-                "<p style='text-align:center;'><b>You are already logged in!</b></p>",
-                unsafe_allow_html=True,
-            )
-            time.sleep(2)
-            message_placeholder.empty()
-            return True
+            st.success(f"You are already logged in as **{username}** (Role: **{role}**).")
+            
+            # Provide a logout button to clear the token and rerun
+            if st.button("Logout"):
+                st.session_state.jwt_token = None
+                st.experimental_rerun()
 
-    # LOGIN FORM
+            # If we want to *skip* showing the login form altogether when user is logged in:
+            st.stop()
+        else:
+            # If token is invalid, clear it
+            st.session_state.jwt_token = None
+
     st.subheader("Login to Your Account")
     with st.form("login_form", clear_on_submit=True):
         username = st.text_input("Username", key="login_username")
@@ -191,9 +195,9 @@ def login_page():
         submitted = st.form_submit_button("Login")
 
         if submitted:
+            # Attempt user verification
             success, user_role = verify_user(username, password)
             if success:
-                # Create a JWT for this user
                 token = create_jwt_token(username, user_role)
                 if token:
                     st.session_state.jwt_token = token
@@ -204,13 +208,22 @@ def login_page():
             else:
                 st.error("Invalid username or password.")
 
-    # REGISTRATION
+    # Registration section
     with st.expander("New User? Register Here", expanded=False):
         st.write("Create a new account to explore the Civic Catalyst platform.")
         with st.form("registration_form", clear_on_submit=True):
             new_username = st.text_input("New Username", key="reg_username")
             new_password = st.text_input("New Password", type="password", key="reg_password")
             confirm_password = st.text_input("Confirm Password", type="password", key="reg_confirm")
+            
+            # Optional: let user choose role (admin/user)
+            # Remove or hide this if you want to keep it strictly "user" in normal registration:
+            role_choice = st.selectbox(
+                "Select Role (Admins have special privileges)",
+                options=["user", "admin"],
+                index=0
+            )
+            
             register_btn = st.form_submit_button("Register")
 
             if register_btn:
@@ -219,28 +232,32 @@ def login_page():
                 elif len(new_password) < 6:
                     st.error("Password must be at least 6 characters long.")
                 else:
-                    # By default, role='user'; you can add a role selector here if needed
-                    created = create_user(new_username, new_password, role='user')
+                    created = create_user(new_username, new_password, role=role_choice)
                     if created:
-                        st.success("Registration successful! You can now log in.")
+                        st.success(f"Registration successful as '{role_choice}'! You can now log in.")
                     else:
                         st.error("Username already exists or registration failed.")
 
-    # Return False if user is not yet logged in
+    # Return False if user is not logged in
     return False
+
 
 def main():
     """
-    Demo: Just run the login page here if you want to treat this file as
-    a standalone Streamlit app. If used in a multipage app, you'd 
-    reference 'login_page()' from other scripts.
+    Run this file as a standalone app:
+      streamlit run Login.py
+    If used in a multipage environment, you might call `login_page()` 
+    from your main code. 
     """
-    st.title("Login Page")
+    st.title("Welcome to Civic Catalyst")
     st.write("Use the form below to log in or register.")
     
-    init_auth()  # Initialize user file, etc.
-    if login_page():
-        st.success("You're logged in! You could navigate to the main app now.")
+    # Make sure authentication system is initialized
+    init_auth()
+    
+    # If the user is already logged in, login_page() returns True 
+    # but we don't strictly need that here. We can do:
+    login_page()
 
 
 if __name__ == "__main__":
