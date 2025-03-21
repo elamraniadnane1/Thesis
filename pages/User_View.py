@@ -1,5 +1,3 @@
-# File: user_dashboard_enhanced.py
-
 import streamlit as st
 import pandas as pd
 import openai
@@ -15,49 +13,157 @@ import json
 
 # For better Arabic font handling in Matplotlib:
 import matplotlib
-# Use a font that supports Arabic glyphs. DejaVu Sans is often a fallback.
 matplotlib.rcParams['font.family'] = 'DejaVu Sans'
 matplotlib.rcParams['font.size'] = 14
 matplotlib.rcParams['axes.unicode_minus'] = False
 
-# Auth system (your own code from 'auth_system.py')
+# Import your auth system
 from auth_system import require_auth, verify_jwt_token
 
+
 ##############################################################################
-# 1) GPT Initialization
+# 0) UI TEXT DICTIONARIES FOR INTERFACE ELEMENTS
+##############################################################################
+# This allows us to translate basic interface labels into Arabic, French, English, Darija.
+ui_texts = {
+    "English": {
+        "title": "User Dashboard",
+        "header_comments": "Citizen Comments (REMACTO)",
+        "label_normalize": "Apply Basic Arabic Normalization (Optional)",
+        "analysis_section": "GPT-Based Sentiment & Summaries + Polarity",
+        "proposal_header": "Submit a New Proposal or Feedback",
+        "proposal_title_label": "Proposal Title",
+        "proposal_description_label": "Proposal Description",
+        "proposal_submit_button": "Submit Proposal",
+        "feedback_label": "Your Feedback",
+        "feedback_button": "Send Feedback",
+        "logout_button": "Logout",
+        "no_comments_msg": "No REMACTO Comments available.",
+        "original_data_label": "Original Data (first 10 rows):",
+        "norm_success": "Text normalization applied.",
+        "no_token_msg": "No token found in session. Please go back and log in.",
+        "token_invalid": "Token is invalid or expired. Please log in again.",
+        "logged_in_as": "You are logged in as:",
+        "role_label": "(Role: ",
+        "closing_paren": ")",
+        "projects_header": "Municipal Projects (REMACTO)",
+        "no_projects_msg": "No REMACTO Projects available.",
+        "projects_data_preview": "Projects Data (Preview)",
+        "summaries_of_themes": "Summaries of Project Themes",
+        "proposals_feedback_tab": "Submit a New Proposal or Feedback",
+        "extra_visualizations_tab": "Extra Visualizations & Analysis",
+        "all_user_inputs_tab": "All Stored Inputs from Citizens"
+    },
+    "Arabic": {
+        "title": "لوحة المستخدم",
+        "header_comments": "تعليقات المواطنين (ريماكتو)",
+        "label_normalize": "تطبيق تنقيح بسيط للنص العربي (اختياري)",
+        "analysis_section": "تحليل المشاعر والتلخيص والاستقطاب باستخدام GPT",
+        "proposal_header": "إضافة اقتراح جديد أو ملاحظات",
+        "proposal_title_label": "عنوان الاقتراح",
+        "proposal_description_label": "وصف الاقتراح",
+        "proposal_submit_button": "إرسال الاقتراح",
+        "feedback_label": "ملاحظاتك",
+        "feedback_button": "إرسال الملاحظات",
+        "logout_button": "تسجيل الخروج",
+        "no_comments_msg": "لا توجد تعليقات ريماكتو متاحة.",
+        "original_data_label": "البيانات الأصلية (أول 10 صفوف):",
+        "norm_success": "تم تطبيق تنقيح النص.",
+        "no_token_msg": "لا يوجد رمز في الجلسة. يرجى العودة وتسجيل الدخول.",
+        "token_invalid": "الرمز غير صالح أو منتهي. يرجى تسجيل الدخول مجددًا.",
+        "logged_in_as": "تم تسجيل الدخول باسم:",
+        "role_label": "(الدور: ",
+        "closing_paren": ")",
+        "projects_header": "مشاريع البلدية (ريماكتو)",
+        "no_projects_msg": "لا توجد مشاريع ريماكتو متاحة.",
+        "projects_data_preview": "عرض بيانات المشاريع",
+        "summaries_of_themes": "تلخيص مواضيع المشاريع",
+        "proposals_feedback_tab": "إضافة اقتراح أو ملاحظات",
+        "extra_visualizations_tab": "تصورات وتحليلات إضافية",
+        "all_user_inputs_tab": "جميع المدخلات المخزنة من المواطنين"
+    },
+    "French": {
+        "title": "Tableau de bord de l'utilisateur",
+        "header_comments": "Commentaires des citoyens (REMACTO)",
+        "label_normalize": "Appliquer une normalisation de base de l'arabe (optionnel)",
+        "analysis_section": "Analyse de sentiment et résumés GPT + polarité",
+        "proposal_header": "Soumettre une nouvelle proposition ou un feedback",
+        "proposal_title_label": "Titre de la proposition",
+        "proposal_description_label": "Description de la proposition",
+        "proposal_submit_button": "Soumettre la proposition",
+        "feedback_label": "Vos commentaires",
+        "feedback_button": "Envoyer le commentaire",
+        "logout_button": "Se déconnecter",
+        "no_comments_msg": "Aucun commentaire REMACTO disponible.",
+        "original_data_label": "Données d'origine (10 premières lignes):",
+        "norm_success": "Normalisation du texte appliquée.",
+        "no_token_msg": "Aucun jeton trouvé dans la session. Veuillez vous reconnecter.",
+        "token_invalid": "Jeton invalide ou expiré. Veuillez vous reconnecter.",
+        "logged_in_as": "Connecté en tant que:",
+        "role_label": "(Rôle: ",
+        "closing_paren": ")",
+        "projects_header": "Projets Municipaux (REMACTO)",
+        "no_projects_msg": "Aucun projet REMACTO disponible.",
+        "projects_data_preview": "Aperçu des données du projet",
+        "summaries_of_themes": "Résumés des thèmes du projet",
+        "proposals_feedback_tab": "Propositions et feedback",
+        "extra_visualizations_tab": "Visualisations supplémentaires",
+        "all_user_inputs_tab": "Toutes les entrées des citoyens"
+    },
+    "Darija": {
+        "title": "لوحة المستخدم بالدارجة",
+        "header_comments": "تعليقات الناس (ريماكتو)",
+        "label_normalize": "نقّي النص العربي شوية (اختياري)",
+        "analysis_section": "تحليل المشاعر مع GPT + البولاريتي",
+        "proposal_header": "زيد اقتراح جديد ولا شي ملاحظة",
+        "proposal_title_label": "عنوان الاقتراح بالدارجة",
+        "proposal_description_label": "وصف الاقتراح بالتفاصيل",
+        "proposal_submit_button": "صيفط الاقتراح",
+        "feedback_label": "تعطينا رأيك",
+        "feedback_button": "صيفط رأيك",
+        "logout_button": "خروج",
+        "no_comments_msg": "ماكايناش تعليقات ريماكتو دابا.",
+        "original_data_label": "البيانات الأصلية (أول 10 صفوف):",
+        "norm_success": "تصاوابات تنقية النص.",
+        "no_token_msg": "ماكينش التوكن فالسيشن. رجع سيني.",
+        "token_invalid": "التوكن خايب ولا سالا. خصك تسيني.",
+        "logged_in_as": "نتا داخل باسم:",
+        "role_label": "(دور: ",
+        "closing_paren": ")",
+        "projects_header": "مشاريع الجماعة (ريماكتو)",
+        "no_projects_msg": "ماكاين لا مشاريع لا والو.",
+        "projects_data_preview": "شوف بيانات المشاريع",
+        "summaries_of_themes": "لخص مواضيع المشاريع",
+        "proposals_feedback_tab": "زيد اقتراح ولا ملاحظة",
+        "extra_visualizations_tab": "تصاور وتحليلات زوينة",
+        "all_user_inputs_tab": "كلشي ديال المدخلات ديال الناس"
+    }
+}
+
+
+##############################################################################
+# 4) GPT Initialization + Language Dictionary
 ##############################################################################
 def init_gpt():
     """
     Initialize OpenAI GPT with the key stored in st.secrets.
-    If you allow user overrides at runtime, you might conditionally set
-    openai.api_key = st.secrets["openai"]["api_key"] only if openai.api_key isn't set.
     """
     if not openai.api_key:
         openai.api_key = st.secrets["openai"]["api_key"]
 
 
 ##############################################################################
-# 2) Arabic Text Normalization
+# 5) Utility: Normalizing Arabic, chunking, GPT for data
 ##############################################################################
 def normalize_arabic(text: str) -> str:
-    """
-    Simple normalization: remove diacritics, extra spaces, etc.
-    You can expand with more robust steps if needed.
-    """
-    # Remove Arabic diacritics
+    # (same as above)
     diacritics_pattern = re.compile(r'[\u0617-\u061A\u064B-\u0652]')
     text = re.sub(diacritics_pattern, '', text)
-
-    # Remove tatweel / kashida
     text = re.sub(r'ـ+', '', text)
-
-    # Remove punctuation (basic approach)
     text = re.sub(r'[^\w\s]', '', text)
-
-    # Trim extra spaces
     text = ' '.join(text.split())
-
     return text.strip()
+
 
 
 ##############################################################################
@@ -415,38 +521,40 @@ def store_user_input_in_csv(username: str, input_type: str, content: str):
 
 
 ##############################################################################
-# 8) Main Dashboard
+# 9) The Main Dashboard
 ##############################################################################
 @require_auth
 def main():
     # 1) Initialize GPT
     init_gpt()
 
-    # ---------------------------------------------------------------------
-    # Option to choose the translation language for WordCloud
-    # ---------------------------------------------------------------------
-    st.sidebar.header("WordCloud Language")
-    chosen_language = st.sidebar.selectbox(
-        "Select WordCloud translation language:",
-        ["English", "French"]
-    )
+    # 2) Determine the interface language from session_state
+    #    (fallback to English if not present)
+    lang = st.session_state.get("site_language", "English")
+    if lang not in ui_texts:
+        lang = "English"
+
+    # Shortcut to the dictionary for the chosen language
+    L = ui_texts[lang]
 
     # Title & Description
-    st.title("👤 User View (REMACTO Dashboard) - Enhanced w/ Language Option")
+    st.title(L["title"])
     st.write("Welcome to your personal dashboard! Engage with projects, share feedback, see analytics, etc.")
 
+    # Check JWT token
     token = st.session_state.get("jwt_token", None)
     if token:
         is_valid, username, role = verify_jwt_token(token)
         if is_valid:
-            st.success(f"You are logged in as: **{username}** (Role: **{role}**)")
+            # Show a success message with user's role
+            st.success(f"{L['logged_in_as']} **{username}** {L['role_label']}{role}{L['closing_paren']}")
 
-            # Logout
-            if st.button("Logout"):
+            # Logout button
+            if st.button(L["logout_button"]):
                 st.session_state.jwt_token = None
                 st.experimental_rerun()
 
-            # CSV paths
+            # CSV paths (adjust as needed)
             comments_csv_path = "REMACTO Comments.csv"
             projects_csv_path = "REMACTO Projects.csv"
 
@@ -456,11 +564,11 @@ def main():
             # Create main tabs
             tabs = st.tabs(
                 [
-                    "📊 Comments Analysis",
-                    "🏗️ Projects",
-                    "⚙️ Proposals & Feedback",
-                    "📈 Extra Visualizations",
-                    "🗃️ All User Inputs",
+                    L["header_comments"],             # e.g. "Citizen Comments (REMACTO)"
+                    L["projects_header"],             # e.g. "Municipal Projects (REMACTO)"
+                    L["proposals_feedback_tab"],       # e.g. "Submit a New Proposal or Feedback"
+                    L["extra_visualizations_tab"],     # e.g. "Extra Visualizations & Analysis"
+                    L["all_user_inputs_tab"],          # e.g. "All Stored Inputs from Citizens"
                 ]
             )
 
@@ -468,39 +576,38 @@ def main():
             # TAB 1: Comments Analysis
             # -----------------------------------------------------------------
             with tabs[0]:
-                st.header("Citizen Comments (REMACTO)")
+                st.header(L["header_comments"])
                 if df_comments.empty:
-                    st.warning("No REMACTO Comments available.")
+                    st.warning(L["no_comments_msg"])
                 else:
-                    st.write("### Original Data (first 10 rows):")
+                    st.write(f"### {L['original_data_label']}")
                     st.dataframe(df_comments.head(10))
 
-                    # Optional: Normalization
-                    st.write("#### Apply Basic Arabic Normalization (Optional)")
-                    do_normalize = st.checkbox("Normalize Text?", value=False)
+                    st.write(f"#### {L['label_normalize']}")
+                    do_normalize = st.checkbox("Normalize Text?")
                     df_comments_proc = df_comments.copy()
 
                     if do_normalize:
                         df_comments_proc["challenge"] = df_comments_proc["challenge"].apply(normalize_arabic)
                         df_comments_proc["proposed_solution"] = df_comments_proc["proposed_solution"].apply(normalize_arabic)
-                        st.success("Text normalization applied to challenges/solutions.")
+                        st.success(L["norm_success"])
 
                     # Filter by axis
                     unique_axes = df_comments_proc["axis"].unique()
-                    selected_axis = st.selectbox("Filter by Axis", ["All"] + list(unique_axes))
+                    selected_axis = st.selectbox("Filter by Axis:", ["All"] + list(unique_axes))
                     if selected_axis != "All":
                         filtered_comments = df_comments_proc[df_comments_proc["axis"] == selected_axis]
                     else:
                         filtered_comments = df_comments_proc
 
-                    st.write(f"Total {len(filtered_comments)} comments after filtering by axis: {selected_axis}")
+                    st.write(f"Total {len(filtered_comments)} comments after axis filter: {selected_axis}")
 
                     # GPT-based Analysis
-                    st.write("### GPT-Based Sentiment & Summaries + Polarity")
+                    st.write(f"### {L['analysis_section']}")
                     num_rows = st.slider("Number of Rows to Analyze", 1, min(50, len(filtered_comments)), 5)
 
                     analysis_data = []
-                    with st.spinner("Analyzing comments with GPT..."):
+                    with st.spinner("Analyzing with GPT..."):
                         for i in range(num_rows):
                             row = filtered_comments.iloc[i]
                             challenge_text = row["challenge"]
@@ -509,15 +616,15 @@ def main():
                             # 1) Sentiment + Polarity
                             sentiment, polarity_score = gpt_arabic_sentiment_with_polarity(challenge_text)
 
-                            # 2) Bullet Summary for challenge
+                            # 2) Bullet Summary
                             bullet_challenge = gpt_bullet_summary(challenge_text)
 
-                            # 3) Pros & Cons for solution
+                            # 3) Pros & Cons
                             pros_cons = gpt_extract_pros_cons(solution_text)
                             pros_join = "; ".join(pros_cons["pros"]) if pros_cons["pros"] else ""
                             cons_join = "; ".join(pros_cons["cons"]) if pros_cons["cons"] else ""
 
-                            # 4) Basic topic extraction
+                            # 4) Topics
                             topics = gpt_extract_topics(challenge_text)
                             topics_join = "; ".join(topics)
 
@@ -536,59 +643,43 @@ def main():
                     df_analysis = pd.DataFrame(analysis_data)
                     st.dataframe(df_analysis)
 
-                    # Polarity Distribution
+                    # Polarity distribution
                     st.write("#### Polarity Distribution (Histogram)")
                     fig_pol, ax_pol = plt.subplots()
                     ax_pol.hist(df_analysis["polarity_score"], bins=10, color="skyblue")
-                    ax_pol.set_title("Polarity Score Distribution", fontproperties=None)
-                    ax_pol.set_xlabel("Polarity Score (-1 = negative, +1 = positive)")
+                    ax_pol.set_title("Polarity Score Distribution")
+                    ax_pol.set_xlabel("Score (-1 = negative, +1 = positive)")
                     ax_pol.set_ylabel("Count")
                     st.pyplot(fig_pol)
 
-                    # Sentiment Distribution
-                    st.write("#### Sentiment Distribution (Challenge)")
+                    # Pie chart of sentiment distribution
                     sentiment_counts = df_analysis["challenge_sentiment"].value_counts()
-                    fig1, ax1 = plt.subplots()
-                    ax1.pie(
-                        sentiment_counts.values,
-                        labels=sentiment_counts.index,
-                        autopct="%1.1f%%",
-                        startangle=140
-                    )
-                    ax1.axis("equal")
-                    st.pyplot(fig1)
+                    st.write("#### Sentiment Distribution")
+                    fig_sent, ax_sent = plt.subplots()
+                    ax_sent.pie(sentiment_counts.values, labels=sentiment_counts.index, autopct="%1.1f%%")
+                    ax_sent.axis("equal")
+                    st.pyplot(fig_sent)
 
-                    # Sentiment by Axis (Stacked Bar)
-                    st.write("#### Sentiment by Axis (Stacked Bar Chart)")
-                    cross_tab = pd.crosstab(df_analysis["axis"], df_analysis["challenge_sentiment"])
-                    fig_stack, ax_stack = plt.subplots(figsize=(6, 4))
-                    cross_tab.plot(kind='bar', stacked=True, ax=ax_stack)
-                    ax_stack.set_title("Number of Comments by Axis and Sentiment")
-                    ax_stack.set_xlabel("Axis")
-                    ax_stack.set_ylabel("Count of Comments")
-                    plt.xticks(rotation=45, ha='right')
-                    st.pyplot(fig_stack)
-
-                    # WordCloud (in chosen language)
-                    st.write(f"#### Word Cloud of All Challenges (Translated to {chosen_language})")
+                    # Wordcloud of challenges, translated to user-chosen language for display
+                    st.write(f"#### Word Cloud (Challenges) in {lang}")
                     plot_wordcloud(
                         filtered_comments["challenge"].astype(str).tolist(),
-                        f"Challenges Word Cloud ({chosen_language})",
-                        target_language=chosen_language
+                        f"Challenges Word Cloud ({lang})",
+                        target_language="English" if lang in ["English", "Darija"] else lang
                     )
 
             # -----------------------------------------------------------------
             # TAB 2: Projects
             # -----------------------------------------------------------------
             with tabs[1]:
-                st.header("Municipal Projects (REMACTO)")
+                st.header(L["projects_header"])
                 if df_projects.empty:
-                    st.warning("No REMACTO Projects available.")
+                    st.warning(L["no_projects_msg"])
                 else:
-                    st.write("### Projects Data (Preview)")
+                    st.write(f"### {L['projects_data_preview']}")
                     st.dataframe(df_projects.head(10))
 
-                    st.write("### Summaries of Project Themes")
+                    st.write(f"### {L['summaries_of_themes']}")
                     max_rows_proj = st.slider("Number of Projects to Summarize", 1, len(df_projects), 5)
                     project_summaries = []
                     with st.spinner("Summarizing project themes..."):
@@ -604,7 +695,8 @@ def main():
 
                     st.write(pd.DataFrame(project_summaries))
 
-                    st.write("### Projects by Collectivité Territoriale (CT)")
+                    # Quick bar chart
+                    st.write("### Projects by CT")
                     ct_counts = df_projects["CT"].value_counts()
                     st.bar_chart(ct_counts)
 
@@ -612,28 +704,28 @@ def main():
             # TAB 3: Proposals & Feedback
             # -----------------------------------------------------------------
             with tabs[2]:
-                st.header("Submit a New Proposal or Feedback")
+                st.header(L["proposal_header"])
 
-                st.write("Use the forms below to propose new ideas or provide feedback about existing projects. Your input is stored for analysis.")
+                st.subheader(L["proposal_title_label"])
+                proposal_title = st.text_input(L["proposal_title_label"], placeholder="e.g. مسارات خاصة للدراجات في المدينة")
 
-                st.subheader("➕ Submit a Proposal")
-                proposal_title = st.text_input("Proposal Title", placeholder="e.g. مسارات خاصة للدراجات في المدينة")
-                proposal_description = st.text_area("Proposal Description", placeholder="Describe your idea in detail...")
+                st.subheader(L["proposal_description_label"])
+                proposal_description = st.text_area(L["proposal_description_label"], placeholder="Describe your idea in detail...")
 
-                if st.button("Submit Proposal"):
+                if st.button(L["proposal_submit_button"]):
                     if proposal_title.strip() and proposal_description.strip():
                         content = f"Title: {proposal_title}\nDescription: {proposal_description}"
                         store_user_input_in_csv(username, "proposal", content)
-                        st.success("Your proposal has been submitted successfully!")
+                        st.success("Proposal submitted successfully!")
                     else:
                         st.warning("Please provide both title and description.")
 
-                st.subheader("💬 Provide Feedback")
-                feedback_text = st.text_area("Your Feedback", placeholder="Any feedback or concerns about the city projects?")
-                if st.button("Send Feedback"):
+                st.subheader(L["feedback_label"])
+                feedback_text = st.text_area(L["feedback_label"], placeholder="Any feedback or concerns about the city projects?")
+                if st.button(L["feedback_button"]):
                     if feedback_text.strip():
                         store_user_input_in_csv(username, "feedback", feedback_text)
-                        st.success("Thank you! Your feedback has been recorded.")
+                        st.success("Your feedback has been recorded.")
                     else:
                         st.warning("Please enter some feedback.")
 
@@ -641,48 +733,46 @@ def main():
             # TAB 4: Extra Visualizations
             # -----------------------------------------------------------------
             with tabs[3]:
-                st.header("Extra Visualizations & Analysis")
-                st.write("""
-                    More plots or deeper analysis can be included here to
-                    help stakeholders glean insights from the REMACTO data.
-                """)
+                st.header(L["extra_visualizations_tab"])
 
-                if not df_comments.empty:
+                if df_comments.empty:
+                    st.info(L["no_comments_msg"])
+                else:
+                    # Axis distribution
                     axis_counts = df_comments["axis"].value_counts()
                     st.write("### Axis Distribution (Bar Chart)")
                     st.bar_chart(axis_counts)
 
+                    # Channel distribution
                     channel_counts = df_comments["channel"].value_counts()
-                    st.write("### Channels Used (Pie Chart)")
-                    fig2, ax2 = plt.subplots()
-                    ax2.pie(channel_counts.values, labels=channel_counts.index, autopct="%1.1f%%")
-                    ax2.axis("equal")
-                    st.pyplot(fig2)
+                    st.write("### Channels (Pie Chart)")
+                    fig_c, ax_c = plt.subplots()
+                    ax_c.pie(channel_counts.values, labels=channel_counts.index, autopct="%1.1f%%")
+                    ax_c.axis("equal")
+                    st.pyplot(fig_c)
 
-                    st.write(f"### Word Cloud of Proposed Solutions (Translated to {chosen_language})")
+                    st.write(f"### Word Cloud of Proposed Solutions (in {lang})")
                     plot_wordcloud(
                         df_comments["proposed_solution"].astype(str).tolist(),
-                        f"Proposed Solutions Word Cloud ({chosen_language})",
-                        target_language=chosen_language
+                        f"Proposed Solutions ({lang})",
+                        target_language="English" if lang in ["English", "Darija"] else lang
                     )
-                else:
-                    st.info("No comments data available for extra visualization.")
 
             # -----------------------------------------------------------------
             # TAB 5: All User Inputs
             # -----------------------------------------------------------------
             with tabs[4]:
-                st.header("🗃️ All Stored Inputs from Citizens")
+                st.header(L["all_user_inputs_tab"])
                 csv_file = "user_inputs.csv"
                 if not os.path.exists(csv_file):
-                    st.info("No user inputs stored yet. Interact with the proposals/feedback forms first.")
+                    st.info("No user inputs stored yet.")
                 else:
                     df_user_inputs = pd.read_csv(csv_file)
                     st.dataframe(df_user_inputs)
 
                     if role != "admin":
                         df_user_specific = df_user_inputs[df_user_inputs["username"] == username]
-                        st.write(f"Showing inputs for your user: **{username}**")
+                        st.write(f"Showing inputs for user: **{username}**")
                         st.dataframe(df_user_specific)
 
                     st.write("### Export Citizen Inputs as CSV")
@@ -695,9 +785,9 @@ def main():
                     )
 
         else:
-            st.warning("Token is invalid or expired. Please log in again.")
+            st.warning(L["token_invalid"])
     else:
-        st.info("No token found in session. Please go back and log in.")
+        st.info(L["no_token_msg"])
 
 
 # If running standalone
