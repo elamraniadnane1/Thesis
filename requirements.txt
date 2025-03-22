@@ -8,6 +8,7 @@ matplotlib==3.7.2
 seaborn==0.12.2
 plotly==5.20.0
 wordcloud==1.9.3
+qdrant-client
 
 # NLP and Machine Learning
 transformers==4.30.2
