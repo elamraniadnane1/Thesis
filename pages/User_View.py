@@ -28,118 +28,119 @@ from auth_system import require_auth, verify_jwt_token
 # This allows us to translate basic interface labels into Arabic, French, English, Darija.
 ui_texts = {
     "English": {
-        "title": "📊 User Dashboard",
-        "header_comments": "💬 Citizen Comments (REMACTO)",
-        "label_normalize": "🧹 Apply Basic Arabic Normalization (Optional)",
-        "analysis_section": "🧠 GPT-Based Sentiment & Summaries + Polarity",
-        "proposal_header": "📝 Submit a New Proposal or Feedback",
+        "title": "📊 Dashboard",
+        "header_comments": "💬 Citizen Comments Analysis",
+        "label_normalize": "🧹 Normalize Arabic Text (Optional)",
+        "analysis_section": "🧠 AI-Powered Sentiment Analysis & Summaries",
+        "proposal_header": "📝 Submit Your Proposal or Feedback",
         "proposal_title_label": "📌 Proposal Title",
         "proposal_description_label": "🧾 Proposal Description",
         "proposal_submit_button": "📤 Submit Proposal",
         "feedback_label": "💭 Your Feedback",
         "feedback_button": "📬 Send Feedback",
         "logout_button": "🔓 Logout",
-        "no_comments_msg": "⚠️ No REMACTO Comments available.",
+        "no_comments_msg": "⚠️ No comments available at this moment.",
         "original_data_label": "📋 Original Data (first 10 rows):",
-        "norm_success": "✅ Text normalization applied.",
-        "no_token_msg": "⚠️ No token found in session. Please go back and log in.",
+        "norm_success": "✅ Text normalization applied successfully.",
+        "no_token_msg": "⚠️ No token found in session. Please log in.",
         "token_invalid": "❌ Token is invalid or expired. Please log in again.",
-        "logged_in_as": "✅ You are logged in as:",
+        "logged_in_as": "✅ Logged in as:",
         "role_label": "(Role: ",
         "closing_paren": ")",
-        "projects_header": "🏗️ Municipal Projects (REMACTO)",
-        "no_projects_msg": "⚠️ No REMACTO Projects available.",
+        "projects_header": "🏗️ Municipal Projects",
+        "no_projects_msg": "⚠️ No projects available.",
         "projects_data_preview": "📂 Projects Data (Preview)",
-        "summaries_of_themes": "📝 Summaries of Project Themes",
-        "proposals_feedback_tab": "🗳️ Submit a New Proposal or Feedback",
+        "summaries_of_themes": "📝 Project Themes Summaries",
+        "proposals_feedback_tab": "🗳️ Submit Proposal or Feedback",
         "extra_visualizations_tab": "📈 Extra Visualizations & Analysis",
-        "all_user_inputs_tab": "🗃️ All Stored Inputs from Citizens"
+        "all_user_inputs_tab": "🗃️ All Citizen Inputs"
     },
     "Arabic": {
         "title": "📊 لوحة المستخدم",
-        "header_comments": "💬 تعليقات المواطنين (ريماكتو)",
-        "label_normalize": "🧹 تطبيق تنقيح بسيط للنص العربي (اختياري)",
-        "analysis_section": "🧠 تحليل المشاعر والتلخيص باستخدام GPT",
-        "proposal_header": "📝 إضافة اقتراح جديد أو ملاحظات",
+        "header_comments": "💬 تحليل تعليقات المواطنين",
+        "label_normalize": "🧹 تنقية النص العربي (اختياري)",
+        "analysis_section": "🧠 تحليل المشاعر والتلخيص باستخدام الذكاء الاصطناعي",
+        "proposal_header": "📝 إرسال اقتراح جديد أو ملاحظات",
         "proposal_title_label": "📌 عنوان الاقتراح",
         "proposal_description_label": "🧾 وصف الاقتراح",
         "proposal_submit_button": "📤 إرسال الاقتراح",
         "feedback_label": "💭 ملاحظاتك",
         "feedback_button": "📬 إرسال الملاحظات",
         "logout_button": "🔓 تسجيل الخروج",
-        "no_comments_msg": "⚠️ لا توجد تعليقات ريماكتو متاحة.",
+        "no_comments_msg": "⚠️ لا توجد تعليقات متاحة حالياً.",
         "original_data_label": "📋 البيانات الأصلية (أول 10 صفوف):",
-        "norm_success": "✅ تم تطبيق تنقيح النص.",
-        "no_token_msg": "⚠️ لا يوجد رمز في الجلسة. يرجى العودة وتسجيل الدخول.",
-        "token_invalid": "❌ الرمز غير صالح أو منتهي. يرجى تسجيل الدخول مجددًا.",
+        "norm_success": "✅ تم تطبيق تنقية النص بنجاح.",
+        "no_token_msg": "⚠️ لا يوجد رمز في الجلسة. يرجى تسجيل الدخول.",
+        "token_invalid": "❌ الرمز غير صالح أو منتهي. يرجى تسجيل الدخول مجدداً.",
         "logged_in_as": "✅ تم تسجيل الدخول باسم:",
         "role_label": "(الدور: ",
         "closing_paren": ")",
-        "projects_header": "🏗️ مشاريع البلدية (ريماكتو)",
-        "no_projects_msg": "⚠️ لا توجد مشاريع ريماكتو متاحة.",
+        "projects_header": "🏗️ مشاريع البلدية",
+        "no_projects_msg": "⚠️ لا توجد مشاريع متاحة.",
         "projects_data_preview": "📂 عرض بيانات المشاريع",
         "summaries_of_themes": "📝 تلخيص مواضيع المشاريع",
-        "proposals_feedback_tab": "🗳️ إضافة اقتراح أو ملاحظات",
+        "proposals_feedback_tab": "🗳️ إرسال اقتراح أو ملاحظات",
         "extra_visualizations_tab": "📈 تصورات وتحليلات إضافية",
-        "all_user_inputs_tab": "🗃️ جميع المدخلات المخزنة من المواطنين"
+        "all_user_inputs_tab": "🗃️ جميع المدخلات من المواطنين"
     },
     "French": {
-        "title": "📊 Tableau de bord de l'utilisateur",
-        "header_comments": "💬 Commentaires des citoyens (REMACTO)",
-        "label_normalize": "🧹 Appliquer une normalisation de l'arabe (optionnel)",
-        "analysis_section": "🧠 Analyse de sentiment et résumés GPT + polarité",
-        "proposal_header": "📝 Soumettre une nouvelle proposition ou un retour",
+        "title": "📊 Tableau de bord",
+        "header_comments": "💬 Analyse des commentaires citoyens",
+        "label_normalize": "🧹 Normalisation du texte arabe (optionnel)",
+        "analysis_section": "🧠 Analyse de sentiment et résumés par IA",
+        "proposal_header": "📝 Soumettre une proposition ou un retour",
         "proposal_title_label": "📌 Titre de la proposition",
         "proposal_description_label": "🧾 Description de la proposition",
         "proposal_submit_button": "📤 Soumettre la proposition",
         "feedback_label": "💭 Vos commentaires",
         "feedback_button": "📬 Envoyer le commentaire",
         "logout_button": "🔓 Se déconnecter",
-        "no_comments_msg": "⚠️ Aucun commentaire REMACTO disponible.",
+        "no_comments_msg": "⚠️ Aucun commentaire disponible pour le moment.",
         "original_data_label": "📋 Données d'origine (10 premières lignes):",
-        "norm_success": "✅ Normalisation du texte appliquée.",
+        "norm_success": "✅ Normalisation du texte appliquée avec succès.",
         "no_token_msg": "⚠️ Aucun jeton trouvé dans la session. Veuillez vous reconnecter.",
         "token_invalid": "❌ Jeton invalide ou expiré. Veuillez vous reconnecter.",
         "logged_in_as": "✅ Connecté en tant que:",
         "role_label": "(Rôle: ",
         "closing_paren": ")",
-        "projects_header": "🏗️ Projets Municipaux (REMACTO)",
-        "no_projects_msg": "⚠️ Aucun projet REMACTO disponible.",
+        "projects_header": "🏗️ Projets municipaux",
+        "no_projects_msg": "⚠️ Aucun projet disponible.",
         "projects_data_preview": "📂 Aperçu des données du projet",
         "summaries_of_themes": "📝 Résumés des thèmes du projet",
-        "proposals_feedback_tab": "🗳️ Propositions et retour",
+        "proposals_feedback_tab": "🗳️ Soumettre une proposition ou un retour",
         "extra_visualizations_tab": "📈 Visualisations supplémentaires",
         "all_user_inputs_tab": "🗃️ Toutes les entrées des citoyens"
     },
     "Darija": {
         "title": "📊 لوحة المستخدم بالدارجة",
-        "header_comments": "💬 تعليقات الناس (ريماكتو)",
-        "label_normalize": "🧹 نقّي النص العربي شوية (اختياري)",
-        "analysis_section": "🧠 تحليل المشاعر مع GPT + البولاريتي",
-        "proposal_header": "📝 زيد اقتراح جديد ولا شي ملاحظة",
+        "header_comments": "💬 تحليل تعليقات الناس",
+        "label_normalize": "🧹 تنقية النص العربي شوية (اختياري)",
+        "analysis_section": "🧠 تحليل المشاعر مع الذكاء الاصطناعي",
+        "proposal_header": "📝 صيفط اقتراح جديد ولا ملاحظة",
         "proposal_title_label": "📌 عنوان الاقتراح بالدارجة",
         "proposal_description_label": "🧾 وصف الاقتراح بالتفاصيل",
         "proposal_submit_button": "📤 صيفط الاقتراح",
-        "feedback_label": "💭 تعطينا رأيك",
+        "feedback_label": "💭 رأيك",
         "feedback_button": "📬 صيفط رأيك",
         "logout_button": "🔓 خروج",
-        "no_comments_msg": "⚠️ ماكايناش تعليقات ريماكتو دابا.",
+        "no_comments_msg": "⚠️ ماكايناش تعليقات متاحة دابا.",
         "original_data_label": "📋 البيانات الأصلية (أول 10 صفوف):",
-        "norm_success": "✅ تصاوابات تنقية النص.",
-        "no_token_msg": "⚠️ ماكينش التوكن فالسيشن. رجع سيني.",
-        "token_invalid": "❌ التوكن خايب ولا سالا. خصك تسيني.",
+        "norm_success": "✅ تنقية النص تمّت بنجاح.",
+        "no_token_msg": "⚠️ ماكاينش التوكن فالسيشن. رجع تسيني.",
+        "token_invalid": "❌ التوكن خايب ولا منتهي. خصك تسيني.",
         "logged_in_as": "✅ نتا داخل باسم:",
         "role_label": "(دور: ",
         "closing_paren": ")",
-        "projects_header": "🏗️ مشاريع الجماعة (ريماكتو)",
-        "no_projects_msg": "⚠️ ماكاين لا مشاريع لا والو.",
-        "projects_data_preview": "📂 شوف بيانات المشاريع",
-        "summaries_of_themes": "📝 لخص مواضيع المشاريع",
-        "proposals_feedback_tab": "🗳️ زيد اقتراح ولا ملاحظة",
-        "extra_visualizations_tab": "📈 تصاور وتحليلات زوينة",
-        "all_user_inputs_tab": "🗃️ كلشي ديال المدخلات ديال الناس"
+        "projects_header": "🏗️ مشاريع الجماعة",
+        "no_projects_msg": "⚠️ ماكاين لا مشاريع دابا.",
+        "projects_data_preview": "📂 عرض بيانات المشاريع",
+        "summaries_of_themes": "📝 تلخيص مواضيع المشاريع",
+        "proposals_feedback_tab": "🗳️ صيفط اقتراح ولا ملاحظة",
+        "extra_visualizations_tab": "📈 تصاور وتحليلات إضافية",
+        "all_user_inputs_tab": "🗃️ جميع المدخلات ديال الناس"
     }
 }
+
 
 
 ##############################################################################
@@ -624,7 +625,6 @@ def main():
             # ------------------------- TAB 1: Comments Analysis -------------------------
             with tabs[0]:
                 st.header("💬 Citizen Comments Analysis")
-
                 if df_comments.empty:
                     st.warning("⚠️ No REMACTO Comments available.")
                 else:
@@ -634,6 +634,10 @@ def main():
                     st.write("#### 🧹 Apply Basic Arabic Normalization (Optional)")
                     do_normalize = st.checkbox("Normalize Text?")
                     df_comments_proc = df_comments.copy()
+
+                    # Ensure text columns are strings
+                    df_comments_proc["challenge"] = df_comments_proc["challenge"].astype(str)
+                    df_comments_proc["proposed_solution"] = df_comments_proc["proposed_solution"].astype(str)
 
                     if do_normalize:
                         df_comments_proc["challenge"] = df_comments_proc["challenge"].apply(normalize_arabic)
@@ -675,18 +679,16 @@ def main():
                     # Perform GPT processing or load from cache
                     if should_reprocess or not os.path.exists(CACHE_FILE):
                         st.warning("🧠 New data detected. Running fresh GPT analysis...")
-
                         analysis_data = []
                         with st.spinner("🔍 Analyzing comments with GPT..."):
-                            for i, row in df_comments_proc.iterrows():
+                            # Analyze only the first 20 rows
+                            for i, row in df_comments_proc.head(20).iterrows():
                                 challenge = row["challenge"]
                                 solution = row["proposed_solution"]
-
                                 sentiment, polarity = gpt_arabic_sentiment_with_polarity(challenge)
                                 summary = gpt_bullet_summary(challenge)
                                 pros_cons = gpt_extract_pros_cons(solution)
                                 topics = gpt_extract_topics(challenge)
-
                                 analysis_data.append({
                                     "idea_id": row["idea_id"],
                                     "axis": row["axis"],
@@ -698,7 +700,6 @@ def main():
                                     "cons": "; ".join(pros_cons.get("cons", [])),
                                     "topics": "; ".join(topics),
                                 })
-
                         df_analysis = pd.DataFrame(analysis_data)
                         df_analysis.to_csv(CACHE_FILE, index=False)
                         save_current_hash(COMMENTS_CSV, HASH_FILE)
@@ -707,11 +708,9 @@ def main():
                         st.success("✅ Using cached GPT analysis.")
                         df_analysis = pd.read_csv(CACHE_FILE)
 
-                    # Slider for row display
                     num_rows = st.slider("🔢 Number of Rows to Display", 1, min(50, len(df_analysis)), 5)
                     st.dataframe(df_analysis.head(num_rows))
 
-                    # Visualization 1: Polarity Histogram
                     st.write("#### 📉 Polarity Score Distribution")
                     fig1, ax1 = plt.subplots()
                     ax1.hist(df_analysis["polarity_score"], bins=10, color="skyblue")
@@ -720,7 +719,6 @@ def main():
                     ax1.set_ylabel("Count")
                     st.pyplot(fig1)
 
-                    # Visualization 2: Sentiment Pie Chart
                     st.write("#### 🥧 Sentiment Distribution")
                     sentiment_counts = df_analysis["sentiment"].value_counts()
                     fig2, ax2 = plt.subplots()
@@ -728,13 +726,13 @@ def main():
                     ax2.axis("equal")
                     st.pyplot(fig2)
 
-                    # Visualization 3: Word Cloud
                     st.write(f"#### ☁️ Word Cloud (Challenges) in {lang}")
                     plot_wordcloud(
-                        df_comments_proc["challenge"].astype(str).tolist(),
+                        df_comments_proc["challenge"].tolist(),
                         f"Challenges Word Cloud ({lang})",
                         target_language="English" if lang in ["English", "Darija"] else lang
                     )
+
 
             # -----------------------------------------------------------------
             # TAB 2: Projects
