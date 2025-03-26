@@ -145,38 +145,6 @@ def require_auth(func):
             st.stop()
     return wrapper
 
-def require_admin(func):
-    """
-    Decorator to require that the user is authenticated AND has the admin role.
-    """
-    def wrapper(*args, **kwargs):
-        try:
-            # Ensure there's a token in session
-            if not st.session_state.get('jwt_token'):
-                st.error("Please login to access this page.")
-                st.stop()
-            
-            # Decode the token
-            is_valid, username, role = verify_jwt_token(st.session_state.jwt_token)
-            if not is_valid:
-                # If invalid, clear token and stop
-                st.session_state.jwt_token = None
-                st.error("Session expired or invalid. Please login again.")
-                st.stop()
-            
-            # Now check role
-            if role != "admin":
-                st.error("⛔ Access Denied: You must be an admin to view this page.")
-                st.stop()
-            
-            # If everything is good, call the original function
-            return func(*args, **kwargs)
-        
-        except Exception as e:
-            st.error(f"Authentication error: {str(e)}")
-            st.stop()
-    return wrapper
-
 ################################################################################
 # FANCY CIVIC CATALYST LOGIN PAGE
 ################################################################################
@@ -362,7 +330,7 @@ def login_page():
         password = st.text_input("Password", type="password", key="login_password")
         submitted = st.form_submit_button("Login")
 
-        if submitted :
+        if submitted:
             success, user_role = verify_user(username, password)
             if success:
                 token = create_jwt_token(username, user_role)
