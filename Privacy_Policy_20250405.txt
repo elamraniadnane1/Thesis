@@ -1,0 +1,49 @@
+
+_Last updated: October 2025_
+
+## Introduction
+At Civic Catalyst, your privacy is our priority. This Privacy Policy explains how we collect, use, and safeguard your information when you use our platform. We are committed to protecting your personal data and ensuring transparency in our operations.
+
+## Data Collection
+We may collect information such as:
+- **Personal Information:** Your name, email address, and contact details provided during registration.
+- **User Content:** Ideas, comments, and other submissions made on the platform.
+- **Usage Data:** Information about how you interact with our services, such as IP addresses and browser type.
+- **Cookies and Tracking Technologies:** To enhance your user experience, we may use cookies.
+
+## Data Usage
+The information we collect is used to:
+- Provide and improve our services.
+- Personalize your experience.
+- Communicate with you about updates and offers.
+- Ensure the security and integrity of our platform.
+
+## Data Sharing & Disclosure
+We do not sell your personal data. We may share your information with:
+- **Service Providers:** Trusted third parties who help us operate our platform.
+- **Legal Authorities:** When required by law or to protect our rights.
+- **Business Partners:** In cases where you have explicitly consented to such sharing.
+
+## Security Measures
+We use industry-standard security practices to protect your data from unauthorized access, alteration, or disclosure. This includes encryption, access controls, and regular security reviews.
+
+## Your Rights
+You have the right to:
+- Access your personal data.
+- Correct inaccuracies in your information.
+- Request deletion of your data.
+- Object to certain processing activities.
+- Withdraw consent at any time (where applicable).
+
+## Cookies & Tracking
+We use cookies to improve your experience. You can adjust your cookie preferences in your browser settings. However, disabling cookies may affect the functionality of our platform.
+
+## Changes to This Policy
+We may update our Privacy Policy periodically. We will notify you of any significant changes by updating the "Last updated" date on this page.
+
+## Contact Us
+If you have any questions about this Privacy Policy or our data practices, please contact our Privacy Officer:
+- **Email:** privacy@civiccatalyst.org
+- **Address:** AUI, Ifrane
+
+Thank you for trusting Civic Catalyst with your data.
