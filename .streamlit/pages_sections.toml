@@ -1,0 +1,104 @@
+[[pages]]
+path = "pages/Login.py"
+name = "Login"
+icon = "🔐"
+
+[[pages]]
+name = "Admin Panel"
+icon = "⚙️"
+is_section = true
+
+[[pages]]
+path = "pages/Admin_Panel.py"
+name = "Admin Panel"
+icon = "🛠️"
+
+[[pages]]
+path = "pages/General Configuration.py"
+name = "General Config"
+icon = "⚙️"
+
+[[pages]]
+path = "pages/Evaluation Panel.py"
+name = "Evaluation"
+icon = "📝"
+
+[[pages]]
+name = "AI Assistants"
+icon = "🤖"
+is_section = true
+
+[[pages]]
+path = "pages/Chatbot.py"
+name = "Chatbot"
+icon = "💬"
+
+[[pages]]
+path = "pages/Jurisbot.py"
+name = "Jurisbot"
+icon = "⚖️"
+
+[[pages]]
+path = "pages/NLP Management.py"
+name = "NLP Management"
+icon = "🧠"
+
+[[pages]]
+name = "Citizen Engagement"
+icon = "👥"
+is_section = true
+
+[[pages]]
+path = "pages/Citizen_Space.py"
+name = "Citizen Space"
+icon = "🌍"
+
+[[pages]]
+path = "pages/Contact_Us.py"
+name = "Contact Us"
+icon = "📬"
+
+[[pages]]
+path = "pages/Our Partners.py"
+name = "Our Partners"
+icon = "🤝"
+
+[[pages]]
+name = "Security & Privacy"
+icon = "🔐"
+is_section = true
+
+[[pages]]
+path = "pages/Cybersecurity_Reports_(DGSSI).py"
+name = "Cybersecurity Reports"
+icon = "🛡️"
+
+[[pages]]
+path = "pages/Your Privacy.py"
+name = "Your Privacy"
+icon = "🔏"
+
+[[pages]]
+name = "Public Sector"
+icon = "🏛️"
+is_section = true
+
+[[pages]]
+path = "pages/Public_Markets & Fundraising.py"
+name = "Markets & Fundraising"
+icon = "💼"
+
+[[pages]]
+path = "pages/Scaling Up & Deploy.py"
+name = "Scaling & Deploy"
+icon = "🚀"
+
+[[pages]]
+name = "Help & Support"
+icon = "❓"
+is_section = true
+
+[[pages]]
+path = "pages/Help.py"
+name = "Help"
+icon = "🆘"

@@ -1,6 +1,27 @@
 import streamlit as st
 from streamlit_extras.switch_page_button import switch_page
+import streamlit as st
+from st_pages import add_page_title, get_nav_from_toml
 
+
+
+st.set_page_config(
+    page_title="Civic Catalyst",
+    page_icon="icon.png",  # Must be a small icon-sized image (like 32x32)
+    layout="wide"
+)
+
+
+# If you want to use the no-sections version, this
+# defaults to looking in .streamlit/pages.toml, so you can
+# just call `get_nav_from_toml()`
+nav = get_nav_from_toml(".streamlit/pages_sections.toml")
+st.logo("icon.png")
+st.image("icon.png", width=200)
+pg = st.navigation(nav)
+add_page_title(pg)
+
+pg.run()
 def main():
     st.title("Civic Catalyst")
 

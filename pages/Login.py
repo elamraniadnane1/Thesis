@@ -460,7 +460,6 @@ def main():
     
     init_auth()
     login_page()
-    st.rerun()
-
+    st.stop()
 if __name__ == "__main__":
     main()
