@@ -12,9 +12,9 @@ from qdrant_client import QdrantClient
 from qdrant_client.models import PointStruct
 from datetime import datetime
 from bson import ObjectId
-from Login import create_user
+from CivicCatalyst import create_user
 import openai
-from Login import delete_user
+from CivicCatalyst import delete_user
 import hashlib
 # Set OpenAI API key from Streamlit secrets
 openai.api_key = st.secrets["openai"]["api_key"]
