@@ -14,6 +14,8 @@ from CivicCatalyst import create_user
 import openai
 from CivicCatalyst import delete_user
 import hashlib
+
+
 # Set OpenAI API key from Streamlit secrets
 openai.api_key = st.secrets["openai"]["api_key"]
 # --------------------------

@@ -624,7 +624,6 @@ def main():
         selected = option_menu(
             menu_title="Navigation",  # Title of the sidebar menu
             options=[
-                "Login",
                 "Admin Panel",
                 "Chatbot",
                 "Citizen Space",
@@ -641,7 +640,6 @@ def main():
                 "Your Privacy"
             ],
             icons=[
-                "user-shield",
                 "gear",             # Admin Panel
                 "robot",            # Chatbot
                 "people",           # Citizen Space
@@ -675,9 +673,7 @@ def main():
 
     # 4) Switch pages based on the user’s selection
     #    Make sure each .py in /pages has a matching name (or filename).
-    if selected == "Login":
-        st.switch_page("Login.py")
-    elif selected == "Admin Panel":
+    if selected == "Admin Panel":
         st.switch_page("pages\Admin_Panel.py")
     elif selected == "Chatbot":
         st.switch_page("pages\Chatbot.py")
