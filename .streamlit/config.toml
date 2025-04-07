@@ -1,7 +1,9 @@
 [theme]
-base="dark"
-primaryColor="#1E88E5"
-backgroundColor="#121212"
-secondaryBackgroundColor="#1F1F1F"
-textColor="#E0E0E0"
-font="sans serif"
+base = "dark"
+primaryColor = "#FF416C"                  # Vibrant pink-red for action buttons and highlights
+backgroundColor = "#0D1117"               # Deep, true black-blue background (GitHub dark vibe)
+secondaryBackgroundColor = "#161B22"      # Slightly lighter shade for containers/cards
+textColor = "#E6EDF3"                     # Soft off-white for readability
+font = "monospace"                        # Techy feel (options: "sans serif", "serif", "monospace")
+[client]
+showSidebarNavigation = true

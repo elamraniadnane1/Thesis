@@ -32,7 +32,9 @@ def main():
         st.switch_page("pages\\Login.py")  # Name of your Login page
     else:
         # User is logged in; show main content here
-        st.success(f"Welcome back, {st.session_state.get('username', 'User')}!")
+        # Retrieve the username from session state (or default to 'User')
+        username = st.session_state.get("username", "User")
+        st.success(f"Welcome back, {username}!")
         st.write("This is the main content of the Civic Catalyst application.")
 
 if __name__ == "__main__":

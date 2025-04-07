@@ -9,7 +9,7 @@ from pymongo import MongoClient
 # -----------------------------------------------------------------------------
 # PAGE CONFIGURATION
 # -----------------------------------------------------------------------------
-st.set_page_config(page_title="Our Partners", layout="wide")
+#st.set_page_config(page_title="Our Partners", layout="wide")
 st.markdown(
     """
     <style>
@@ -134,7 +134,7 @@ if partners:
                 st.markdown("<div class='partner-card'>", unsafe_allow_html=True)
                 # Display logo if available
                 if partner.get("logo_url"):
-                    st.image(partner["logo_url"], use_column_width=True, output_format="auto", caption=partner.get("name", "Partner Logo"), width=120)
+                    st.image(partner["logo_url"], use_container_width=True, output_format="auto", caption=partner.get("name", "Partner Logo"), width=120)
                 st.markdown(f"<div class='partner-name'>{partner.get('name', 'Unnamed Partner')}</div>", unsafe_allow_html=True)
                 st.markdown(f"<div class='partner-desc'>{partner.get('description', 'No description provided.')}</div>", unsafe_allow_html=True)
                 if partner.get("website"):

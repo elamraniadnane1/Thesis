@@ -506,8 +506,23 @@ st.markdown(
 # -----------------------------------------------------------------------------
 # ENFORCE CITIZEN LOGIN (Using same login mechanism as Login.py)
 # -----------------------------------------------------------------------------
+from streamlit_cookies_manager import EncryptedCookieManager
+
+# Initialize cookie manager
+cookies = EncryptedCookieManager(prefix="civic_", password=os.environ.get("COOKIE_PASSWORD", "YOUR_STRONG_PASSWORD"))
+
+if cookies.ready():
+    # Fallback: set session state from cookies if not already set
+    if "username" not in st.session_state and cookies.get("username"):
+        st.session_state["username"] = cookies.get("username")
+
+    if "role" not in st.session_state and cookies.get("role"):
+        st.session_state["role"] = cookies.get("role")
+
+# Final check (after fallback)
 if not st.session_state.get("username") or not st.session_state.get("role"):
     st.error("Access Denied. Please log in to use the Citizen Space.")
+
     st.markdown("### Login")
     with st.form("login_form", clear_on_submit=True):
         login_username = st.text_input("Username", key="login_username")

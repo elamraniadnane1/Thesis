@@ -4,7 +4,7 @@ from datetime import datetime
 # -----------------------------------------------------------------------------
 # STREAMLIT PAGE CONFIGURATION
 # -----------------------------------------------------------------------------
-st.set_page_config(page_title="Your Privacy", layout="centered")
+#st.set_page_config(page_title="Your Privacy", layout="centered")
 
 # -----------------------------------------------------------------------------
 # CUSTOM CSS FOR THE PRIVACY PAGE

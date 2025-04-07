@@ -743,7 +743,7 @@ def dashboard_admin():
         st.write("### Top Keywords")
         sample_keywords = ["transparency", "participation", "innovation", "development", "citizenship", "open government"]
         wc_path = generate_word_cloud(sample_keywords)
-        st.image(wc_path, caption="Word Cloud of Top Keywords", use_column_width=True)
+        st.image(wc_path, caption="Word Cloud of Top Keywords", use_container_width=True)
         
         st.markdown("---")
         
@@ -1220,7 +1220,7 @@ def dashboard_admin():
         st.write("#### Keyword Insights (Word Cloud)")
         sample_keywords = ["transparency", "participation", "innovation", "development", "citizenship", "open government"]
         wc_path = generate_word_cloud(sample_keywords)
-        st.image(wc_path, caption="Word Cloud of Frequently Occurring Keywords", use_column_width=True)
+        st.image(wc_path, caption="Word Cloud of Frequently Occurring Keywords", use_container_width=True)
 
     # --- Tab 7: System Health & Settings ---
     with tabs[6]:

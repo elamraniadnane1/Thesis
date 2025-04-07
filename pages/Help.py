@@ -14,96 +14,134 @@ from pymongo import MongoClient
 # -----------------------------------------------------------------------------
 # STREAMLIT PAGE CONFIGURATION
 # -----------------------------------------------------------------------------
-st.set_page_config(page_title="Help & Support", layout="centered")
+#st.set_page_config(page_title="Help & Support", layout="centered")
 
 # -----------------------------------------------------------------------------
-# CUSTOM CSS FOR THE HELP PAGE
+# SIDEBAR SETTINGS: Adjust Text Size for Accessibility
+# -----------------------------------------------------------------------------
+text_size = st.sidebar.selectbox("Adjust Text Size", ["Small", "Medium", "Large"], index=1)
+if text_size == "Small":
+    base_font_size = "0.9rem"
+elif text_size == "Large":
+    base_font_size = "1.3rem"
+else:
+    base_font_size = "1.1rem"
+
+# -----------------------------------------------------------------------------
+# CUSTOM CSS FOR THE HELP PAGE (with dynamic text size and improved styling)
 # -----------------------------------------------------------------------------
 st.markdown(
-    """
+    f"""
     <style>
-      body {
+      body {{
           background: #1c1c1c;
           font-family: 'Helvetica Neue', sans-serif;
           color: #f0f0f0;
-      }
-      .stApp {
+          font-size: {base_font_size};
+      }}
+      .stApp {{
           background-color: #1c1c1c;
-      }
-      .main-title {
+      }}
+      /* Skip link for keyboard navigation */
+      .skip-link {{
+          position: absolute;
+          top: -40px;
+          left: 0;
+          background: #FF416C;
+          color: #fff;
+          padding: 8px;
+          z-index: 100;
+          transition: top 0.3s;
+      }}
+      .skip-link:focus {{
+          top: 0;
+      }}
+      .main-title {{
           text-align: center;
           font-size: 3.5rem;
-          font-weight: 900;
-          color: #FF6F61;
+          font-weight: 800;
+          color: #FF416C;
           margin-bottom: 1.5rem;
-      }
-      .section-header {
+      }}
+      .section-header {{
           font-size: 2.2rem;
           font-weight: 700;
           margin-top: 2rem;
           margin-bottom: 1rem;
           color: #FFB74D;
-      }
-      .faq-item {
+      }}
+      .faq-item {{
           margin-bottom: 1.5rem;
           padding: 1rem;
           background: #333333;
-          border-left: 5px solid #FF6F61;
+          border-left: 5px solid #FF416C;
           box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-      }
-      .faq-question {
+      }}
+      .faq-question {{
           font-weight: bold;
           margin-bottom: 0.5rem;
           color: #FFB74D;
-      }
-      .faq-answer {
+      }}
+      .faq-answer {{
           margin-left: 1rem;
           color: #d0d0d0;
-      }
-      .contact-form {
+      }}
+      .contact-form {{
           background: #2a2a2a;
           padding: 2rem;
           border-radius: 8px;
           box-shadow: 0 4px 8px rgba(0,0,0,0.3);
           margin-top: 2rem;
-      }
-      .footer {
+      }}
+      .footer {{
           text-align: center;
           font-size: 0.9rem;
           color: #a0a0a0;
           margin-top: 3rem;
           border-top: 1px solid #444;
           padding-top: 1rem;
-      }
-      .icon {
+      }}
+      .icon {{
           margin-right: 0.5rem;
-          color: #FF6F61;
-      }
-      .tab-header {
+          color: #FF416C;
+      }}
+      .tab-header {{
           text-align: center;
           font-size: 2rem;
           margin-bottom: 1rem;
           color: #FFB74D;
-      }
+      }}
+      /* Focus outlines for accessibility */
+      button:focus, input:focus, textarea:focus {{
+          outline: 2px dashed #FF416C;
+          outline-offset: 2px;
+      }}
     </style>
     """,
     unsafe_allow_html=True
 )
 
-# Load Font Awesome for icons
+# -----------------------------------------------------------------------------
+# LOAD FONT AWESOME FOR ICONS
+# -----------------------------------------------------------------------------
 st.markdown("""
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
-integrity="sha512-dBwEXZg+0ItZ3Y11rXwSTBPH3IyzYFHDxvxxrEC0Cjk0n6X8hEP1p7eKcK9F9D6b2ZLKl91r6Wip4v1qzK+qUg==" 
+integrity="sha512-dBwEXZg+0ItZ3Y11rXwSTBPH3IyzYFHDxvxxrEC0Cjk0n6X8hEP1p7eKcK9F9D6b2LKl91r6Wip4v1qzK+qUg==" 
 crossorigin="anonymous" referrerpolicy="no-referrer" />
 """, unsafe_allow_html=True)
 
 # -----------------------------------------------------------------------------
-# PAGE TITLE & HEADER
+# SKIP TO CONTENT LINK (for keyboard navigation)
 # -----------------------------------------------------------------------------
-st.markdown("<div class='main-title'><i class='fas fa-life-ring icon'></i>Help & Support</div>", unsafe_allow_html=True)
+st.markdown("<a href='#main-content' class='skip-link'>Skip to main content</a>", unsafe_allow_html=True)
 
 # -----------------------------------------------------------------------------
-# HELPER FUNCTION: MongoDB Client
+# PAGE TITLE & HEADER (with ARIA attributes)
+# -----------------------------------------------------------------------------
+st.markdown("<div id='main-content' class='main-title'><i class='fas fa-life-ring icon' aria-hidden='true'></i>Help & Support</div>", unsafe_allow_html=True)
+
+# -----------------------------------------------------------------------------
+# HELPER FUNCTION: MONGODB CLIENT
 # -----------------------------------------------------------------------------
 def get_mongo_client():
     connection_string = st.secrets["mongodb"].get("connection_string", "mongodb://localhost:27017")
@@ -122,6 +160,35 @@ def store_support_ticket(ticket_data):
         client.close()
 
 # -----------------------------------------------------------------------------
+# FAQ DATA & SEARCH FEATURE
+# -----------------------------------------------------------------------------
+faqs = [
+    {
+        "question": "How do I register for an account?",
+        "answer": "Click on the 'Register' button on the login page and fill in the required fields, including your unique CIN number (e.g., D922986)."
+    },
+    {
+        "question": "How do I submit an idea?",
+        "answer": "After logging in, navigate to the 'Submit Idea' tab. Fill in your idea or comment in the provided form. You can optionally link your idea to a municipal project."
+    },
+    {
+        "question": "What happens to my idea after submission?",
+        "answer": "Your idea will be marked as 'pending' until a moderator reviews it. Once approved, it will appear in the public Idea Feed."
+    },
+    {
+        "question": "How is my data used?",
+        "answer": "We use your data to improve our services and personalize your experience. For more details, please refer to our Privacy Policy."
+    },
+    {
+        "question": "Who can I contact for further support?",
+        "answer": "If you need additional help, please use the Contact Support form on this page or email support@civiccatalyst.org."
+    }
+]
+
+faq_search = st.text_input("Search FAQs", placeholder="Type a keyword to filter questions...")
+filtered_faqs = [faq for faq in faqs if faq_search.lower() in faq["question"].lower()] if faq_search else faqs
+
+# -----------------------------------------------------------------------------
 # CREATE TABS FOR HELP CONTENT
 # -----------------------------------------------------------------------------
 tabs = st.tabs(["FAQ", "Tutorial", "Troubleshooting", "Contact Support"])
@@ -131,29 +198,7 @@ tabs = st.tabs(["FAQ", "Tutorial", "Troubleshooting", "Contact Support"])
 # -----------------------------------------------------------------------------
 with tabs[0]:
     st.markdown("<div class='section-header'>Frequently Asked Questions</div>", unsafe_allow_html=True)
-    faqs = [
-        {
-            "question": "How do I register for an account?",
-            "answer": "Click on the 'Register' button on the login page and fill in the required fields, including your unique CIN number (e.g., D922986)."
-        },
-        {
-            "question": "How do I submit an idea?",
-            "answer": "After logging in, navigate to the 'Submit Idea' tab. Fill in your idea or comment in the provided form. You can optionally link your idea to a municipal project."
-        },
-        {
-            "question": "What happens to my idea after submission?",
-            "answer": "Your idea will be marked as 'pending' until a moderator reviews it. Once approved, it will appear in the public Idea Feed."
-        },
-        {
-            "question": "How is my data used?",
-            "answer": "We use your data to improve our services and personalize your experience. For more details, please refer to our Privacy Policy."
-        },
-        {
-            "question": "Who can I contact for further support?",
-            "answer": "If you need additional help, please use the Contact Support form on this page or email support@civiccatalyst.org."
-        }
-    ]
-    for faq in faqs:
+    for faq in filtered_faqs:
         st.markdown(f"<div class='faq-item'><div class='faq-question'>Q: {faq['question']}</div>", unsafe_allow_html=True)
         st.markdown(f"<div class='faq-answer'>A: {faq['answer']}</div></div>", unsafe_allow_html=True)
 
@@ -170,7 +215,7 @@ with tabs[1]:
     4. **Project Linkage:** Optionally, link your idea to an existing municipal project.
     5. **Support:** Use this Help page or contact support for further assistance.
     """)
-    st.image("https://via.placeholder.com/800x400?text=Tutorial+Screenshot", caption="Tutorial Screenshot", use_column_width=True)
+    st.image("https://via.placeholder.com/800x400?text=Tutorial+Screenshot", caption="Tutorial Screenshot", use_container_width=True)
 
 # -----------------------------------------------------------------------------
 # TAB 3: Troubleshooting
@@ -193,8 +238,8 @@ with tabs[2]:
         }
     ]
     for item in troubleshooting:
-        st.markdown(f"<b>Issue:</b> {item['issue']}", unsafe_allow_html=True)
-        st.markdown(f"<b>Solution:</b> {item['solution']}", unsafe_allow_html=True)
+        st.markdown(f"<strong>Issue:</strong> {item['issue']}", unsafe_allow_html=True)
+        st.markdown(f"<strong>Solution:</strong> {item['solution']}", unsafe_allow_html=True)
         st.markdown("<hr>", unsafe_allow_html=True)
 
 # -----------------------------------------------------------------------------
@@ -228,6 +273,7 @@ with tabs[3]:
                 st.error("There was an error submitting your ticket. Please try again later.")
 
 # -----------------------------------------------------------------------------
-# FOOTER
+# FOOTER & BACK-TO-TOP LINK
 # -----------------------------------------------------------------------------
 st.markdown("<div class='footer'>© 2025 Civic Catalyst. All rights reserved.</div>", unsafe_allow_html=True)
+st.markdown("<div style='text-align: center;'><a href='#top' style='color:#FF416C; text-decoration:none;'>Back to top</a></div>", unsafe_allow_html=True)

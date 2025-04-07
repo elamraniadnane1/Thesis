@@ -8,6 +8,7 @@ import time
 import random
 import logging
 import os
+import hashlib
 import re
 import json
 import schedule
@@ -50,7 +51,7 @@ if st.session_state.get("role") != "admin":
 # -----------------------------------------------------------------------------
 # STREAMLIT PAGE CONFIGURATION
 # -----------------------------------------------------------------------------
-st.set_page_config(page_title="NLP Management", layout="wide", initial_sidebar_state="expanded")
+#st.set_page_config(page_title="NLP Management", layout="wide", initial_sidebar_state="expanded")
 st.markdown(
     """
     <style>

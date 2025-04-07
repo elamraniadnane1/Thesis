@@ -17,7 +17,7 @@ from pymongo import MongoClient
 openai.api_key = st.secrets["openai"]["api_key"]
 
 # Set page configuration
-st.set_page_config(page_title="Contact Us", layout="centered")
+#st.set_page_config(page_title="Contact Us", layout="centered")
 
 # Load Font Awesome for icons
 st.markdown("""

@@ -10,7 +10,7 @@ import json
 # -----------------------------------------------------------------------------
 # STREAMLIT PAGE CONFIGURATION
 # -----------------------------------------------------------------------------
-st.set_page_config(page_title="Scaling Up & Deployment", layout="wide", initial_sidebar_state="expanded")
+#st.set_page_config(page_title="Scaling Up & Deployment", layout="wide", initial_sidebar_state="expanded")
 if st.session_state.get("role") != "admin":
     st.error("Access Denied. Only Admins can access this Page.")
     st.stop()

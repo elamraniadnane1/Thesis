@@ -41,7 +41,7 @@ if st.session_state.get("role") != "admin":
 # -----------------------------------------------------------------------------
 # STREAMLIT PAGE CONFIGURATION
 # -----------------------------------------------------------------------------
-st.set_page_config(page_title="General Configuration", layout="wide", initial_sidebar_state="expanded")
+#st.set_page_config(page_title="General Configuration", layout="wide", initial_sidebar_state="expanded")
 st.markdown(
     """
     <style>
