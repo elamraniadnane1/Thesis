@@ -556,6 +556,7 @@ if st.session_state.get("role") != "citizen":
 # -----------------------------------------------------------------------------
 tabs = st.tabs([
     "📊 Dashboard", 
+    "👍👎 Pros & Cons",
     "📝 Submit Idea", 
     "📢 Idea Feed", 
     "🏗 Projects", 
@@ -954,11 +955,157 @@ with tabs[0]:
             st.markdown('</div>', unsafe_allow_html=True)
 
 
+import json
+from datetime import datetime
+
+def update_comment_sentiment_in_mongodb(comment_id: str, sentiment: str, polarity: float):
+    """
+    Upsert the sentiment analysis result for a given comment_id into MongoDB.
+    The document is stored in the 'gpt_sentiment_results' collection.
+    """
+    try:
+        client = get_mongo_client()
+        db = client["CivicCatalyst"]
+        db["gpt_sentiment_results"].update_one(
+            {"comment_id": comment_id},
+            {"$set": {
+                "sentiment": sentiment,
+                "polarity": polarity,
+                "last_updated": datetime.utcnow()
+            }},
+            upsert=True
+        )
+    except Exception as e:
+        st.error(f"Error updating sentiment in MongoDB for comment {comment_id}: {e}")
+    finally:
+        client.close()
+
+def get_cached_sentiment(comment_id: str):
+    """
+    Retrieve cached sentiment and polarity for a given comment_id from MongoDB.
+    Returns a tuple (sentiment, polarity) if found; otherwise, returns None.
+    """
+    try:
+        client = get_mongo_client()
+        db = client["CivicCatalyst"]
+        doc = db["gpt_sentiment_results"].find_one({"comment_id": comment_id})
+        if doc:
+            sentiment = doc.get("sentiment", "NEU")
+            polarity = float(doc.get("polarity", 0.0))
+            return sentiment, polarity
+        else:
+            return None
+    except Exception as e:
+        st.error(f"Error retrieving cached sentiment for comment {comment_id}: {e}")
+        return None
+    finally:
+        client.close()
+
+def get_sentiment_via_gpt(comment_text: str) -> (str, float):
+    """
+    Use GPT to analyze the sentiment of a comment.
+    Returns a tuple of (sentiment, polarity) where sentiment is one of 'POS', 'NEG', or 'NEU',
+    and polarity is a float value.
+    """
+    prompt = (
+        f"Determine the sentiment and polarity of the following comment. "
+        f"Return only a JSON object with keys 'sentiment' and 'polarity'. "
+        f"Sentiment should be one of 'POS', 'NEG', or 'NEU'.\n\n"
+        f"Comment: {comment_text}"
+    )
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are an assistant that analyzes sentiment."},
+                {"role": "user", "content": prompt}
+            ],
+            max_tokens=50,
+            temperature=0.5,
+        )
+        result_text = response["choices"][0]["message"]["content"].strip()
+        result = json.loads(result_text)
+        sentiment = result.get("sentiment", "NEU").upper()
+        polarity = float(result.get("polarity", 0.0))
+        return sentiment, polarity
+    except Exception as e:
+        st.error(f"Error during GPT sentiment analysis: {e}")
+        return "NEU", 0.0
+
+# -------------------------------
+# New Tab: Pros & Cons with Caching
+# -------------------------------
+with tabs[1]:
+    st.header("Pros & Cons")
+    
+    # Checkbox to force re-run of GPT sentiment analysis even if cache exists
+    run_gpt_analysis = st.checkbox("Force re-run GPT Sentiment Analysis for all comments", value=False)
+    
+    # Load citizen comments from Qdrant (ensure vector_dim matches your data)
+    comments = load_qdrant_documents("citizen_comments", vector_dim=384)
+    
+    if comments:
+        # Process each comment using caching to minimize GPT calls
+        for comment in comments:
+            comment_text = comment.get("comment_text", "")
+            comment_id = comment.get("comment_id")
+            if comment_text and comment_id:
+                if run_gpt_analysis:
+                    # Force re-run GPT analysis
+                    sentiment, polarity = get_sentiment_via_gpt(comment_text)
+                    update_comment_sentiment_in_mongodb(comment_id, sentiment, polarity)
+                else:
+                    # Attempt to retrieve cached result
+                    cached = get_cached_sentiment(comment_id)
+                    if cached:
+                        sentiment, polarity = cached
+                    else:
+                        sentiment, polarity = get_sentiment_via_gpt(comment_text)
+                        update_comment_sentiment_in_mongodb(comment_id, sentiment, polarity)
+                comment["sentiment"] = sentiment
+                comment["polarity"] = polarity
+        
+        # Separate comments based on sentiment: "POS" for Pros, "NEG" for Cons.
+        pros = [c for c in comments if c.get("sentiment", "").upper() == "POS"]
+        cons = [c for c in comments if c.get("sentiment", "").upper() == "NEG"]
+
+        # Display summary metrics
+        st.subheader("Summary Metrics")
+        col1, col2 = st.columns(2)
+        with col1:
+            st.metric("Total Pros", len(pros))
+        with col2:
+            st.metric("Total Cons", len(cons))
+        avg_pros = sum(c.get("polarity", 0.0) for c in pros) / len(pros) if pros else 0.0
+        avg_cons = sum(c.get("polarity", 0.0) for c in cons) / len(cons) if cons else 0.0
+        st.write(f"Average Pros Polarity: {avg_pros:.2f}")
+        st.write(f"Average Cons Polarity: {avg_cons:.2f}")
+
+        st.markdown("---")
+
+        # Display individual comments in two columns
+        col1, col2 = st.columns(2)
+        with col1:
+            st.subheader("Pros (Positive Comments)")
+            for pro in pros:
+                st.markdown(f"**{pro.get('citizen_name', 'Anonymous')}** on {pro.get('date_submitted', 'Unknown Date')}")
+                st.markdown(f"> {pro.get('comment_text', '')}")
+                st.markdown(f"*Project:* {pro.get('project_title', 'N/A')}")
+                st.markdown("---")
+        with col2:
+            st.subheader("Cons (Negative Comments)")
+            for con in cons:
+                st.markdown(f"**{con.get('citizen_name', 'Anonymous')}** on {con.get('date_submitted', 'Unknown Date')}")
+                st.markdown(f"> {con.get('comment_text', '')}")
+                st.markdown(f"*Project:* {con.get('project_title', 'N/A')}")
+                st.markdown("---")
+    else:
+        st.info("No citizen comments found.")
 
 # -----------------------------------------------------------------------------
 # TAB 2: Submit Idea
 # -----------------------------------------------------------------------------
-with tabs[1]:
+with tabs[2]:
     st.header("Submit Your Idea")
     st.write("Please provide the required information below. All fields marked as **Mandatory** must be completed. Your idea will be reviewed by moderators.")
 
@@ -1136,7 +1283,7 @@ with tabs[1]:
 # -----------------------------------------------------------------------------
 # TAB 3: Idea Feed
 # -----------------------------------------------------------------------------
-with tabs[2]:
+with tabs[3]:
     st.header("Approved Ideas Feed")
     # Load ideas from citizen_ideas collection
     all_ideas = load_qdrant_documents("citizen_ideas", vector_dim=384)
@@ -1188,7 +1335,7 @@ with tabs[2]:
 # -----------------------------------------------------------------------------
 # TAB 4: Projects
 # -----------------------------------------------------------------------------
-with tabs[3]:
+with tabs[4]:
     st.header("Municipal Projects")
     
     # Load projects from Qdrant
@@ -1385,7 +1532,7 @@ with tabs[3]:
 # TAB 5: News
 # -----------------------------------------------------------------------------
 
-with tabs[4]:
+with tabs[5]:
     st.header("News")
     st.write(
         "This section finds news comments (hespress_politics_comments) that are similar to citizen comments "
@@ -1549,7 +1696,7 @@ with tabs[4]:
 # -----------------------------------------------------------------------------
 # TAB 6: Profile
 # -----------------------------------------------------------------------------
-with tabs[5]:
+with tabs[6]:
     st.header("Your Profile")
     st.write(f"**Username:** {st.session_state['username']} :bust_in_silhouette:")
     st.write(f"**Role:** {st.session_state['role']} :lock:")
@@ -1588,7 +1735,7 @@ with tabs[5]:
 # -----------------------------------------------------------------------------
 # TAB 7: Chat with Assistant
 # -----------------------------------------------------------------------------
-with tabs[6]:
+with tabs[7]:
     st.header("Chat with Assistant")
     st.write("Ask your questions and get personalized answers from our assistant. :speech_balloon:")
 

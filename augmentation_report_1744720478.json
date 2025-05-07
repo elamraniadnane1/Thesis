@@ -1,0 +1,20 @@
+{
+  "timestamp": "2025-04-15 13:34:38",
+  "collections": {
+    "remacto_comments": {
+      "original_count": 923,
+      "augmented_count": 0,
+      "augmentation_factor": 0.0,
+      "strategies": {
+        "paraphrase": 0
+      },
+      "sentiment_distribution": {
+        "POS": 0,
+        "NEG": 0,
+        "NEU": 0
+      },
+      "topic_distribution": {},
+      "top_keywords": {}
+    }
+  }
+}

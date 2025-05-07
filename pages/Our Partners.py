@@ -7,23 +7,24 @@ from datetime import datetime
 from pymongo import MongoClient
 
 # -----------------------------------------------------------------------------
-# PAGE CONFIGURATION
+# PAGE CONFIGURATION & CSS
 # -----------------------------------------------------------------------------
-#st.set_page_config(page_title="Our Partners", layout="wide")
 st.markdown(
     """
     <style>
       body {
-          background: #f9f9f9;
+          background: #f0f2f6;
           font-family: 'Roboto', sans-serif;
           color: #333;
+          margin: 0;
+          padding: 0;
       }
       .main-title {
           text-align: center;
           font-size: 3.5rem;
           font-weight: 900;
           color: #FF416C;
-          margin-bottom: 1.5rem;
+          margin: 2rem 0 1.5rem 0;
       }
       .partner-card {
           background: #fff;
@@ -31,6 +32,11 @@ st.markdown(
           box-shadow: 0 4px 12px rgba(0,0,0,0.1);
           padding: 1rem;
           margin-bottom: 1.5rem;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .partner-card:hover {
+          transform: scale(1.03);
+          box-shadow: 0 6px 16px rgba(0,0,0,0.15);
       }
       .partner-logo {
           max-width: 120px;
@@ -41,15 +47,18 @@ st.markdown(
           font-size: 1.8rem;
           font-weight: 700;
           color: #FF4B2B;
+          margin-bottom: 0.5rem;
       }
       .partner-desc {
           font-size: 1.1rem;
           margin-bottom: 0.5rem;
+          line-height: 1.5;
       }
       .partner-link {
           font-size: 1rem;
           color: #0077cc;
           text-decoration: none;
+          font-weight: 500;
       }
       .partner-link:hover {
           text-decoration: underline;
@@ -58,7 +67,6 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-
 st.markdown("<div class='main-title'>Our Partners</div>", unsafe_allow_html=True)
 
 # -----------------------------------------------------------------------------
@@ -118,6 +126,36 @@ def update_partner(partner_id: str, updated_data: dict):
         return False
     finally:
         client.close()
+
+# -----------------------------------------------------------------------------
+# REMACTO PARTNER: ENSURE IT EXISTS
+# -----------------------------------------------------------------------------
+def ensure_remacto_partner():
+    """Check if REMACTO exists; if not, add it with a detailed explanation in English."""
+    partners = get_partners()
+    for partner in partners:
+        if partner.get("name", "").strip().lower() == "remacto":
+            return  # Already exists
+    remacto_description = (
+        "Detailed explanation of how open government initiatives work to strengthen citizen participation:\n\n"
+        "The Moroccan Network of Open Territorial Collectivities (REMACTO) was launched to encourage and support the "
+        "implementation of openness principles within Moroccan local governments: transparency, accountability, access to information, "
+        "citizen participation, and digitalization. It relies on an organizational, legal, and methodological framework that fosters "
+        "the co-creation of open government programs, citizen engagement, and public consultation."
+    )
+    new_partner = {
+         "partner_id": str(uuid.uuid4()),
+         "name": "REMACTO",
+         "logo_url": "",  # Add a default logo URL if available.
+         "description": remacto_description,
+         "website": "http://collectivites-territoriales.gov.ma/en/remacto",  # Example English website URL.
+         "contact_info": "",
+         "timestamp": datetime.utcnow()
+    }
+    add_partner(new_partner)
+
+# Automatically ensure REMACTO is present
+ensure_remacto_partner()
 
 # -----------------------------------------------------------------------------
 # DISPLAY PARTNERS
@@ -191,7 +229,7 @@ if st.session_state.get("role") == "admin":
             else:
                 st.error("Error deleting partner.")
 
-    # Option to update a partner (simplified update of description)
+    # Option to update a partner (here, update only the description)
     st.markdown("### Update Partner Description")
     if partners:
         update_options = {f"{p.get('name', 'Unnamed')} (ID: {p.get('partner_id')})": p.get("partner_id") for p in partners}

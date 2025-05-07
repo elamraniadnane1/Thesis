@@ -1,1 +1,4 @@
 python -m streamlit run Main.py
+python script5.py --input "C:\Users\DELL\OneDrive\Desktop\Thesis\sentiment_ground_truths(4).csv" --api-key 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 --batch-size 25 --limit 500
+python script5.py --input "C:\Users\DELL\OneDrive\Desktop\Thesis\sentiment_ground_truths(4).csv" --api-key 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
+python script5.py --input "C:\Users\DELL\OneDrive\Desktop\Thesis\sentiment_ground_truths(4).csv" --api-key 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 --compare-models

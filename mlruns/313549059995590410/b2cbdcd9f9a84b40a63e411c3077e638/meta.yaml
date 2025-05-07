@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/DELL/OneDrive/Desktop/Thesis/mlruns/313549059995590410/b2cbdcd9f9a84b40a63e411c3077e638/artifacts
+end_time: 1744855170025
+entry_point_name: ''
+experiment_id: '313549059995590410'
+lifecycle_stage: active
+run_id: b2cbdcd9f9a84b40a63e411c3077e638
+run_name: anthropic_vs_arabert-tweet
+run_uuid: b2cbdcd9f9a84b40a63e411c3077e638
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1744855001906
+status: 3
+tags: []
+user_id: DELL
