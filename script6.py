@@ -196,8 +196,8 @@ def process_census_data(file_path, output_dir):
 # Main execution
 if __name__ == "__main__":
     # File paths
-    input_file = r"C:\Users\LENOVO\OneDrive\Bureau\POPULATION LÉGALE DES RÉGIONS, PROVINCES, PRÉFECTURES, MUNICIPALITÉS, ARRONDISSEMENTS ET COMMUNES DU ROYAUME D'APRÈS LES RÉSULTATS DU RGPH 2014 (16 Régions).xlsx"
-    output_directory = r"C:\Users\LENOVO\OneDrive\Bureau\Morocco_Census_CSV"
+    input_file = r"C:\Users\Administrator\Desktop\Thesis\POPULATION LÉGALE DES RÉGIONS, PROVINCES, PRÉFECTURES, MUNICIPALITÉS, ARRONDISSEMENTS ET COMMUNES DU ROYAUME D’APRÈS LES RÉSULTATS DU RGPH 2014 (16 Régions).xlsx"
+    output_directory = r"C:\Users\Administrator\Desktop"
     
     try:
         process_census_data(input_file, output_directory)

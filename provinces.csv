@@ -1,0 +1,63 @@
+﻿code,name_fr,name_ar,region_code,region_name,menages,population,etrangers,marocains
+01.066.,Aousserd,إقليم: أوسرد,01.,Oued Ed-Dahab-Lagouira,776,16190,180,16010
+01.391.,Oued Ed-Dahab,إقليم: وادي الذهب,01.,Oued Ed-Dahab-Lagouira,28609,126765,708,126057
+02.121.,Boujdour,إقليم: بوجدور,02.,Laayoune-Boujdour-Sakia El Hamra,10186,50566,72,50494
+02.321.,Laâyoune,إقليم: العيون,02.,Laayoune-Boujdour-Sakia El Hamra,53561,238096,596,237500
+02.537.,Tarfaya,إقليم: طرفاية,02.,Laayoune-Boujdour-Sakia El Hamra,3393,13082,75,13007
+03.071.,Assa-Zag,إقليم: أسا - الزاك,03.,Guelmim Es Semara,5208,44124,4,44120
+03.221.,Es-Semara,إقليم: السمارة,03.,Guelmim Es Semara,11614,66014,34,65980
+03.261.,Guelmim,إقليم: كلميم,03.,Guelmim Es Semara,40214,187808,195,187613
+03.521.,Tan-Tan,إقليم: طانطان,03.,Guelmim Es Semara,19472,86134,46,86088
+03.551.,Tata,إقليم: طاطا,03.,Guelmim Es Semara,22359,117841,32,117809
+04.163.,Chtouka- Ait Baha,إقليم: شتوكة آيت باها,04.,Souss-Massa-Draa,88732,371102,211,370891
+04.401.,Ouarzazate,إقليم: ورزازات,04.,Souss-Massa-Draa,54959,297502,281,297221
+04.473.,Sidi Ifni,إقليم: سيدي افني,04.,Souss-Massa-Draa,25308,115691,102,115589
+04.541.,Taroudannt,إقليم: تارودانت,04.,Souss-Massa-Draa,171186,838820,335,838485
+04.577.,Tinghir,إقليم: تنغير,04.,Souss-Massa-Draa,49990,322412,111,322301
+04.581.,Tiznit,إقليم: تيزنيت,04.,Souss-Massa-Draa,51142,207367,198,207169
+04.587.,Zagora,إقليم: زاكورة,04.,Souss-Massa-Draa,38067,307306,122,307184
+05.281.,Kénitra,إقليم: القنيطرة,05.,Gharb-Chrarda-Beni-Hssen,214640,1061435,1815,1059620
+05.481.,Sidi Kacem,إقليم: سيدي قاسم,05.,Gharb-Chrarda-Beni-Hssen,99191,522270,95,522175
+05.491.,Sidi Slimane,إقليم: سيدي سليمان,05.,Gharb-Chrarda-Beni-Hssen,60922,320407,92,320315
+06.111.,Benslimane,إقليم: بنسليمان,06.,Chaouia-Ouardigha,49108,233123,478,232645
+06.117.,Berrechid,إقليم: برشيد,06.,Chaouia-Ouardigha,103803,484518,499,484019
+06.311.,Khouribga,إقليم: خريبكة,06.,Chaouia-Ouardigha,116126,542125,417,541708
+06.461.,Settat,إقليم: سطات,06.,Chaouia-Ouardigha,119283,634184,609,633575
+07.041.,Al  Haouz,إقليم: الحوز,07.,Marrakech-Tensift-Al-Haouz,111627,573128,362,572766
+07.161.,Chichaoua,إقليم: شيشاوة,07.,Marrakech-Tensift-Al-Haouz,73928,369955,66,369889
+07.191.,El Kelâa des  Sraghna,إقليم: قلعة  السراغنة,07.,Marrakech-Tensift-Al-Haouz,97874,537488,115,537373
+07.211.,Essaouira,إقليم: الصويرة,07.,Marrakech-Tensift-Al-Haouz,95520,450527,795,449732
+07.427.,Rehamna,إقليم: الرحامنة,07.,Marrakech-Tensift-Al-Haouz,57514,315077,65,315012
+08.113.,Berkane,إقليم: بركان,08.,Oriental,66372,289137,607,288530
+08.167.,Driouch,إقليم: الدريوش,08.,Oriental,43935,211059,39,211020
+08.251.,Figuig,إقليم: فجيج,08.,Oriental,28439,138325,41,138284
+08.275.,Jerada,إقليم: جرادة,08.,Oriental,20983,108727,99,108628
+08.381.,Nador,إقليم: الناضور,08.,Oriental,125951,565426,483,564943
+08.533.,Taourirt,إقليم: تاوريرت,08.,Oriental,43676,233188,123,233065
+09.355.,Médiouna,إقليم: مديونة,09.,Grand Casablanca,39560,172680,154,172526
+09.385.,Nouaceur,إقليم: النواصر,09.,Grand Casablanca,76711,333604,1076,332528
+10.291.,Khémisset,إقليم: الخميسات,10.,Rabat-Salé-Zemmour-Zaer,122144,542221,196,542025
+11.181.,El Jadida,إقليم: الجديدة,11.,Doukkala-Abda,167602,786716,1402,785314
+11.431.,Safi,إقليم: آسفي,11.,Doukkala-Abda,144490,691983,396,691587
+11.467.,Sidi Bennour,إقليم: سيدي بنور,11.,Doukkala-Abda,87032,452448,90,452358
+11.585.,Youssoufia,إقليم: اليوسفية,11.,Doukkala-Abda,45030,251943,73,251870
+12.081.,Azilal,إقليم: أزيلال,12.,Tadla-Azilal,97346,554001,106,553895
+12.091.,Béni Mellal,إقليم: بني ملال,12.,Tadla-Azilal,123067,550678,464,550214
+12.255.,Fquih Ben Salah,إقليم: الفقيه بن صالح,12.,Tadla-Azilal,96062,502827,159,502668
+13.171.,El  Hajeb,إقليم: الحاجب,13.,Meknes-Tafilalet,53230,247016,74,246942
+13.201.,Errachidia,إقليم: الرشيدية,13.,Meknes-Tafilalet,75264,418451,212,418239
+13.271.,Ifrane,إقليم: إفران,13.,Meknes-Tafilalet,35859,155221,325,154896
+13.301.,Khénifra,إقليم: خنيفرة,13.,Meknes-Tafilalet,87573,371145,116,371029
+13.363.,Midelt,إقليم: ميدلت,13.,Meknes-Tafilalet,59718,289337,70,289267
+14.131.,Boulemane,إقليم: بولمان,14.,Fès-Boulemane,39219,197596,86,197510
+14.451.,Sefrou,إقليم: صفرو,14.,Fès-Boulemane,66034,286489,203,286286
+14.591.,Moulay Yacoub,إقليم: مولاي يعقوب,14.,Fès-Boulemane,31338,174079,31,174048
+15.051.,Al Hoceima,إقليم: الحسيمة,15.,Taza-Al Hoceima-Taounate,79326,399654,236,399418
+15.265.,Guercif,إقليم: جرسيف,15.,Taza-Al Hoceima-Taounate,40666,216717,75,216642
+15.531.,Taounate,إقليم: تاونات,15.,Taza-Al Hoceima-Taounate,128719,662246,81,662165
+15.561.,Taza,إقليم: تازة,15.,Taza-Al Hoceima-Taounate,107408,528419,138,528281
+16.151.,Chefchaouen,إقليم: شفشاون,16.,Tanger-Tetouan,82914,457432,143,457289
+16.227.,Fahs-Anjra,إقليم: فحص - انجرة,16.,Tanger-Tetouan,16823,76447,44,76403
+16.331.,Larache,إقليم: العرائش,16.,Tanger-Tetouan,107357,496687,413,496274
+16.405.,Ouezzane,إقليم: وزان,16.,Tanger-Tetouan,67858,300637,134,300503
+16.571.,Tétouan,إقليم: تطوان,16.,Tanger-Tetouan,126969,550374,605,549769

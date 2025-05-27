@@ -1,0 +1,11 @@
+Morocco Census Data Processing Summary
+==================================================
+
+Regions: 16 records
+Provinces: 62 records
+Prefectures: 13 records
+Municipalitys: 215 records
+Arrondissements: 41 records
+Communes: 1282 records
+Cercles: 196 records
+Centres: 149 records

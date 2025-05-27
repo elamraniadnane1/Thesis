@@ -1,0 +1,197 @@
+﻿code,name_fr,name_ar,region_code,region_name,province_code,province_name,menages,population,etrangers,marocains
+01.066.03.,Aousserd,دائرة : أوسرد,01.,Oued Ed-Dahab-Lagouira,01.066.,Aousserd,168,11565,116,11449
+01.066.05.,Bir Gandouz,دائرة : بئر كندوز,01.,Oued Ed-Dahab-Lagouira,01.066.,Aousserd,608,4625,64,4561
+01.391.05.,Bir Anzarane,دائرة : بئر انزران,01.,Oued Ed-Dahab-Lagouira,01.391.,Oued Ed-Dahab,259,11580,28,11552
+01.391.09.,El Argoub,دائرة : العركوب,01.,Oued Ed-Dahab-Lagouira,01.391.,Oued Ed-Dahab,2881,8908,127,8781
+02.121.03.,Jraifia,دائرة : الجريفية,02.,Laayoune-Boujdour-Sakia El Hamra,02.121.,Boujdour,675,7915,32,7883
+02.321.03.,Laayoune,دائرة : العيون,02.,Laayoune-Boujdour-Sakia El Hamra,02.321.,Laâyoune,701,2447,43,2404
+02.537.03.,Daoura -el Hagounia,دائرة : الدورة الحكونية,02.,Laayoune-Boujdour-Sakia El Hamra,02.537.,Tarfaya,325,1259,0,1259
+02.537.05.,Tarfaya,دائرة : طرفاية,02.,Laayoune-Boujdour-Sakia El Hamra,02.537.,Tarfaya,976,3796,13,3783
+03.071.03.,Assa,دائرة : أسا,03.,Guelmim Es Semara,03.071.,Assa-Zag,956,10455,1,10454
+03.071.05.,Zag,دائرة : الزاك,03.,Guelmim Es Semara,03.071.,Assa-Zag,321,6336,1,6335
+03.221.03.,Es-Semara,دائرة : السمارة,03.,Guelmim Es Semara,03.221.,Es-Semara,212,8979,10,8969
+03.261.03.,Bouizakarne,دائرة : بويزكارن,03.,Guelmim Es Semara,03.261.,Guelmim,7439,35670,13,35657
+03.261.05.,Guelmim,دائرة : كلميم,03.,Guelmim Es Semara,03.261.,Guelmim,1852,9899,29,9870
+03.261.07.,Laqsabi,دائرة : لقصابي,03.,Guelmim Es Semara,03.261.,Guelmim,2062,9693,10,9683
+03.521.03.,Msied,دائرة : امسيد,03.,Guelmim Es Semara,03.521.,Tan-Tan,376,2290,0,2290
+03.521.05.,Tan Tan,دائرة : طانطان,03.,Guelmim Es Semara,03.521.,Tan-Tan,313,1340,0,1340
+03.551.03.,Akka,دائرة : أقا,03.,Guelmim Es Semara,03.551.,Tata,3553,16914,2,16912
+03.551.05.,Foum Zguid,دائرة : فم  زكيد,03.,Guelmim Es Semara,03.551.,Tata,5578,34350,3,34347
+03.551.07.,Tata,دائرة : طاطا,03.,Guelmim Es Semara,03.551.,Tata,5236,25757,3,25754
+04.001.05.,Agadir  Banlieue,دائرة : أحواز أكادير,04.,Souss-Massa-Draa,04.001.,Agadir-Ida -Ou-Tanane,18227,83323,50,83273
+04.001.07.,Agadir  Atlantique,دائرة : أكادير الأطلسية,04.,Souss-Massa-Draa,04.001.,Agadir-Ida -Ou-Tanane,20468,95432,232,95200
+04.163.03.,Ait Baha,دائرة : أيت باها,04.,Souss-Massa-Draa,04.163.,Chtouka- Ait Baha,10240,41489,0,41489
+04.163.05.,Belfaa- Massa,دائرة : بلفاع ماسة,04.,Souss-Massa-Draa,04.163.,Chtouka- Ait Baha,22310,93541,85,93456
+04.163.07.,Biougra,دائرة : بيوكرة,04.,Souss-Massa-Draa,04.163.,Chtouka- Ait Baha,45360,192471,93,192378
+04.273.05.,Ait Melloul,دائرة : أيت ملول,04.,Souss-Massa-Draa,04.273.,Inezgane- Ait Melloul,12265,55367,14,55353
+04.401.03.,Amerzgane,دائرة : امرزكان,04.,Souss-Massa-Draa,04.401.,Ouarzazate,18814,106426,30,106396
+04.401.07.,Ouarzazate,دائرة : ورزازات,04.,Souss-Massa-Draa,04.401.,Ouarzazate,19142,112728,54,112674
+04.473.05.,Ifni,دائرة : إفني,04.,Souss-Massa-Draa,04.473.,Sidi Ifni,8435,39667,71,39596
+04.473.07.,Lakhsas,دائرة : الاخصاص,04.,Souss-Massa-Draa,04.473.,Sidi Ifni,10289,49677,2,49675
+04.541.03.,Irherm,دائرة : ايغرم,04.,Souss-Massa-Draa,04.541.,Taroudannt,10901,42031,1,42030
+04.541.04.,Oulad   Berhil,دائرة : أولاد برحيل,04.,Souss-Massa-Draa,04.541.,Taroudannt,24883,132478,8,132470
+04.541.05.,Oulad Teima,دائرة : أولاد تايمة,04.,Souss-Massa-Draa,04.541.,Taroudannt,35089,179400,119,179281
+04.541.07.,Taliouine,دائرة : تالوين,04.,Souss-Massa-Draa,04.541.,Taroudannt,20022,110304,2,110302
+04.541.09.,Taroudannt,دائرة : تارودانت,04.,Souss-Massa-Draa,04.541.,Taroudannt,24886,125967,61,125906
+04.577.02.,Alnif,دائرة : النيف,04.,Souss-Massa-Draa,04.577.,Tinghir,5305,42639,5,42634
+04.577.03.,Assoul,دائرة : أسول,04.,Souss-Massa-Draa,04.577.,Tinghir,3099,17752,3,17749
+04.577.05.,Boumalne   Dades,دائرة : بو مالن دادس,04.,Souss-Massa-Draa,04.577.,Tinghir,19693,133689,7,133682
+04.577.07.,Tinghir,دائرة : تنغير,04.,Souss-Massa-Draa,04.577.,Tinghir,8524,57004,29,56975
+04.581.03.,Anezi,دائرة : انزي,04.,Souss-Massa-Draa,04.581.,Tiznit,9885,41947,2,41945
+04.581.09.,Tafraout,دائرة : تافراوت,04.,Souss-Massa-Draa,04.581.,Tiznit,4981,16292,2,16290
+04.581.11.,Tiznit,دائرة : تزنيت,04.,Souss-Massa-Draa,04.581.,Tiznit,16085,68084,87,67997
+04.587.03.,Agdz,دائرة : اكدز,04.,Souss-Massa-Draa,04.587.,Zagora,13442,109391,64,109327
+04.587.07.,Tinzouline,دائرة : تنزولين,04.,Souss-Massa-Draa,04.587.,Zagora,8850,82534,2,82532
+04.587.09.,Zagora,دائرة : زاكورة,04.,Souss-Massa-Draa,04.587.,Zagora,7578,64633,3,64630
+05.281.03.,Kénitra-Banlieue,دائرة : أحواز القنيطرة,05.,Gharb-Chrarda-Beni-Hssen,05.281.,Kénitra,22293,117375,26,117349
+05.281.05.,Ben Mansour,دائرة : بنمنصور,05.,Gharb-Chrarda-Beni-Hssen,05.281.,Kénitra,20467,128780,9,128771
+05.281.07.,Souk Arbaa  El Gharb,دائرة : سوق الاربعاء  الغرب,05.,Gharb-Chrarda-Beni-Hssen,05.281.,Kénitra,13859,77141,3,77138
+05.281.09.,Souk Tlet  El Gharb,دائرة : سوق ثلاثاء الغرب,05.,Gharb-Chrarda-Beni-Hssen,05.281.,Kénitra,18367,115106,6,115100
+05.281.11.,Lalla Mimouna,دائرة : للا ميمونة,05.,Gharb-Chrarda-Beni-Hssen,05.281.,Kénitra,16556,93850,82,93768
+05.481.03.,Tilal Al Gharb,دائرة : تلال الغرب,05.,Gharb-Chrarda-Beni-Hssen,05.481.,Sidi Kacem,13650,73602,10,73592
+05.481.05.,Gharb-Bni Malek,دائرة : غرب بني مالك,05.,Gharb-Chrarda-Beni-Hssen,05.481.,Sidi Kacem,11654,67722,6,67716
+05.481.07.,Ouargha,دائرة : ورغة,05.,Gharb-Chrarda-Beni-Hssen,05.481.,Sidi Kacem,14510,78040,3,78037
+05.481.09.,Chrarda,دائرة : الشراردة,05.,Gharb-Chrarda-Beni-Hssen,05.481.,Sidi Kacem,13011,73383,3,73380
+05.481.11.,Baht,دائرة : بهت,05.,Gharb-Chrarda-Beni-Hssen,05.481.,Sidi Kacem,12463,79187,1,79186
+05.491.03.,Kceibya,دائرة : قصيبية,05.,Gharb-Chrarda-Beni-Hssen,05.491.,Sidi Slimane,10683,67903,4,67899
+05.491.05.,Sidi slimane,دائرة : سيدي سليمان,05.,Gharb-Chrarda-Beni-Hssen,05.491.,Sidi Slimane,22016,121536,12,121524
+06.111.03.,Benslimane,دائرة : بنسليمان,06.,Chaouia-Ouardigha,06.111.,Benslimane,18557,97395,27,97368
+06.111.05.,Bouznika,دائرة : بوزنيقة,06.,Chaouia-Ouardigha,06.111.,Benslimane,4129,21536,14,21522
+06.117.05.,Berrechid,دائرة : برشيد,06.,Chaouia-Ouardigha,06.117.,Berrechid,26121,131084,65,131019
+06.117.08.,El Gara,دائرة : الكارة,06.,Chaouia-Ouardigha,06.117.,Berrechid,14898,79534,77,79457
+06.311.03.,Bejaad,دائرة : ابي الجعد,06.,Chaouia-Ouardigha,06.311.,Khouribga,7392,39216,0,39216
+06.311.05.,Khouribga,دائرة : خريبكة,06.,Chaouia-Ouardigha,06.311.,Khouribga,14566,72628,20,72608
+06.311.07.,Oued-Zem,دائرة : واد زم,06.,Chaouia-Ouardigha,06.311.,Khouribga,11930,65277,2,65275
+06.461.03.,Ben Ahmed,دائرة : بن أحمد,06.,Chaouia-Ouardigha,06.461.,Settat,29383,173290,16,173274
+06.461.07.,El Borouj,دائرة : البروج,06.,Chaouia-Ouardigha,06.461.,Settat,15765,96232,1,96231
+06.461.09.,Settat,دائرة : سطات,06.,Chaouia-Ouardigha,06.461.,Settat,27403,155318,16,155302
+07.041.03.,Ait Ourir,دائرة : أيت اورير,07.,Marrakech-Tensift-Al-Haouz,07.041.,Al  Haouz,28991,149268,97,149171
+07.041.05.,Amizmiz,دائرة : امزميز,07.,Marrakech-Tensift-Al-Haouz,07.041.,Al  Haouz,11049,53270,24,53246
+07.041.07.,Asni,دائرة : أسني,07.,Marrakech-Tensift-Al-Haouz,07.041.,Al  Haouz,11415,59881,11,59870
+07.041.09.,Tahannaout,دائرة : تحناوت,07.,Marrakech-Tensift-Al-Haouz,07.041.,Al  Haouz,27521,137873,166,137707
+07.041.11.,Touama,دائرة : توامة,07.,Marrakech-Tensift-Al-Haouz,07.041.,Al  Haouz,18176,107262,17,107245
+07.161.03.,Chichaoua,دائرة : شيشاوة,07.,Marrakech-Tensift-Al-Haouz,07.161.,Chichaoua,18429,95852,8,95844
+07.161.05.,Imintanoute,دائرة : امنتانوت,07.,Marrakech-Tensift-Al-Haouz,07.161.,Chichaoua,12823,63761,4,63757
+07.161.07.,Majjat,دائرة : مجاط,07.,Marrakech-Tensift-Al-Haouz,07.161.,Chichaoua,19064,99017,8,99009
+07.161.09.,Mtouga,دائرة : امتوكة,07.,Marrakech-Tensift-Al-Haouz,07.161.,Chichaoua,12878,62619,0,62619
+07.191.03.,El Kelaa Des Sraghna,دائرة : قلعة السراغنة,07.,Marrakech-Tensift-Al-Haouz,07.191.,El Kelâa des  Sraghna,29029,172632,9,172623
+07.191.05.,Laattaouia,دائرة : العطاوية,07.,Marrakech-Tensift-Al-Haouz,07.191.,El Kelâa des  Sraghna,25904,146903,6,146897
+07.191.07.,Tamallalt,دائرة : تاملالت,07.,Marrakech-Tensift-Al-Haouz,07.191.,El Kelâa des  Sraghna,11465,65969,7,65962
+07.211.03.,Essaouira,دائرة : الصويرة,07.,Marrakech-Tensift-Al-Haouz,07.211.,Essaouira,39768,198373,124,198249
+07.211.05.,Tamanar,دائرة : تمنار,07.,Marrakech-Tensift-Al-Haouz,07.211.,Essaouira,30262,151354,118,151236
+07.351.02.,Alouidane,دائرة : الويدان,07.,Marrakech-Tensift-Al-Haouz,07.351.,Marrakech,16146,76989,392,76597
+07.351.03.,Bour,دائرة : البور,07.,Marrakech-Tensift-Al-Haouz,07.351.,Marrakech,16385,79490,33,79457
+07.351.05.,Loudaya,دائرة : الأوداية,07.,Marrakech-Tensift-Al-Haouz,07.351.,Marrakech,15679,78717,43,78674
+07.351.07.,Saada,دائرة : سعادة,07.,Marrakech-Tensift-Al-Haouz,07.351.,Marrakech,36682,166422,204,166218
+07.427.07.,Rehamna,دائرة : الرحامنة,07.,Marrakech-Tensift-Al-Haouz,07.427.,Rehamna,19720,118259,9,118250
+07.427.09.,Sidi Bou Othmane,دائرة : سيدي بو عثمان,07.,Marrakech-Tensift-Al-Haouz,07.427.,Rehamna,17169,99011,33,98978
+08.113.03.,Ahfir,دائرة : احفير,08.,Oriental,08.113.,Berkane,11023,48479,116,48363
+08.113.05.,Aklim,دائرة : اكليم,08.,Oriental,08.113.,Berkane,12837,60420,14,60406
+08.167.03.,Driouch,دائرة : الدريوش,08.,Oriental,08.167.,Driouch,12008,60277,5,60272
+08.167.09.,Rif,دائرة : الريف,08.,Oriental,08.167.,Driouch,22214,106763,25,106738
+08.251.03.,Bni Tadjite,دائرة : بني تادجيت,08.,Oriental,08.251.,Figuig,13999,66488,13,66475
+08.251.05.,Figuig,دائرة : فجيج,08.,Oriental,08.251.,Figuig,5702,32119,4,32115
+08.275.03.,Jerada Banlieue,دائرة : أحواز جرادة,08.,Oriental,08.275.,Jerada,4613,23837,17,23820
+08.275.05.,Ain Bni  Mathar,دائرة : عين بني مطهر,08.,Oriental,08.275.,Jerada,3516,21958,5,21953
+08.381.05.,Guelaia,دائرة : قلعية,08.,Oriental,08.381.,Nador,25783,120145,36,120109
+08.381.07.,Louta,دائرة : لوطا,08.,Oriental,08.381.,Nador,16490,80393,18,80375
+08.411.03.,Oujda  Banlieue Nord,دائرة : أحواز وجدة الشمالية,08.,Oriental,08.411.,Oujda-Angad,5471,26859,129,26730
+08.411.05.,Oujda  Banlieue Sud,دائرة : أحواز وجدة الجنوبية,08.,Oriental,08.411.,Oujda-Angad,3516,18634,1,18633
+08.533.03.,Debdou,دائرة : دبدو,08.,Oriental,08.533.,Taourirt,4363,28768,2,28766
+08.533.07.,El Aioun,دائرة : العيون,08.,Oriental,08.533.,Taourirt,4749,26820,5,26815
+08.533.09.,Taourirt,دائرة : تاوريرت,08.,Oriental,08.533.,Taourirt,4620,27410,1,27409
+09.355.03.,Tit Mellil,دائرة : تيط مليل,09.,Grand Casablanca,09.355.,Médiouna,12171,52635,51,52584
+09.371.03.,Znata,دائرة : زناتة,09.,Grand Casablanca,09.371.,Mohammadia,31234,133616,113,133503
+09.385.03.,Bouskoura,دائرة : بوسكورة,09.,Grand Casablanca,09.385.,Nouaceur,12481,55403,39,55364
+10.291.03.,Khémisset,دائرة : الخميسات,10.,Rabat-Salé-Zemmour-Zaer,10.291.,Khémisset,19147,91774,9,91765
+10.291.05.,Oulmes,دائرة : أولماس,10.,Rabat-Salé-Zemmour-Zaer,10.291.,Khémisset,14922,61054,4,61050
+10.291.07.,Rommani,دائرة : الرماني,10.,Rabat-Salé-Zemmour-Zaer,10.291.,Khémisset,14647,73111,4,73107
+10.291.09.,Tiflet,دائرة : تيفلت,10.,Rabat-Salé-Zemmour-Zaer,10.291.,Khémisset,14258,69868,28,69840
+10.441.03.,Salé  Banlieue,دائرة : أحواز سلا,10.,Rabat-Salé-Zemmour-Zaer,10.441.,Salé,12908,66505,22,66483
+10.501.03.,Ain El Aouda,دائرة : عين العودة,10.,Rabat-Salé-Zemmour-Zaer,10.501.,Skhirate- Témara,17872,75357,600,74757
+10.501.05.,Témara,دائرة : تمارة,10.,Rabat-Salé-Zemmour-Zaer,10.501.,Skhirate- Témara,7408,35646,25,35621
+11.181.03.,Azemmour,دائرة : أزمور,11.,Doukkala-Abda,11.181.,El Jadida,19919,106091,21,106070
+11.181.05.,El Jadida,دائرة : الجديدة,11.,Doukkala-Abda,11.181.,El Jadida,38128,188743,224,188519
+11.181.07.,Haouzia,دائرة : حوزية,11.,Doukkala-Abda,11.181.,El Jadida,11132,57270,28,57242
+11.181.09.,Sidi Smail,دائرة : سيدي اسماعيل,11.,Doukkala-Abda,11.181.,El Jadida,34061,174622,24,174598
+11.431.03.,Abda,دائرة : عبدة,11.,Doukkala-Abda,11.431.,Safi,21512,122458,3,122455
+11.431.07.,Gzoula,دائرة : كزولة,11.,Doukkala-Abda,11.431.,Safi,22821,119507,23,119484
+11.431.09.,Hrara,دائرة : حرارة,11.,Doukkala-Abda,11.431.,Safi,20590,111716,15,111701
+11.467.07.,Sidi Bennour,دائرة : سيدي بنور,11.,Doukkala-Abda,11.467.,Sidi Bennour,47392,253952,11,253941
+11.467.11.,Zemamra,دائرة : زمامرة,11.,Doukkala-Abda,11.467.,Sidi Bennour,24217,129402,32,129370
+11.585.05.,Ahmar,دائرة : أحمر,11.,Doukkala-Abda,11.585.,Youssoufia,12662,83473,0,83473
+11.585.07.,Al Gantour,دائرة : الكنتور,11.,Doukkala-Abda,11.585.,Youssoufia,12695,76539,12,76527
+12.081.03.,Azilal,دائرة : أزيلال,12.,Tadla-Azilal,12.081.,Azilal,13981,96718,10,96708
+12.081.05.,Bzou,دائرة : بزو,12.,Tadla-Azilal,12.081.,Azilal,19031,104026,26,104000
+12.081.09.,Ouaouizeght,دائرة : واويزغت,12.,Tadla-Azilal,12.081.,Azilal,12443,64159,27,64132
+12.081.11.,Afourar,دائرة : افورار,12.,Tadla-Azilal,12.081.,Azilal,10660,52542,11,52531
+12.081.13.,Fetouqka,دائرة : فتواكة,12.,Tadla-Azilal,12.081.,Azilal,12466,80580,0,80580
+12.081.15.,Oultana,دائرة : ولتانة,12.,Tadla-Azilal,12.081.,Azilal,14088,87952,9,87943
+12.091.03.,Béni Mellal,دائرة : بني ملال,12.,Tadla-Azilal,12.091.,Béni Mellal,22161,111047,30,111017
+12.091.05.,Aghbala,دائرة : أغبالة,12.,Tadla-Azilal,12.091.,Béni Mellal,6574,32090,7,32083
+12.091.07.,El Ksiba,دائرة : القصيبة,12.,Tadla-Azilal,12.091.,Béni Mellal,15164,69771,8,69763
+12.091.11.,Kasba Tadla,دائرة : قصبة تادلة,12.,Tadla-Azilal,12.091.,Béni Mellal,10146,52362,8,52354
+12.255.05.,Bni Moussa Charquia,دائرة : ا بني موسى لشرقية,12.,Tadla-Azilal,12.255.,Fquih Ben Salah,15960,88555,23,88532
+12.255.09.,Fqih  Ben  Salah,دائرة : الفقيه بن صالح,12.,Tadla-Azilal,12.255.,Fquih Ben Salah,23333,124079,20,124059
+12.255.11.,Bni Moussa Gharbia,دائرة : ا بني موسى الغربية,12.,Tadla-Azilal,12.255.,Fquih Ben Salah,17209,104280,17,104263
+13.061.03.,Ain Orma,دائرة : عين عرمة,13.,Meknes-Tafilalet,13.061.,Meknès,8319,46758,15,46743
+13.061.05.,Meknès Banlieue,دائرة : أحواز مكناس,13.,Meknes-Tafilalet,13.061.,Meknès,18052,89463,32,89431
+13.061.07.,Zerhoun,دائرة : زرهون,13.,Meknes-Tafilalet,13.061.,Meknès,8780,42839,3,42836
+13.171.03.,Agourai,دائرة : أكوراي,13.,Meknes-Tafilalet,13.171.,El  Hajeb,7713,37763,7,37756
+13.171.05.,Ain Taoujdate,دائرة : عين تاوجطات,13.,Meknes-Tafilalet,13.171.,El  Hajeb,16340,79400,17,79383
+13.171.07.,El Hajeb,دائرة : الحاجب,13.,Meknes-Tafilalet,13.171.,El  Hajeb,4718,23355,6,23349
+13.201.03.,Arfoud,دائرة : أرفود,13.,Meknes-Tafilalet,13.201.,Errachidia,5286,35101,1,35100
+13.201.07.,Errachidia,دائرة : الرشيدية,13.,Meknes-Tafilalet,13.201.,Errachidia,10483,57714,4,57710
+13.201.11.,Er-Rissani,دائرة : الريصاني,13.,Meknes-Tafilalet,13.201.,Errachidia,6039,39880,26,39854
+13.201.13.,Goulmima,دائرة : كلميمة,13.,Meknes-Tafilalet,13.201.,Errachidia,14942,92858,20,92838
+13.271.03.,Azrou,دائرة : أزرو,13.,Meknes-Tafilalet,13.271.,Ifrane,14565,65665,13,65652
+13.271.81.,-,دائرة : -,13.,Meknes-Tafilalet,13.271.,Ifrane,4067,20547,2,20545
+13.301.03.,El Kbab,دائرة : القباب,13.,Meknes-Tafilalet,13.301.,Khénifra,17587,75955,19,75936
+13.301.05.,Khénifra,دائرة : خنيفرة,13.,Meknes-Tafilalet,13.301.,Khénifra,10512,48850,6,48844
+13.301.07.,Aguelmous,دائرة : اكلموس,13.,Meknes-Tafilalet,13.301.,Khénifra,19181,86100,12,86088
+13.363.05.,Boumia,دائرة : بومية,13.,Meknes-Tafilalet,13.363.,Midelt,12777,60120,3,60117
+13.363.07.,Midelt,دائرة : ميدلت,13.,Meknes-Tafilalet,13.363.,Midelt,11591,55512,6,55506
+13.363.09.,Er-Rich,دائرة : الريش,13.,Meknes-Tafilalet,13.363.,Midelt,10667,57737,15,57722
+13.363.15.,Imilchil,دائرة : إملشيل,13.,Meknes-Tafilalet,13.363.,Midelt,5862,34672,1,34671
+14.131.03.,Boulemane,دائرة : بولمان,14.,Fès-Boulemane,14.131.,Boulemane,12585,57834,14,57820
+14.131.05.,Missour,دائرة : ميسور,14.,Fès-Boulemane,14.131.,Boulemane,4979,26180,48,26132
+14.131.07.,Outat El Haj,دائرة : أوطاط الحاج,14.,Fès-Boulemane,14.131.,Boulemane,9379,60293,8,60285
+14.231.81.,Fès Banlieue,دائرة : احواز فاس,14.,Fès-Boulemane,14.231.,Fès,7297,38059,6,38053
+14.451.03.,El Menzel,دائرة : المنزل,14.,Fès-Boulemane,14.451.,Sefrou,11067,50319,5,50314
+14.451.05.,Imouzzer  Kandar,دائرة : إيموزار كندر,14.,Fès-Boulemane,14.451.,Sefrou,7637,37922,26,37896
+14.451.07.,Sefrou,دائرة : صفرو,14.,Fès-Boulemane,14.451.,Sefrou,11934,56859,2,56857
+14.591.03.,Moulay  Yacoub,دائرة : مولاي يعقوب,14.,Fès-Boulemane,14.591.,Moulay Yacoub,18001,96508,28,96480
+14.591.05.,Oulad Jemaa Lemta,دائرة : أولاد جمعة لمطة,14.,Fès-Boulemane,14.591.,Moulay Yacoub,12355,72959,2,72957
+15.051.03.,Bni Boufrah,دائرة : بني بوفراح,15.,Taza-Al Hoceima-Taounate,15.051.,Al Hoceima,6529,37935,0,37935
+15.051.05.,Bni Ouriaghel,دائرة : بني أورياغل,15.,Taza-Al Hoceima-Taounate,15.051.,Al Hoceima,17469,85956,12,85944
+15.051.07.,Targuist,دائرة : تارجيست,15.,Taza-Al Hoceima-Taounate,15.051.,Al Hoceima,8618,50317,2,50315
+15.051.09.,Ketama,دائرة : كتامة,15.,Taza-Al Hoceima-Taounate,15.051.,Al Hoceima,17066,97903,117,97786
+15.265.05.,Guercif,دائرة : جرسيف,15.,Taza-Al Hoceima-Taounate,15.265.,Guercif,14510,83611,23,83588
+15.265.07.,Taddart,دائرة : تادرت,15.,Taza-Al Hoceima-Taounate,15.265.,Guercif,7377,42226,0,42226
+15.531.03.,Ghafsai,دائرة : غفساي,15.,Taza-Al Hoceima-Taounate,15.531.,Taounate,33533,157245,3,157242
+15.531.05.,Karia Ba  Mohamed,دائرة : قرية با محمد,15.,Taza-Al Hoceima-Taounate,15.531.,Taounate,23606,134923,2,134921
+15.531.07.,Taounate,دائرة : تاونات,15.,Taza-Al Hoceima-Taounate,15.531.,Taounate,26562,133164,15,133149
+15.531.09.,Tissa,دائرة : تيسة,15.,Taza-Al Hoceima-Taounate,15.531.,Taounate,27268,157798,8,157790
+15.561.03.,Aknoul,دائرة : أكنول,15.,Taza-Al Hoceima-Taounate,15.561.,Taza,9579,46037,7,46030
+15.561.07.,Oued Amlil,دائرة : واد أمليل,15.,Taza-Al Hoceima-Taounate,15.561.,Taza,16034,90830,4,90826
+15.561.09.,Tahla,دائرة : تاهلة,15.,Taza-Al Hoceima-Taounate,15.561.,Taza,10114,49730,12,49718
+15.561.11.,Tainaste,دائرة : تيناست,15.,Taza-Al Hoceima-Taounate,15.561.,Taza,12607,66577,3,66574
+15.561.13.,Taza,دائرة : تازة,15.,Taza-Al Hoceima-Taounate,15.561.,Taza,15215,84252,1,84251
+16.151.03.,Bab Berred,دائرة : باب برد,16.,Tanger-Tetouan,16.151.,Chefchaouen,13588,77641,3,77638
+16.151.05.,Bab Taza,دائرة : باب تازة,16.,Tanger-Tetouan,16.151.,Chefchaouen,18680,101406,7,101399
+16.151.06.,Bni Ahmed,دائرة : بني أحمد,16.,Tanger-Tetouan,16.151.,Chefchaouen,10754,55303,1,55302
+16.151.07.,Bou Ahmed,دائرة : بو أحمد,16.,Tanger-Tetouan,16.151.,Chefchaouen,16694,102247,30,102217
+16.151.09.,Jebha,دائرة : جبهة,16.,Tanger-Tetouan,16.151.,Chefchaouen,12903,78049,10,78039
+16.227.03.,Anjra,دائرة : أنجرة,16.,Tanger-Tetouan,16.227.,Fahs-Anjra,9020,42735,24,42711
+16.227.05.,Fahs,دائرة : فحص,16.,Tanger-Tetouan,16.227.,Fahs-Anjra,7803,33712,20,33692
+16.331.07.,Loukouss,دائرة : اللوكوس,16.,Tanger-Tetouan,16.331.,Larache,21865,115794,0,115794
+16.331.09.,Moulay Abdeslem-Ben M'chich,دائرة : مولاي عبد السلام بن مشيش,16.,Tanger-Tetouan,16.331.,Larache,9583,44633,1,44632
+16.331.11.,Oued El Makhazine,دائرة : وادي المخازين,16.,Tanger-Tetouan,16.331.,Larache,15995,84635,99,84536
+16.405.07.,Ouezzane,دائرة : وزان,16.,Tanger-Tetouan,16.405.,Ouezzane,30396,138146,17,138129
+16.405.09.,Moqrisset,دائرة : مقريصات,16.,Tanger-Tetouan,16.405.,Ouezzane,10182,46061,3,46058
+16.405.11.,Zoumi,دائرة : زومي,16.,Tanger-Tetouan,16.405.,Ouezzane,12445,56824,8,56816
+16.511.03.,Assilah,دائرة : أصيلة,16.,Tanger-Tetouan,16.511.,Tanger-Assilah,11238,53109,28,53081
+16.511.81.,-,دائرة : -,16.,Tanger-Tetouan,16.511.,Tanger-Assilah,2210,9792,13,9779
+16.571.03.,Jebala,دائرة : جبالة,16.,Tanger-Tetouan,16.571.,Tétouan,13286,63469,11,63458
+16.571.05.,Tétouan,دائرة : تطوان,16.,Tanger-Tetouan,16.571.,Tétouan,18636,96453,24,96429
+16.573.03.,-,دائرة : -,16.,Tanger-Tetouan,16.573.,M'Diq-Fnideq,2635,11879,44,11835
