@@ -2413,7 +2413,7 @@ def get_mongo_client():
                 cache.clear(prefix=cache_key)
         
         # Get connection string from Streamlit secrets
-        connection_string = st.secrets.get("mongodb", {}).get("connection_string", "mongodb://localhost:27017")
+        connection_string = st.secrets.get("mongodb", {}).get("connection_string", "mongodb://ac-aurbbb0-shard-00-01.mvvbpez.mongodb.net:27017")
         
         # Use connection pooling for better performance
         client = MongoClient(

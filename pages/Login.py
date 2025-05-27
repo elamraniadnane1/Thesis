@@ -191,7 +191,11 @@ def check_required_packages():
 SECRET_KEY = os.environ.get("SECRET_KEY", "mysecretkey")
 JWT_ALGORITHM = "HS256"
 COOKIE_PASSWORD = os.environ.get("COOKIE_PASSWORD", "YOUR_STRONG_PASSWORD")
-MONGO_URI = os.environ.get("MONGO_URI", "mongodb://localhost:27017")
+MONGO_URI = os.getenv(
+    "MONGO_URI",
+    "mongodb+srv://CivicCatalyst:Abdi2022@cluster0.mvvbpez.mongodb.net/CivicCatalyst?retryWrites=true&w=majority"
+)
+
 
 MAX_LOGIN_ATTEMPTS = 3  # Lock out user after 3 failed attempts
 LOCKOUT_TIME = 15       # Lockout duration (minutes)

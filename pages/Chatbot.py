@@ -100,7 +100,7 @@ def reset_conversation():
 def get_mongodb_client():
     """Get a MongoDB client connection"""
     try:
-        client = MongoClient("mongodb://localhost:27017")
+        client = MongoClient("mongodb://ac-aurbbb0-shard-00-01.mvvbpez.mongodb.net:27017")
         # Test connection
         client.admin.command('ping')
         return client
