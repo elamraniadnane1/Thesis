@@ -98,5 +98,5 @@ def process_csv_to_qdrant(csv_path, collection_name, chunk_size=100):
 
 # --- Example Usage ---
 if __name__ == "__main__":
-    csv_path = r"C:\Users\DELL\OneDrive\Desktop\Thesis\hespress_politics_comments.csv"  # Update to your file path
+    csv_path = r"C:\Users\Administrator\Desktop\Thesis\hespress_politics_comments.csv"  # Update to your file path
     process_csv_to_qdrant(csv_path, comments_collection, chunk_size=100)
