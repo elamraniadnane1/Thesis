@@ -193,7 +193,7 @@ JWT_ALGORITHM = "HS256"
 COOKIE_PASSWORD = os.environ.get("COOKIE_PASSWORD", "YOUR_STRONG_PASSWORD")
 MONGO_URI = os.getenv(
     "MONGO_URI",
-    "mongodb+srv://CivicCatalyst:Abdi2022@cluster0.mvvbpez.mongodb.net/CivicCatalyst?retryWrites=true&w=majority"
+    "mongodb://localhost:27017"
 )
 
 

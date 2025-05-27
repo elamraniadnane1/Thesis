@@ -1,36 +1,47 @@
 # Web framework
-streamlit==1.30.0
+streamlit
 
 # Data handling and visualization
-pandas==1.5.3
-numpy==1.24.4
-matplotlib==3.7.2
-seaborn==0.12.2
-plotly==5.20.0
-wordcloud==1.9.3
+pandas
+numpy
+matplotlib
+seaborn
+plotly
+wordcloud
 qdrant-client
 
 # NLP and Machine Learning
-transformers==4.30.2
-sentence-transformers==2.2.2
-faiss-cpu==1.7.4
-huggingface-hub==0.19.4  # Ensures compatibility with sentence-transformers
+transformers
+sentence-transformers
+faiss-cpu
+huggingface-hub
 
 # Web scraping
-beautifulsoup4==4.12.3
-selenium==4.18.1
-webdriver-manager==4.0.1
+beautifulsoup4
+selenium
+webdriver-manager
 
 # Date and time utilities
-dateparser==1.1.8
+dateparser
 
 # Additional utilities
-requests==2.31.0
-regex==2023.12.25
-concurrent-log-handler==0.9.24
+requests
+regex
+concurrent-log-handler
 
 # OpenAI API
-openai==0.28
+openai
 # Authentication
-PyJWT==2.8.0
+PyJWT
 gtts
+setuptools 
+wheel
+jaraco
+jaraco.text
+streamlit-extras
+st-pages
+openai
+gtts
+pymongo
+streamlit-lottie
+streamlit-authenticator

@@ -1,4 +1,30 @@
 python -m streamlit run Main.py
+
+
+docker run -d --name qdrant -p 6333:6333 -v qdrant_storage:/qdrant/storage qdrant/qdrant:latest
+
+docker run -it -d -p 8080:8080 zenmldocker/zenml-server
+
+# Add Docker's official GPG key:
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add the repository to Apt sources:
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+
+docker run -d --name qdrant -p 6333:6333 -v qdrant_storage:/qdrant/storage qdrant/qdrant:latest
+
+
 python script5.py --input "C:\Users\DELL\OneDrive\Desktop\Thesis\sentiment_ground_truths(4).csv" --api-key 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 --batch-size 25 --limit 500
 python script5.py --input "C:\Users\DELL\OneDrive\Desktop\Thesis\sentiment_ground_truths(4).csv" --api-key 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
 python script5.py --input "C:\Users\DELL\OneDrive\Desktop\Thesis\sentiment_ground_truths(4).csv" --api-key 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 --compare-models
