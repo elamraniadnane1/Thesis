@@ -1,0 +1,65 @@
+{
+  "evaluation": {
+    "accuracy": 0.4168235294117647,
+    "classification_report": {
+      "negative": {
+        "precision": 1.0,
+        "recall": 0.05555555555555555,
+        "f1-score": 0.10526315789473684,
+        "support": 2412.0
+      },
+      "neutral": {
+        "precision": 0.404507405022537,
+        "recall": 0.9596700274977086,
+        "f1-score": 0.5691248414567857,
+        "support": 3273.0
+      },
+      "positive": {
+        "precision": 0.4459234608985025,
+        "recall": 0.09520426287744227,
+        "f1-score": 0.15690866510538642,
+        "support": 2815.0
+      },
+      "accuracy": 0.4168235294117647,
+      "macro avg": {
+        "precision": 0.6168102886403465,
+        "recall": 0.37014328197690216,
+        "f1-score": 0.27709888815230294,
+        "support": 8500.0
+      },
+      "weighted avg": {
+        "precision": 0.5872032093021233,
+        "recall": 0.4168235294117647,
+        "f1-score": 0.3009809688472739,
+        "support": 8500.0
+      }
+    },
+    "confusion_matrix": [
+      [
+        134,
+        2077,
+        201
+      ],
+      [
+        0,
+        3141,
+        132
+      ],
+      [
+        0,
+        2547,
+        268
+      ]
+    ],
+    "classes": [
+      "negative",
+      "neutral",
+      "positive"
+    ],
+    "evaluated_records": 8500,
+    "total_records": 20112
+  },
+  "stats": {
+    "total_records": 20112,
+    "processed_records": 20112,
+    "records_with_ground_truth": 

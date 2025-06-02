@@ -1,0 +1,87 @@
+{
+  "evaluation": {
+    "accuracy": 0.4361052631578947,
+    "classification_report": {
+      "negative": {
+        "precision": 1.0,
+        "recall": 0.0975609756097561,
+        "f1-score": 0.17777777777777778,
+        "support": 2747.0
+      },
+      "neutral": {
+        "precision": 0.4158156911581569,
+        "recall": 0.9267277268942548,
+        "f1-score": 0.5740565632253073,
+        "support": 3603.0
+      },
+      "positive": {
+        "precision": 0.4459234608985025,
+        "recall": 0.17015873015873015,
+        "f1-score": 0.24632352941176472,
+        "support": 3150.0
+      },
+      "accuracy": 0.4361052631578947,
+      "macro avg": {
+        "precision": 0.6205797173522198,
+        "recall": 0.3981491442209137,
+        "f1-score": 0.3327192901382833,
+        "support": 9500.0
+      },
+      "weighted avg": {
+        "precision": 0.5947202986392761,
+        "recall": 0.4361052631578947,
+        "f1-score": 0.3508000495266733,
+        "support": 9500.0
+      }
+    },
+    "confusion_matrix": [
+      [
+        268,
+        2077,
+        402
+      ],
+      [
+        0,
+        3339,
+        264
+      ],
+      [
+        0,
+        2614,
+        536
+      ]
+    ],
+    "classes": [
+      "negative",
+      "neutral",
+      "positive"
+    ],
+    "evaluated_records": 9500,
+    "total_records": 21112
+  },
+  "stats": {
+    "total_records": 21112,
+    "processed_records": 21112,
+    "records_with_ground_truth": 9500,
+    "ground_truth_distribution": {
+      "NEU": 2943,
+      "POS": 2480,
+      "NEG": 2077,
+      "negative": 670,
+      "positive": 670,
+      "neutral": 660
+    },
+    "prediction_distribution": {
+      "neutral": 19574,
+      "positive": 1260,
+      "negative": 278
+    }
+  },
+  "model_info": {
+    "name": "TextBlob",
+    "sentiment_thresholds": {
+      "positive": 0.1,
+      "negative": -0.1
+    }
+  }
+}
