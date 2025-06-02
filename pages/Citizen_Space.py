@@ -56,7 +56,7 @@ def load_qdrant_points(collection_name: str, vector_dim: int):
 openai.api_key = st.secrets["openai"]["api_key"]
 
 def get_mongo_client():
-    return MongoClient("mongodb://ac-aurbbb0-shard-00-01.mvvbpez.mongodb.net:27017")
+    return MongoClient("mongodb://localhost:27017")
 
 def get_qdrant_client():
     return QdrantClient(host="localhost", port=6333)

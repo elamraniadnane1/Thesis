@@ -1,0 +1,20 @@
+{
+  "users": {
+    "id": "int",
+    "name": "str",
+    "email": "str",
+    "active": "bool",
+    "created_at": "str"
+  },
+  "products": {
+    "length": 2,
+    "element_types": [
+      "dict"
+    ]
+  },
+  "settings": {
+    "theme": "str",
+    "notifications": "bool",
+    "language": "str"
+  }
+}

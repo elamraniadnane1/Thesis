@@ -1,0 +1,1618 @@
+{
+  "remacto_comments": {
+    "config": {
+      "name": "remacto_comments",
+      "shard_number": 1,
+      "sharding_method": null,
+      "replication_factor": 1,
+      "write_consistency_factor": 1,
+      "read_fan_out_factor": null,
+      "on_disk_payload": true,
+      "sparse_vectors": null
+    },
+    "vector_configs": {
+      "size": {
+        "size": 384,
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null
+      },
+      "distance": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: Distance"
+      },
+      "hnsw_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "quantization_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "on_disk": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "datatype": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "multivector_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      }
+    },
+    "schema": {
+      "__deprecated__": "The `schema` method is deprecated; use `model_json_schema` instead."
+    },
+    "point_count": 923
+  },
+  "municipal_projects": {
+    "config": {
+      "name": "municipal_projects",
+      "shard_number": 1,
+      "sharding_method": null,
+      "replication_factor": 1,
+      "write_consistency_factor": 1,
+      "read_fan_out_factor": null,
+      "on_disk_payload": true,
+      "sparse_vectors": null
+    },
+    "vector_configs": {
+      "size": {
+        "size": 384,
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null
+      },
+      "distance": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: Distance"
+      },
+      "hnsw_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "quantization_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "on_disk": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "datatype": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "multivector_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      }
+    },
+    "schema": {
+      "__deprecated__": "The `schema` method is deprecated; use `model_json_schema` instead."
+    },
+    "point_count": 6000
+  },
+  "project_updates": {
+    "config": {
+      "name": "project_updates",
+      "shard_number": 1,
+      "sharding_method": null,
+      "replication_factor": 1,
+      "write_consistency_factor": 1,
+      "read_fan_out_factor": null,
+      "on_disk_payload": true,
+      "sparse_vectors": null
+    },
+    "vector_configs": {
+      "size": {
+        "size": 384,
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null
+      },
+      "distance": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: Distance"
+      },
+      "hnsw_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "quantization_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "on_disk": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "datatype": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "multivector_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      }
+    },
+    "schema": {
+      "__deprecated__": "The `schema` method is deprecated; use `model_json_schema` instead."
+    },
+    "point_count": 10935
+  },
+  "hespress_politics_details": {
+    "config": {
+      "name": "hespress_politics_details",
+      "shard_number": 1,
+      "sharding_method": null,
+      "replication_factor": 1,
+      "write_consistency_factor": 1,
+      "read_fan_out_factor": null,
+      "on_disk_payload": true,
+      "sparse_vectors": null
+    },
+    "vector_configs": {
+      "size": {
+        "size": 1536,
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null
+      },
+      "distance": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: Distance"
+      },
+      "hnsw_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "quantization_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "on_disk": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "datatype": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "multivector_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      }
+    },
+    "schema": {
+      "__deprecated__": "The `schema` method is deprecated; use `model_json_schema` instead."
+    },
+    "point_count": 373
+  },
+  "citizen_comments": {
+    "config": {
+      "name": "citizen_comments",
+      "shard_number": 1,
+      "sharding_method": null,
+      "replication_factor": 1,
+      "write_consistency_factor": 1,
+      "read_fan_out_factor": null,
+      "on_disk_payload": true,
+      "sparse_vectors": null
+    },
+    "vector_configs": {
+      "size": {
+        "size": 384,
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null
+      },
+      "distance": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: Distance"
+      },
+      "hnsw_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "quantization_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "on_disk": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "datatype": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "multivector_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      }
+    },
+    "schema": {
+      "__deprecated__": "The `schema` method is deprecated; use `model_json_schema` instead."
+    },
+    "point_count": 10000
+  },
+  "remacto_projects": {
+    "config": {
+      "name": "remacto_projects",
+      "shard_number": 1,
+      "sharding_method": null,
+      "replication_factor": 1,
+      "write_consistency_factor": 1,
+      "read_fan_out_factor": null,
+      "on_disk_payload": true,
+      "sparse_vectors": null
+    },
+    "vector_configs": {
+      "size": {
+        "size": 384,
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null
+      },
+      "distance": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: Distance"
+      },
+      "hnsw_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "quantization_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "on_disk": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "datatype": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "multivector_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      }
+    },
+    "schema": {
+      "__deprecated__": "The `schema` method is deprecated; use `model_json_schema` instead."
+    },
+    "point_count": 690
+  },
+  "citizen_ideas": {
+    "config": {
+      "name": "citizen_ideas",
+      "shard_number": 1,
+      "sharding_method": null,
+      "replication_factor": 1,
+      "write_consistency_factor": 1,
+      "read_fan_out_factor": null,
+      "on_disk_payload": true,
+      "sparse_vectors": null
+    },
+    "vector_configs": {
+      "size": {
+        "size": 384,
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null
+      },
+      "distance": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: Distance"
+      },
+      "hnsw_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "quantization_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "on_disk": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "datatype": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "multivector_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      }
+    },
+    "schema": {
+      "__deprecated__": "The `schema` method is deprecated; use `model_json_schema` instead."
+    },
+    "point_count": 9000
+  },
+  "citizens": {
+    "config": {
+      "name": "citizens",
+      "shard_number": 1,
+      "sharding_method": null,
+      "replication_factor": 1,
+      "write_consistency_factor": 1,
+      "read_fan_out_factor": null,
+      "on_disk_payload": true,
+      "sparse_vectors": null
+    },
+    "vector_configs": {
+      "size": {
+        "size": 384,
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null
+      },
+      "distance": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: Distance"
+      },
+      "hnsw_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "quantization_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "on_disk": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "datatype": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "multivector_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      }
+    },
+    "schema": {
+      "__deprecated__": "The `schema` method is deprecated; use `model_json_schema` instead."
+    },
+    "point_count": 6000
+  },
+  "morocco_centres": {
+    "config": {
+      "name": "morocco_centres",
+      "shard_number": 1,
+      "sharding_method": null,
+      "replication_factor": 1,
+      "write_consistency_factor": 1,
+      "read_fan_out_factor": null,
+      "on_disk_payload": true,
+      "sparse_vectors": null
+    },
+    "vector_configs": {
+      "size": {
+        "size": 384,
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null
+      },
+      "distance": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: Distance"
+      },
+      "hnsw_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "quantization_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "on_disk": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "datatype": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "multivector_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      }
+    },
+    "schema": {
+      "__deprecated__": "The `schema` method is deprecated; use `model_json_schema` instead."
+    },
+    "point_count": 149
+  },
+  "morocco_cercles": {
+    "config": {
+      "name": "morocco_cercles",
+      "shard_number": 1,
+      "sharding_method": null,
+      "replication_factor": 1,
+      "write_consistency_factor": 1,
+      "read_fan_out_factor": null,
+      "on_disk_payload": true,
+      "sparse_vectors": null
+    },
+    "vector_configs": {
+      "size": {
+        "size": 384,
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null
+      },
+      "distance": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: Distance"
+      },
+      "hnsw_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "quantization_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "on_disk": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "datatype": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "multivector_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      }
+    },
+    "schema": {
+      "__deprecated__": "The `schema` method is deprecated; use `model_json_schema` instead."
+    },
+    "point_count": 196
+  },
+  "municipal_officials": {
+    "config": {
+      "name": "municipal_officials",
+      "shard_number": 1,
+      "sharding_method": null,
+      "replication_factor": 1,
+      "write_consistency_factor": 1,
+      "read_fan_out_factor": null,
+      "on_disk_payload": true,
+      "sparse_vectors": null
+    },
+    "vector_configs": {
+      "size": {
+        "size": 384,
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null
+      },
+      "distance": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: Distance"
+      },
+      "hnsw_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "quantization_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "on_disk": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "datatype": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "multivector_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      }
+    },
+    "schema": {
+      "__deprecated__": "The `schema` method is deprecated; use `model_json_schema` instead."
+    },
+    "point_count": 1500
+  },
+  "budget_allocations": {
+    "config": {
+      "name": "budget_allocations",
+      "shard_number": 1,
+      "sharding_method": null,
+      "replication_factor": 1,
+      "write_consistency_factor": 1,
+      "read_fan_out_factor": null,
+      "on_disk_payload": true,
+      "sparse_vectors": null
+    },
+    "vector_configs": {
+      "size": {
+        "size": 384,
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null
+      },
+      "distance": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: Distance"
+      },
+      "hnsw_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "quantization_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "on_disk": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "datatype": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "multivector_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      }
+    },
+    "schema": {
+      "__deprecated__": "The `schema` method is deprecated; use `model_json_schema` instead."
+    },
+    "point_count": 1680
+  },
+  "morocco_arrondissements": {
+    "config": {
+      "name": "morocco_arrondissements",
+      "shard_number": 1,
+      "sharding_method": null,
+      "replication_factor": 1,
+      "write_consistency_factor": 1,
+      "read_fan_out_factor": null,
+      "on_disk_payload": true,
+      "sparse_vectors": null
+    },
+    "vector_configs": {
+      "size": {
+        "size": 384,
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null
+      },
+      "distance": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: Distance"
+      },
+      "hnsw_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "quantization_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "on_disk": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "datatype": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "multivector_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      }
+    },
+    "schema": {
+      "__deprecated__": "The `schema` method is deprecated; use `model_json_schema` instead."
+    },
+    "point_count": 41
+  },
+  "engagement_metrics": {
+    "config": {
+      "name": "engagement_metrics",
+      "shard_number": 1,
+      "sharding_method": null,
+      "replication_factor": 1,
+      "write_consistency_factor": 1,
+      "read_fan_out_factor": null,
+      "on_disk_payload": true,
+      "sparse_vectors": null
+    },
+    "vector_configs": {
+      "size": {
+        "size": 384,
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null
+      },
+      "distance": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: Distance"
+      },
+      "hnsw_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "quantization_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "on_disk": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "datatype": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "multivector_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      }
+    },
+    "schema": {
+      "__deprecated__": "The `schema` method is deprecated; use `model_json_schema` instead."
+    },
+    "point_count": 144
+  },
+  "morocco_communes": {
+    "config": {
+      "name": "morocco_communes",
+      "shard_number": 1,
+      "sharding_method": null,
+      "replication_factor": 1,
+      "write_consistency_factor": 1,
+      "read_fan_out_factor": null,
+      "on_disk_payload": true,
+      "sparse_vectors": null
+    },
+    "vector_configs": {
+      "size": {
+        "size": 384,
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null
+      },
+      "distance": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: Distance"
+      },
+      "hnsw_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "quantization_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "on_disk": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "datatype": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "multivector_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      }
+    },
+    "schema": {
+      "__deprecated__": "The `schema` method is deprecated; use `model_json_schema` instead."
+    },
+    "point_count": 0
+  },
+  "hespress_politics_comments": {
+    "config": {
+      "name": "hespress_politics_comments",
+      "shard_number": 1,
+      "sharding_method": null,
+      "replication_factor": 1,
+      "write_consistency_factor": 1,
+      "read_fan_out_factor": null,
+      "on_disk_payload": true,
+      "sparse_vectors": null
+    },
+    "vector_configs": {
+      "size": {
+        "size": 384,
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null
+      },
+      "distance": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: Distance"
+      },
+      "hnsw_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "quantization_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "on_disk": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "datatype": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      },
+      "multivector_config": {
+        "size": "Inferred from data",
+        "distance": "Cosine",
+        "on_disk": false,
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000
+        },
+        "quantization_config": null,
+        "note": "Configuration inferred, type: NoneType"
+      }
+    },
+    "schema": {
+      "__deprecated__": "The `schema` method is deprecated; use `model_json_schema` instead."
+    },
+    "point_count": 5598
+  }
+}

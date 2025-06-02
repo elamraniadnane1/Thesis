@@ -1,0 +1,1589 @@
+# Qdrant Collections Information
+
+Extracted on: 2025-06-01 23:33:35
+Qdrant Client Version: unknown
+
+## Collection: remacto_comments
+
+**Points Count**: 923
+
+### Vector Configurations
+
+**Vector Name**: size
+- Dimensions: 384
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+
+**Vector Name**: distance
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: Distance
+
+**Vector Name**: hnsw_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: quantization_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: on_disk
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: datatype
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: multivector_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+### Schema Information
+
+**Field**: __deprecated__
+- Schema: The `schema` method is deprecated; use `model_json_schema` instead.
+
+### Collection Configuration
+
+- shard_number: 1
+- sharding_method: None
+- replication_factor: 1
+- write_consistency_factor: 1
+- read_fan_out_factor: None
+- on_disk_payload: True
+- sparse_vectors: None
+
+--------------------------------------------------------------------------------
+
+## Collection: municipal_projects
+
+**Points Count**: 6000
+
+### Vector Configurations
+
+**Vector Name**: size
+- Dimensions: 384
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+
+**Vector Name**: distance
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: Distance
+
+**Vector Name**: hnsw_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: quantization_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: on_disk
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: datatype
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: multivector_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+### Schema Information
+
+**Field**: __deprecated__
+- Schema: The `schema` method is deprecated; use `model_json_schema` instead.
+
+### Collection Configuration
+
+- shard_number: 1
+- sharding_method: None
+- replication_factor: 1
+- write_consistency_factor: 1
+- read_fan_out_factor: None
+- on_disk_payload: True
+- sparse_vectors: None
+
+--------------------------------------------------------------------------------
+
+## Collection: project_updates
+
+**Points Count**: 10935
+
+### Vector Configurations
+
+**Vector Name**: size
+- Dimensions: 384
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+
+**Vector Name**: distance
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: Distance
+
+**Vector Name**: hnsw_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: quantization_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: on_disk
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: datatype
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: multivector_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+### Schema Information
+
+**Field**: __deprecated__
+- Schema: The `schema` method is deprecated; use `model_json_schema` instead.
+
+### Collection Configuration
+
+- shard_number: 1
+- sharding_method: None
+- replication_factor: 1
+- write_consistency_factor: 1
+- read_fan_out_factor: None
+- on_disk_payload: True
+- sparse_vectors: None
+
+--------------------------------------------------------------------------------
+
+## Collection: hespress_politics_details
+
+**Points Count**: 373
+
+### Vector Configurations
+
+**Vector Name**: size
+- Dimensions: 1536
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+
+**Vector Name**: distance
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: Distance
+
+**Vector Name**: hnsw_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: quantization_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: on_disk
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: datatype
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: multivector_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+### Schema Information
+
+**Field**: __deprecated__
+- Schema: The `schema` method is deprecated; use `model_json_schema` instead.
+
+### Collection Configuration
+
+- shard_number: 1
+- sharding_method: None
+- replication_factor: 1
+- write_consistency_factor: 1
+- read_fan_out_factor: None
+- on_disk_payload: True
+- sparse_vectors: None
+
+--------------------------------------------------------------------------------
+
+## Collection: citizen_comments
+
+**Points Count**: 10000
+
+### Vector Configurations
+
+**Vector Name**: size
+- Dimensions: 384
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+
+**Vector Name**: distance
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: Distance
+
+**Vector Name**: hnsw_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: quantization_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: on_disk
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: datatype
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: multivector_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+### Schema Information
+
+**Field**: __deprecated__
+- Schema: The `schema` method is deprecated; use `model_json_schema` instead.
+
+### Collection Configuration
+
+- shard_number: 1
+- sharding_method: None
+- replication_factor: 1
+- write_consistency_factor: 1
+- read_fan_out_factor: None
+- on_disk_payload: True
+- sparse_vectors: None
+
+--------------------------------------------------------------------------------
+
+## Collection: remacto_projects
+
+**Points Count**: 690
+
+### Vector Configurations
+
+**Vector Name**: size
+- Dimensions: 384
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+
+**Vector Name**: distance
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: Distance
+
+**Vector Name**: hnsw_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: quantization_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: on_disk
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: datatype
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: multivector_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+### Schema Information
+
+**Field**: __deprecated__
+- Schema: The `schema` method is deprecated; use `model_json_schema` instead.
+
+### Collection Configuration
+
+- shard_number: 1
+- sharding_method: None
+- replication_factor: 1
+- write_consistency_factor: 1
+- read_fan_out_factor: None
+- on_disk_payload: True
+- sparse_vectors: None
+
+--------------------------------------------------------------------------------
+
+## Collection: citizen_ideas
+
+**Points Count**: 9000
+
+### Vector Configurations
+
+**Vector Name**: size
+- Dimensions: 384
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+
+**Vector Name**: distance
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: Distance
+
+**Vector Name**: hnsw_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: quantization_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: on_disk
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: datatype
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: multivector_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+### Schema Information
+
+**Field**: __deprecated__
+- Schema: The `schema` method is deprecated; use `model_json_schema` instead.
+
+### Collection Configuration
+
+- shard_number: 1
+- sharding_method: None
+- replication_factor: 1
+- write_consistency_factor: 1
+- read_fan_out_factor: None
+- on_disk_payload: True
+- sparse_vectors: None
+
+--------------------------------------------------------------------------------
+
+## Collection: citizens
+
+**Points Count**: 6000
+
+### Vector Configurations
+
+**Vector Name**: size
+- Dimensions: 384
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+
+**Vector Name**: distance
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: Distance
+
+**Vector Name**: hnsw_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: quantization_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: on_disk
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: datatype
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: multivector_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+### Schema Information
+
+**Field**: __deprecated__
+- Schema: The `schema` method is deprecated; use `model_json_schema` instead.
+
+### Collection Configuration
+
+- shard_number: 1
+- sharding_method: None
+- replication_factor: 1
+- write_consistency_factor: 1
+- read_fan_out_factor: None
+- on_disk_payload: True
+- sparse_vectors: None
+
+--------------------------------------------------------------------------------
+
+## Collection: morocco_centres
+
+**Points Count**: 149
+
+### Vector Configurations
+
+**Vector Name**: size
+- Dimensions: 384
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+
+**Vector Name**: distance
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: Distance
+
+**Vector Name**: hnsw_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: quantization_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: on_disk
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: datatype
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: multivector_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+### Schema Information
+
+**Field**: __deprecated__
+- Schema: The `schema` method is deprecated; use `model_json_schema` instead.
+
+### Collection Configuration
+
+- shard_number: 1
+- sharding_method: None
+- replication_factor: 1
+- write_consistency_factor: 1
+- read_fan_out_factor: None
+- on_disk_payload: True
+- sparse_vectors: None
+
+--------------------------------------------------------------------------------
+
+## Collection: morocco_cercles
+
+**Points Count**: 196
+
+### Vector Configurations
+
+**Vector Name**: size
+- Dimensions: 384
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+
+**Vector Name**: distance
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: Distance
+
+**Vector Name**: hnsw_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: quantization_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: on_disk
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: datatype
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: multivector_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+### Schema Information
+
+**Field**: __deprecated__
+- Schema: The `schema` method is deprecated; use `model_json_schema` instead.
+
+### Collection Configuration
+
+- shard_number: 1
+- sharding_method: None
+- replication_factor: 1
+- write_consistency_factor: 1
+- read_fan_out_factor: None
+- on_disk_payload: True
+- sparse_vectors: None
+
+--------------------------------------------------------------------------------
+
+## Collection: municipal_officials
+
+**Points Count**: 1500
+
+### Vector Configurations
+
+**Vector Name**: size
+- Dimensions: 384
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+
+**Vector Name**: distance
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: Distance
+
+**Vector Name**: hnsw_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: quantization_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: on_disk
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: datatype
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: multivector_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+### Schema Information
+
+**Field**: __deprecated__
+- Schema: The `schema` method is deprecated; use `model_json_schema` instead.
+
+### Collection Configuration
+
+- shard_number: 1
+- sharding_method: None
+- replication_factor: 1
+- write_consistency_factor: 1
+- read_fan_out_factor: None
+- on_disk_payload: True
+- sparse_vectors: None
+
+--------------------------------------------------------------------------------
+
+## Collection: budget_allocations
+
+**Points Count**: 1680
+
+### Vector Configurations
+
+**Vector Name**: size
+- Dimensions: 384
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+
+**Vector Name**: distance
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: Distance
+
+**Vector Name**: hnsw_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: quantization_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: on_disk
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: datatype
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: multivector_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+### Schema Information
+
+**Field**: __deprecated__
+- Schema: The `schema` method is deprecated; use `model_json_schema` instead.
+
+### Collection Configuration
+
+- shard_number: 1
+- sharding_method: None
+- replication_factor: 1
+- write_consistency_factor: 1
+- read_fan_out_factor: None
+- on_disk_payload: True
+- sparse_vectors: None
+
+--------------------------------------------------------------------------------
+
+## Collection: morocco_arrondissements
+
+**Points Count**: 41
+
+### Vector Configurations
+
+**Vector Name**: size
+- Dimensions: 384
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+
+**Vector Name**: distance
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: Distance
+
+**Vector Name**: hnsw_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: quantization_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: on_disk
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: datatype
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: multivector_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+### Schema Information
+
+**Field**: __deprecated__
+- Schema: The `schema` method is deprecated; use `model_json_schema` instead.
+
+### Collection Configuration
+
+- shard_number: 1
+- sharding_method: None
+- replication_factor: 1
+- write_consistency_factor: 1
+- read_fan_out_factor: None
+- on_disk_payload: True
+- sparse_vectors: None
+
+--------------------------------------------------------------------------------
+
+## Collection: engagement_metrics
+
+**Points Count**: 144
+
+### Vector Configurations
+
+**Vector Name**: size
+- Dimensions: 384
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+
+**Vector Name**: distance
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: Distance
+
+**Vector Name**: hnsw_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: quantization_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: on_disk
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: datatype
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: multivector_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+### Schema Information
+
+**Field**: __deprecated__
+- Schema: The `schema` method is deprecated; use `model_json_schema` instead.
+
+### Collection Configuration
+
+- shard_number: 1
+- sharding_method: None
+- replication_factor: 1
+- write_consistency_factor: 1
+- read_fan_out_factor: None
+- on_disk_payload: True
+- sparse_vectors: None
+
+--------------------------------------------------------------------------------
+
+## Collection: morocco_communes
+
+**Points Count**: 0
+
+### Vector Configurations
+
+**Vector Name**: size
+- Dimensions: 384
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+
+**Vector Name**: distance
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: Distance
+
+**Vector Name**: hnsw_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: quantization_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: on_disk
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: datatype
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: multivector_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+### Schema Information
+
+**Field**: __deprecated__
+- Schema: The `schema` method is deprecated; use `model_json_schema` instead.
+
+### Collection Configuration
+
+- shard_number: 1
+- sharding_method: None
+- replication_factor: 1
+- write_consistency_factor: 1
+- read_fan_out_factor: None
+- on_disk_payload: True
+- sparse_vectors: None
+
+--------------------------------------------------------------------------------
+
+## Collection: hespress_politics_comments
+
+**Points Count**: 5598
+
+### Vector Configurations
+
+**Vector Name**: size
+- Dimensions: 384
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+
+**Vector Name**: distance
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: Distance
+
+**Vector Name**: hnsw_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: quantization_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: on_disk
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: datatype
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+**Vector Name**: multivector_config
+- Dimensions: Inferred from data
+- Distance Metric: Cosine
+- Stored On Disk: False
+- HNSW Configuration:
+  - m: 16
+  - ef_construct: 100
+  - full_scan_threshold: 10000
+- Quantization: None (not using quantization)
+- Note: Configuration inferred, type: NoneType
+
+### Schema Information
+
+**Field**: __deprecated__
+- Schema: The `schema` method is deprecated; use `model_json_schema` instead.
+
+### Collection Configuration
+
+- shard_number: 1
+- sharding_method: None
+- replication_factor: 1
+- write_consistency_factor: 1
+- read_fan_out_factor: None
+- on_disk_payload: True
+- sparse_vectors: None
+
+--------------------------------------------------------------------------------
+

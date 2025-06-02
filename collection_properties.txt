@@ -1,0 +1,170 @@
+# Collection Properties
+# Generated on: 2025-06-01 23:17:24.583323
+
+## Python Built-in Collections
+
+### 1. list
+- **type**: list
+- **methods**:
+  - append
+  - clear
+  - copy
+  - count
+  - extend
+  - index
+  - insert
+  - pop
+  - remove
+  - reverse
+  - sort
+- **mutable**: True
+- **ordered**: True
+- **description**: Mutable sequence of elements
+
+### 2. dict
+- **type**: dict
+- **methods**:
+  - clear
+  - copy
+  - fromkeys
+  - get
+  - items
+  - keys
+  - pop
+  - popitem
+  - setdefault
+  - update
+  - values
+- **mutable**: True
+- **ordered**: False
+- **description**: Mutable mapping of key-value pairs
+
+### 3. set
+- **type**: set
+- **methods**:
+  - add
+  - clear
+  - copy
+  - difference
+  - difference_update
+  - discard
+  - intersection
+  - intersection_update
+  - isdisjoint
+  - issubset
+  - issuperset
+  - pop
+  - remove
+  - symmetric_difference
+  - symmetric_difference_update
+  - union
+  - update
+- **mutable**: True
+- **ordered**: False
+- **description**: Mutable collection of unique elements
+
+### 4. tuple
+- **type**: tuple
+- **methods**:
+  - count
+  - index
+- **mutable**: False
+- **ordered**: True
+- **description**: Immutable sequence of elements
+
+### 5. defaultdict
+- **type**: defaultdict
+- **methods**:
+  - clear
+  - copy
+  - default_factory
+  - fromkeys
+  - get
+  - items
+  - keys
+  - pop
+  - popitem
+  - setdefault
+  - update
+  - values
+- **mutable**: True
+- **ordered**: False
+- **description**: Dict subclass that calls a factory function to supply missing values
+
+### 6. Counter
+- **type**: Counter
+- **methods**:
+  - clear
+  - copy
+  - elements
+  - fromkeys
+  - get
+  - items
+  - keys
+  - most_common
+  - pop
+  - popitem
+  - setdefault
+  - subtract
+  - total
+  - update
+  - values
+- **mutable**: True
+- **ordered**: False
+- **description**: Dict subclass for counting hashable objects
+
+### 7. OrderedDict
+- **type**: OrderedDict
+- **methods**:
+  - clear
+  - copy
+  - fromkeys
+  - get
+  - items
+  - keys
+  - move_to_end
+  - pop
+  - popitem
+  - setdefault
+  - update
+  - values
+- **mutable**: True
+- **ordered**: True
+- **description**: Dict subclass that remembers the order entries were added
+
+### 8. deque
+- **type**: deque
+- **methods**:
+  - append
+  - appendleft
+  - clear
+  - copy
+  - count
+  - extend
+  - extendleft
+  - index
+  - insert
+  - maxlen
+  - pop
+  - popleft
+  - remove
+  - reverse
+  - rotate
+- **mutable**: True
+- **ordered**: True
+- **description**: List-like container with fast appends and pops on either end
+
+## Library Collections
+
+### 1. City Library
+- **type**: Library
+- **attributes**:
+  - books
+  - name
+- **methods**:
+  - add_book
+  - find_by_author
+- **description**: A collection of books
+
+
+# End of Collection Properties

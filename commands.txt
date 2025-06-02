@@ -1,5 +1,6 @@
 python -m streamlit run Main.py
 
+docker start 08aaeac1ca2b 004be2b88559 dc1d8910fa74 b7d7b12e6add
 
 docker run -d --name qdrant -p 6333:6333 -v qdrant_storage:/qdrant/storage qdrant/qdrant:latest
 
