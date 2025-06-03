@@ -1,7 +1,7 @@
-import torch
+import importlib.util
 
-print("Torch version:", torch.__version__)
-print("CUDA available:", torch.cuda.is_available())
-
-x = torch.rand(5, 3)
-print("Random Tensor:\n", x)
+spec = importlib.util.find_spec("torch")
+if spec is None:
+    print("Torch not found")
+else:
+    print(f"Torch location: {spec.origin}")
