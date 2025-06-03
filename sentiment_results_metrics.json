@@ -1,0 +1,72 @@
+{
+  "total_records": 19112,
+  "sentiment_counts": {
+    "positive": 2236,
+    "neutral": 16203,
+    "negative": 673
+  },
+  "sentiment_percentages": {
+    "positive": 11.69945583926329,
+    "neutral": 84.7791963164504,
+    "negative": 3.521347844286312
+  },
+  "evaluation": {
+    "has_ground_truth": true,
+    "accuracy": 0.39626666666666666,
+    "confusion_matrix": {
+      "negative": {
+        "negative": 0,
+        "neutral": 1627,
+        "positive": 450
+      },
+      "neutral": {
+        "negative": 0,
+        "neutral": 2518,
+        "positive": 425
+      },
+      "positive": {
+        "negative": 0,
+        "neutral": 2026,
+        "positive": 454
+      }
+    },
+    "class_metrics": {
+      "negative": {
+        "precision": 0,
+        "recall": 0.0,
+        "f1": 0,
+        "support": 2077
+      },
+      "neutral": {
+        "precision": 0.40803759520337063,
+        "recall": 0.8555895344886171,
+        "f1": 0.5525565064735573,
+        "support": 2943
+      },
+      "positive": {
+        "precision": 0.3416102332580888,
+        "recall": 0.18306451612903227,
+        "f1": 0.23838277763192436,
+        "support": 2480
+      }
+    },
+    "ground_truth_count": 7500,
+    "labels": [
+      "negative",
+      "neutral",
+      "positive"
+    ],
+    "ground_truth_distribution": {
+      "counts": {
+        "negative": 2077,
+        "neutral": 2943,
+        "positive": 2480
+      },
+      "percentages": {
+        "negative": 27.69333333333333,
+        "neutral": 39.24,
+        "positive": 33.06666666666666
+      }
+    }
+  }
+}
