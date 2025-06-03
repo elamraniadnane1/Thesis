@@ -1,7 +1,3 @@
-import importlib.util
-
-spec = importlib.util.find_spec("torch")
-if spec is None:
-    print("Torch not found")
-else:
-    print(f"Torch location: {spec.origin}")
+import numpy as np
+print("NumPy version:", np.__version__)
+print("Array test:", np.array([1, 2, 3]))
