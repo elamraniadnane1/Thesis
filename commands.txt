@@ -49,3 +49,14 @@ docker run -d --name qdrant -p 6333:6333 -v qdrant_storage:/qdrant/storage qdran
 python script5.py --input "C:\Users\DELL\OneDrive\Desktop\Thesis\sentiment_ground_truths(4).csv" --api-key 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 --batch-size 25 --limit 500
 python script5.py --input "C:\Users\DELL\OneDrive\Desktop\Thesis\sentiment_ground_truths(4).csv" --api-key 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
 python script5.py --input "C:\Users\DELL\OneDrive\Desktop\Thesis\sentiment_ground_truths(4).csv" --api-key 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 --compare-models
+
+
+
+netsh interface portproxy add v4tov4 listenport=27017 listenaddress=0.0.0.0 connectport=27017 connectaddress=172.21.0.58
+netsh interface portproxy add v4tov4 listenport=6379 listenaddress=0.0.0.0 connectport=6379 connectaddress=172.21.0.58
+netsh interface portproxy add v4tov4 listenport=6379 listenaddress=0.0.0.0 connectport=6379 connectaddress=172.21.0.58
+netsh interface portproxy add v4tov4 listenport=8080 listenaddress=0.0.0.0 connectport=8080 connectaddress=172.21.0.58
+netsh interface portproxy add v4tov4 listenport=6333 listenaddress=0.0.0.0 connectport=6333 connectaddress=172.21.0.58
+New-NetFirewallRule -DisplayName "WSL Redis" -Direction Inbound -Action Allow -Protocol TCP -LocalPort 6379
+New-NetFirewallRule -DisplayName "WSL ZenML" -Direction Inbound -Action Allow -Protocol TCP -LocalPort 8080
+New-NetFirewallRule -DisplayName "WSL Qdrant" -Direction Inbound -Action Allow -Protocol TCP -LocalPort 6333
