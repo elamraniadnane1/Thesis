@@ -1,6 +1,6 @@
 python -m streamlit run Main.py
 
-
+python script12.py --tune --iterations 10 --tune_limit 3000
 
 cd C:\Users\Administrator\Desktop
 python -m venv venv
