@@ -1,44 +1,46 @@
 {
   "total_records": 3000,
   "sentiment_counts": {
-    "positive": 364,
-    "negative": 2636
+    "positive": 367,
+    "neutral": 2529,
+    "negative": 104
   },
   "sentiment_percentages": {
-    "positive": 12.133333333333333,
-    "negative": 87.86666666666667
+    "positive": 12.233333333333334,
+    "neutral": 84.3,
+    "negative": 3.4666666666666663
   },
   "evaluation": {
     "has_ground_truth": true,
-    "accuracy": 0.26897133220910624,
+    "accuracy": 0.39291736930860033,
     "confusion_matrix": {
       "neutral": {
-        "neutral": 0,
-        "negative": 422,
+        "neutral": 422,
+        "negative": 0,
         "positive": 50
       },
       "negative": {
-        "neutral": 0,
-        "negative": 275,
+        "neutral": 275,
+        "negative": 0,
         "positive": 39
       },
       "positive": {
-        "neutral": 0,
-        "negative": 356,
+        "neutral": 356,
+        "negative": 0,
         "positive": 44
       }
     },
     "class_metrics": {
       "neutral": {
-        "precision": 0,
-        "recall": 0.0,
-        "f1": 0,
+        "precision": 0.4007597340930674,
+        "recall": 0.8940677966101694,
+        "f1": 0.5534426229508197,
         "support": 472
       },
       "negative": {
-        "precision": 0.2611585944919278,
-        "recall": 0.8757961783439491,
-        "f1": 0.40234089246525234,
+        "precision": 0,
+        "recall": 0.0,
+        "f1": 0,
         "support": 314
       },
       "positive": {

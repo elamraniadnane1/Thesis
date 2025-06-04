@@ -1,50 +1,52 @@
 {
   "total_records": 3000,
   "sentiment_counts": {
-    "positive": 364,
-    "negative": 2636
+    "positive": 237,
+    "neutral": 2664,
+    "negative": 99
   },
   "sentiment_percentages": {
-    "positive": 12.133333333333333,
-    "negative": 87.86666666666667
+    "positive": 7.9,
+    "neutral": 88.8,
+    "negative": 3.3000000000000003
   },
   "evaluation": {
     "has_ground_truth": true,
-    "accuracy": 0.26897133220910624,
+    "accuracy": 0.39376053962900504,
     "confusion_matrix": {
       "neutral": {
-        "neutral": 0,
-        "negative": 422,
-        "positive": 50
+        "neutral": 445,
+        "negative": 0,
+        "positive": 27
       },
       "negative": {
-        "neutral": 0,
-        "negative": 275,
-        "positive": 39
+        "neutral": 302,
+        "negative": 0,
+        "positive": 12
       },
       "positive": {
-        "neutral": 0,
-        "negative": 356,
-        "positive": 44
+        "neutral": 378,
+        "negative": 0,
+        "positive": 22
       }
     },
     "class_metrics": {
       "neutral": {
-        "precision": 0,
-        "recall": 0.0,
-        "f1": 0,
+        "precision": 0.39555555555555555,
+        "recall": 0.9427966101694916,
+        "f1": 0.5572949279899813,
         "support": 472
       },
       "negative": {
-        "precision": 0.2611585944919278,
-        "recall": 0.8757961783439491,
-        "f1": 0.40234089246525234,
+        "precision": 0,
+        "recall": 0.0,
+        "f1": 0,
         "support": 314
       },
       "positive": {
-        "precision": 0.3308270676691729,
-        "recall": 0.11,
-        "f1": 0.16510318949343342,
+        "precision": 0.36065573770491804,
+        "recall": 0.055,
+        "f1": 0.09544468546637744,
         "support": 400
       }
     },

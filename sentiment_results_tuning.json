@@ -1,0 +1,444 @@
+{
+  "best_params": {
+    "positive_bias": 6.261513372989028,
+    "negative_bias": 4.738174660590651,
+    "neutral_threshold": -0.036786784996228734,
+    "min_pos_threshold": 0.24301185827223373,
+    "min_neg_threshold": 0.21103605622529573,
+    "positive_weight": 1.105159213891495,
+    "negative_weight": 3.496375403724556,
+    "neutral_weight": 0.6099212976807722,
+    "use_contextual_valence_shifters": true,
+    "apply_dynamic_weighting": false,
+    "prioritize_domain_matches": false,
+    "aggressive_classification": false
+  },
+  "best_accuracy": 0.39376053962900504,
+  "history": [
+    {
+      "iteration": 0,
+      "params": {
+        "positive_bias": 5.381211883005892,
+        "negative_bias": 5.779441698120292,
+        "neutral_threshold": 0.08095147160886429,
+        "min_pos_threshold": 0.29389849888344505,
+        "min_neg_threshold": 0.23652248267290651,
+        "positive_weight": 1.3882503975542648,
+        "negative_weight": 3.4452789476357735,
+        "neutral_weight": 0.7822358706899488,
+        "use_contextual_valence_shifters": true,
+        "apply_dynamic_weighting": false,
+        "prioritize_domain_matches": true,
+        "aggressive_classification": false
+      },
+      "accuracy": 0.26897133220910624,
+      "class_metrics": {
+        "neutral": {
+          "precision": 0,
+          "recall": 0.0,
+          "f1": 0,
+          "support": 472
+        },
+        "negative": {
+          "precision": 0.2611585944919278,
+          "recall": 0.8757961783439491,
+          "f1": 0.40234089246525234,
+          "support": 314
+        },
+        "positive": {
+          "precision": 0.3308270676691729,
+          "recall": 0.11,
+          "f1": 0.16510318949343342,
+          "support": 400
+        }
+      },
+      "distribution": {
+        "positive": 364,
+        "negative": 2636
+      }
+    },
+    {
+      "iteration": 1,
+      "params": {
+        "positive_bias": 6.36749707311774,
+        "negative_bias": 5.038196198660222,
+        "neutral_threshold": -0.017163931208042,
+        "min_pos_threshold": 0.24590966487218727,
+        "min_neg_threshold": 0.1973433529775937,
+        "positive_weight": 1.123625195410278,
+        "negative_weight": 3.3614933088678507,
+        "neutral_weight": 0.6131179458736085,
+        "use_contextual_valence_shifters": true,
+        "apply_dynamic_weighting": false,
+        "prioritize_domain_matches": true,
+        "aggressive_classification": true
+      },
+      "accuracy": 0.3372681281618887,
+      "class_metrics": {
+        "neutral": {
+          "precision": 0,
+          "recall": 0.0,
+          "f1": 0,
+          "support": 472
+        },
+        "negative": {
+          "precision": 0,
+          "recall": 0.0,
+          "f1": 0,
+          "support": 314
+        },
+        "positive": {
+          "precision": 0.3372681281618887,
+          "recall": 1.0,
+          "f1": 0.5044136191677175,
+          "support": 400
+        }
+      },
+      "distribution": {
+        "positive": 2896,
+        "negative": 104
+      }
+    },
+    {
+      "iteration": 2,
+      "params": {
+        "positive_bias": 5.745533256065382,
+        "negative_bias": 5.641960535287227,
+        "neutral_threshold": -0.047129792900123424,
+        "min_pos_threshold": 0.23273549323044726,
+        "min_neg_threshold": 0.18171208291649724,
+        "positive_weight": 1.0489116110165775,
+        "negative_weight": 3.413845973045761,
+        "neutral_weight": 0.643462941293937,
+        "use_contextual_valence_shifters": false,
+        "apply_dynamic_weighting": false,
+        "prioritize_domain_matches": false,
+        "aggressive_classification": true
+      },
+      "accuracy": 0.3372681281618887,
+      "class_metrics": {
+        "neutral": {
+          "precision": 0,
+          "recall": 0.0,
+          "f1": 0,
+          "support": 472
+        },
+        "negative": {
+          "precision": 0,
+          "recall": 0.0,
+          "f1": 0,
+          "support": 314
+        },
+        "positive": {
+          "precision": 0.3372681281618887,
+          "recall": 1.0,
+          "f1": 0.5044136191677175,
+          "support": 400
+        }
+      },
+      "distribution": {
+        "positive": 2901,
+        "negative": 99
+      }
+    },
+    {
+      "iteration": 3,
+      "params": {
+        "positive_bias": 6.254878382394173,
+        "negative_bias": 4.734997391626038,
+        "neutral_threshold": -0.036642660313895806,
+        "min_pos_threshold": 0.24289648443790418,
+        "min_neg_threshold": 0.21106007099019436,
+        "positive_weight": 1.1064223251872278,
+        "negative_weight": 3.496285575395057,
+        "neutral_weight": 0.609942711867865,
+        "use_contextual_valence_shifters": false,
+        "apply_dynamic_weighting": false,
+        "prioritize_domain_matches": true,
+        "aggressive_classification": false
+      },
+      "accuracy": 0.39291736930860033,
+      "class_metrics": {
+        "neutral": {
+          "precision": 0.4007597340930674,
+          "recall": 0.8940677966101694,
+          "f1": 0.5534426229508197,
+          "support": 472
+        },
+        "negative": {
+          "precision": 0,
+          "recall": 0.0,
+          "f1": 0,
+          "support": 314
+        },
+        "positive": {
+          "precision": 0.3308270676691729,
+          "recall": 0.11,
+          "f1": 0.16510318949343342,
+          "support": 400
+        }
+      },
+      "distribution": {
+        "positive": 366,
+        "neutral": 2529,
+        "negative": 105
+      }
+    },
+    {
+      "iteration": 4,
+      "params": {
+        "positive_bias": 6.465039239606546,
+        "negative_bias": 4.7571153304088964,
+        "neutral_threshold": -0.030017190060550664,
+        "min_pos_threshold": 0.24527852996481173,
+        "min_neg_threshold": 0.20560357382030073,
+        "positive_weight": 1.148643521738958,
+        "negative_weight": 3.4462678299720144,
+        "neutral_weight": 0.6138541784143435,
+        "use_contextual_valence_shifters": false,
+        "apply_dynamic_weighting": false,
+        "prioritize_domain_matches": true,
+        "aggressive_classification": true
+      },
+      "accuracy": 0.3372681281618887,
+      "class_metrics": {
+        "neutral": {
+          "precision": 0,
+          "recall": 0.0,
+          "f1": 0,
+          "support": 472
+        },
+        "negative": {
+          "precision": 0,
+          "recall": 0.0,
+          "f1": 0,
+          "support": 314
+        },
+        "positive": {
+          "precision": 0.3372681281618887,
+          "recall": 1.0,
+          "f1": 0.5044136191677175,
+          "support": 400
+        }
+      },
+      "distribution": {
+        "positive": 2895,
+        "negative": 105
+      }
+    },
+    {
+      "iteration": 5,
+      "params": {
+        "positive_bias": 6.135902943033279,
+        "negative_bias": 4.7620943759372345,
+        "neutral_threshold": -0.03389440203775477,
+        "min_pos_threshold": 0.24404475869585232,
+        "min_neg_threshold": 0.21124838163103113,
+        "positive_weight": 1.104588713735812,
+        "negative_weight": 3.5006614993838863,
+        "neutral_weight": 0.6100596461210415,
+        "use_contextual_valence_shifters": true,
+        "apply_dynamic_weighting": false,
+        "prioritize_domain_matches": true,
+        "aggressive_classification": false
+      },
+      "accuracy": 0.39291736930860033,
+      "class_metrics": {
+        "neutral": {
+          "precision": 0.4007597340930674,
+          "recall": 0.8940677966101694,
+          "f1": 0.5534426229508197,
+          "support": 472
+        },
+        "negative": {
+          "precision": 0,
+          "recall": 0.0,
+          "f1": 0,
+          "support": 314
+        },
+        "positive": {
+          "precision": 0.3308270676691729,
+          "recall": 0.11,
+          "f1": 0.16510318949343342,
+          "support": 400
+        }
+      },
+      "distribution": {
+        "positive": 367,
+        "neutral": 2529,
+        "negative": 104
+      }
+    },
+    {
+      "iteration": 6,
+      "params": {
+        "positive_bias": 6.292206352932827,
+        "negative_bias": 4.7527438497011945,
+        "neutral_threshold": -0.037096155093001695,
+        "min_pos_threshold": 0.24350312613879985,
+        "min_neg_threshold": 0.2113277590836211,
+        "positive_weight": 1.116133217799707,
+        "negative_weight": 3.492527821322058,
+        "neutral_weight": 0.6107447385313801,
+        "use_contextual_valence_shifters": false,
+        "apply_dynamic_weighting": true,
+        "prioritize_domain_matches": false,
+        "aggressive_classification": true
+      },
+      "accuracy": 0.3372681281618887,
+      "class_metrics": {
+        "neutral": {
+          "precision": 0,
+          "recall": 0.0,
+          "f1": 0,
+          "support": 472
+        },
+        "negative": {
+          "precision": 0,
+          "recall": 0.0,
+          "f1": 0,
+          "support": 314
+        },
+        "positive": {
+          "precision": 0.3372681281618887,
+          "recall": 1.0,
+          "f1": 0.5044136191677175,
+          "support": 400
+        }
+      },
+      "distribution": {
+        "positive": 2901,
+        "negative": 99
+      }
+    },
+    {
+      "iteration": 7,
+      "params": {
+        "positive_bias": 6.230912288765033,
+        "negative_bias": 4.748982985874634,
+        "neutral_threshold": -0.03635977617363965,
+        "min_pos_threshold": 0.24261658453397528,
+        "min_neg_threshold": 0.21083019228585118,
+        "positive_weight": 1.1116407497906866,
+        "negative_weight": 3.497201873684537,
+        "neutral_weight": 0.6100052605999333,
+        "use_contextual_valence_shifters": false,
+        "apply_dynamic_weighting": true,
+        "prioritize_domain_matches": true,
+        "aggressive_classification": false
+      },
+      "accuracy": 0.39291736930860033,
+      "class_metrics": {
+        "neutral": {
+          "precision": 0.4007597340930674,
+          "recall": 0.8940677966101694,
+          "f1": 0.5534426229508197,
+          "support": 472
+        },
+        "negative": {
+          "precision": 0,
+          "recall": 0.0,
+          "f1": 0,
+          "support": 314
+        },
+        "positive": {
+          "precision": 0.3308270676691729,
+          "recall": 0.11,
+          "f1": 0.16510318949343342,
+          "support": 400
+        }
+      },
+      "distribution": {
+        "positive": 366,
+        "neutral": 2529,
+        "negative": 105
+      }
+    },
+    {
+      "iteration": 8,
+      "params": {
+        "positive_bias": 6.254643580837665,
+        "negative_bias": 4.735433638182191,
+        "neutral_threshold": -0.03683217660009082,
+        "min_pos_threshold": 0.24264758586903418,
+        "min_neg_threshold": 0.21128402304132393,
+        "positive_weight": 1.107412788109164,
+        "negative_weight": 3.494533711421137,
+        "neutral_weight": 0.6101793160337623,
+        "use_contextual_valence_shifters": false,
+        "apply_dynamic_weighting": false,
+        "prioritize_domain_matches": true,
+        "aggressive_classification": false
+      },
+      "accuracy": 0.39291736930860033,
+      "class_metrics": {
+        "neutral": {
+          "precision": 0.4007597340930674,
+          "recall": 0.8940677966101694,
+          "f1": 0.5534426229508197,
+          "support": 472
+        },
+        "negative": {
+          "precision": 0,
+          "recall": 0.0,
+          "f1": 0,
+          "support": 314
+        },
+        "positive": {
+          "precision": 0.3308270676691729,
+          "recall": 0.11,
+          "f1": 0.16510318949343342,
+          "support": 400
+        }
+      },
+      "distribution": {
+        "positive": 366,
+        "neutral": 2529,
+        "negative": 105
+      }
+    },
+    {
+      "iteration": 9,
+      "params": {
+        "positive_bias": 6.261513372989028,
+        "negative_bias": 4.738174660590651,
+        "neutral_threshold": -0.036786784996228734,
+        "min_pos_threshold": 0.24301185827223373,
+        "min_neg_threshold": 0.21103605622529573,
+        "positive_weight": 1.105159213891495,
+        "negative_weight": 3.496375403724556,
+        "neutral_weight": 0.6099212976807722,
+        "use_contextual_valence_shifters": true,
+        "apply_dynamic_weighting": false,
+        "prioritize_domain_matches": false,
+        "aggressive_classification": false
+      },
+      "accuracy": 0.39376053962900504,
+      "class_metrics": {
+        "neutral": {
+          "precision": 0.39555555555555555,
+          "recall": 0.9427966101694916,
+          "f1": 0.5572949279899813,
+          "support": 472
+        },
+        "negative": {
+          "precision": 0,
+          "recall": 0.0,
+          "f1": 0,
+          "support": 314
+        },
+        "positive": {
+          "precision": 0.36065573770491804,
+          "recall": 0.055,
+          "f1": 0.09544468546637744,
+          "support": 400
+        }
+      },
+      "distribution": {
+        "positive": 237,
+        "neutral": 2664,
+        "negative": 99
+      }
+    }
+  ]
+}

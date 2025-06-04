@@ -4,22 +4,23 @@ SENTIMENT ANALYSIS REPORT
 Total records: 3000
 
 Sentiment distribution:
-  - positive: 364 (12.13%)
-  - negative: 2636 (87.87%)
+  - positive: 367 (12.23%)
+  - neutral: 2529 (84.30%)
+  - negative: 104 (3.47%)
 
 Records with ground truth: 1186
-Overall accuracy: 0.2690 (26.90%)
+Overall accuracy: 0.3929 (39.29%)
 
 Class metrics:
   neutral:
+    Precision: 0.4008
+    Recall: 0.8941
+    F1-score: 0.5534
+    Support: 472
+  negative:
     Precision: 0.0000
     Recall: 0.0000
     F1-score: 0.0000
-    Support: 472
-  negative:
-    Precision: 0.2612
-    Recall: 0.8758
-    F1-score: 0.4023
     Support: 314
   positive:
     Precision: 0.3308
@@ -35,8 +36,8 @@ Ground truth distribution:
 Confusion Matrix:
 True \ Pred | negative | neutral | positive |
 ---------------------------------------------
-negative | 275 | 0 | 39 |
-neutral | 422 | 0 | 50 |
-positive | 356 | 0 | 44 |
+negative | 0 | 275 | 39 |
+neutral | 0 | 422 | 50 |
+positive | 0 | 356 | 44 |
 
 ================================================================================
