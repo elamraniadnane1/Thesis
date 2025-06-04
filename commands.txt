@@ -2,6 +2,14 @@ python -m streamlit run Main.py
 
 python script12.py --tune --iterations 10 --tune_limit 3000
 
+python script13.py --collection "sentiment_analysis_dataset" --host "localhost" --port 6333 --use-ml --ml-model-type bert --train --tune --num-trials 20 --device cuda --output "arabic_sentiment_best" --batch-size 32 --memory-limit 4096 --no-cache
+
+python script13.py --collection "sentiment_analysis_dataset" --host "localhost" --port 6333 --use-ml --ml-model-type hybrid --train --tune --num-trials 15 --device cpu --output "arabic_sentiment_hybrid" --batch-size 64 --no-cache
+
+python script13.py --collection "sentiment_analysis_dataset" --host "localhost" --port 6333 --use-ml --ml-model-type hybrid --train --output "arabic_sentiment_quick" --batch-size 32 --no-cache
+
+python script13.py --collection "sentiment_analysis_dataset" --host "localhost" --port 6333 --limit 5000 --use-ml --ml-model-type bert --train --tune --num-trials 20 --output "arabic_sentiment_limited" --no-cache
+
 cd C:\Users\Administrator\Desktop
 python -m venv venv
 .\venv\Scripts\activate

@@ -1,11 +1,72 @@
 {
-  "total_records": 0,
-  "sentiment_counts": {},
-  "sentiment_percentages": {},
+  "total_records": 19112,
+  "sentiment_counts": {
+    "positive": 1459,
+    "neutral": 16970,
+    "negative": 683
+  },
+  "sentiment_percentages": {
+    "positive": 7.633947258267057,
+    "neutral": 88.79238174968606,
+    "negative": 3.573670992046882
+  },
   "evaluation": {
-    "has_ground_truth": false,
-    "accuracy": null,
-    "confusion_matrix": null,
-    "class_metrics": null
+    "has_ground_truth": true,
+    "accuracy": 0.3957333333333333,
+    "confusion_matrix": {
+      "neutral": {
+        "neutral": 2824,
+        "positive": 119,
+        "negative": 0
+      },
+      "positive": {
+        "neutral": 2336,
+        "positive": 144,
+        "negative": 0
+      },
+      "negative": {
+        "neutral": 1944,
+        "positive": 133,
+        "negative": 0
+      }
+    },
+    "class_metrics": {
+      "neutral": {
+        "precision": 0.3975225225225225,
+        "recall": 0.9595650696568128,
+        "f1": 0.5621578580670847,
+        "support": 2943
+      },
+      "positive": {
+        "precision": 0.36363636363636365,
+        "recall": 0.05806451612903226,
+        "f1": 0.10013908205841447,
+        "support": 2480
+      },
+      "negative": {
+        "precision": 0,
+        "recall": 0.0,
+        "f1": 0,
+        "support": 2077
+      }
+    },
+    "ground_truth_count": 7500,
+    "labels": [
+      "negative",
+      "neutral",
+      "positive"
+    ],
+    "ground_truth_distribution": {
+      "counts": {
+        "negative": 2077,
+        "neutral": 2943,
+        "positive": 2480
+      },
+      "percentages": {
+        "negative": 27.69333333333333,
+        "neutral": 39.24,
+        "positive": 33.06666666666666
+      }
+    }
   }
 }
