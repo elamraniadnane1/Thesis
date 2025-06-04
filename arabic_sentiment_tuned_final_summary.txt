@@ -1,0 +1,31 @@
+================================================================================
+FINAL MODEL SUMMARY
+================================================================================
+Model type: hybrid
+
+Best parameters:
+  learning_rate: 7.576556982209176e-05
+  batch_size: 32
+  hidden_dims: [128]
+  dropout_rate: 0.46420813607351463
+  weight_decay: 0.0011672238437199925
+
+Training metrics:
+  Epochs completed: 4
+  Best epoch: 1
+  Best validation F1: 0.2317
+  Best validation accuracy: 0.3960
+  Training time: 12.27 seconds
+
+Test metrics:
+  Test accuracy: 0.0000
+  Test F1 (macro): 0.0000
+  Test F1 (weighted): 0.0000
+
+Files:
+  Model: arabic_sentiment_tuned_final.pt
+  Training history: arabic_sentiment_tuned_final_history.json
+  Evaluation report: 
+  Results summary: arabic_sentiment_tuned_final_results.json
+
+================================================================================

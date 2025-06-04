@@ -1,0 +1,59 @@
+================================================================================
+MODEL EVALUATION REPORT
+================================================================================
+Model type: hybrid
+Test samples: 1500
+
+Overall metrics:
+  Accuracy: 0.3920
+  F1 (macro): 0.2449
+  F1 (weighted): 0.2771
+
+Classification Report:
+              precision    recall  f1-score   support
+
+    positive       0.34      0.12      0.18       496
+    negative       0.00      0.00      0.00       415
+     neutral       0.40      0.89      0.55       589
+
+    accuracy                           0.39      1500
+   macro avg       0.25      0.34      0.24      1500
+weighted avg       0.27      0.39      0.28      1500
+
+Confusion Matrix:
+[[ 62   0 434]
+ [ 58   0 357]
+ [ 63   0 526]]
+
+Sample Predictions (first 10):
+  Text: تفاصيل إضافية حول شوارع و تطوير تنمية من خلال الشر...
+  True: neutral, Predicted: positive
+
+  Text: 4a058bb7-490b-4171-8d7c-528b470b5fb4
+  True: negative, Predicted: neutral
+
+  Text: 1bb40fb5-c947-4782-a66d-81fee6c1a575
+  True: positive, Predicted: neutral
+
+  Text: تفاصيل إضافية حول مشاركة و تنفيذ ابتكار على مراحل ...
+  True: negative, Predicted: positive
+
+  Text: 75faddc8-dd63-4c43-a7c4-9a929c80012a
+  True: neutral, Predicted: neutral
+
+  Text: تفاصيل إضافية حول شباب و تطوير أمان من خلال التكنو...
+  True: negative, Predicted: positive
+
+  Text: تفاصيل إضافية حول تضامن و تطبيق ذوي الاحتياجات الخ...
+  True: positive, Predicted: neutral
+
+  Text: 75d6a600-2d00-4796-b8fc-917e97b1130b
+  True: neutral, Predicted: neutral
+
+  Text: 1df1bab7-17c4-48ac-902f-3c4f3ff3a5dd
+  True: neutral, Predicted: neutral
+
+  Text: 356dfcc5-b9d9-42b6-8145-f2aac17a40f0
+  True: positive, Predicted: neutral
+
+================================================================================

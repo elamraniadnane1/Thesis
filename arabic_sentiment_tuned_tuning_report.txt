@@ -1,0 +1,39 @@
+================================================================================
+HYPERPARAMETER TUNING REPORT
+================================================================================
+Model type: hybrid
+Number of trials: 10
+Best validation F1: 0.2652
+Best validation accuracy: 0.3987
+Best trial: 5
+
+Best parameters:
+  learning_rate: 7.576556982209176e-05
+  batch_size: 32
+  hidden_dims: [128]
+  dropout_rate: 0.46420813607351463
+  weight_decay: 0.0011672238437199925
+
+All trials:
+  Trial 1: F1=0.1877, Accuracy=0.3920
+    Parameters: {"learning_rate": 6.624213460912615e-05, "batch_size": 64, "hidden_dims": [64], "dropout_rate": 0.3592336490253616, "weight_decay": 0.027586817877367786}
+  Trial 2: F1=0.2536, Accuracy=0.4013
+    Parameters: {"learning_rate": 0.0003202395217101217, "batch_size": 16, "hidden_dims": [128, 64, 32], "dropout_rate": 0.20615194952925445, "weight_decay": 0.03321121956309529}
+  Trial 3: F1=0.2020, Accuracy=0.3920
+    Parameters: {"learning_rate": 1.4607159258931896e-05, "batch_size": 32, "hidden_dims": [32], "dropout_rate": 0.4518957401227479, "weight_decay": 0.0020871491795985972}
+  Trial 4: F1=0.1877, Accuracy=0.3920
+    Parameters: {"learning_rate": 7.401765919081499e-05, "batch_size": 32, "hidden_dims": [64, 32], "dropout_rate": 0.18156291235868163, "weight_decay": 0.009606946611934447}
+  Trial 5: F1=0.2652, Accuracy=0.3987
+    Parameters: {"learning_rate": 7.576556982209176e-05, "batch_size": 32, "hidden_dims": [128], "dropout_rate": 0.46420813607351463, "weight_decay": 0.0011672238437199925}
+  Trial 6: F1=0.2536, Accuracy=0.4013
+    Parameters: {"learning_rate": 0.0004699667162399131, "batch_size": 32, "hidden_dims": [64, 32], "dropout_rate": 0.27588111392096787, "weight_decay": 0.037995067072107744}
+  Trial 7: F1=0.2220, Accuracy=0.3240
+    Parameters: {"learning_rate": 4.1508073707642e-05, "batch_size": 16, "hidden_dims": [32], "dropout_rate": 0.1481221896958369, "weight_decay": 0.004354958210084021}
+  Trial 8: F1=0.2040, Accuracy=0.3213
+    Parameters: {"learning_rate": 2.8774865189329982e-05, "batch_size": 16, "hidden_dims": [64, 32], "dropout_rate": 0.391497134940917, "weight_decay": 0.015624654554709145}
+  Trial 9: F1=0.2536, Accuracy=0.4013
+    Parameters: {"learning_rate": 0.0002750447808931226, "batch_size": 16, "hidden_dims": [64], "dropout_rate": 0.14080598078139006, "weight_decay": 0.02532248703972112}
+  Trial 10: F1=0.2536, Accuracy=0.4013
+    Parameters: {"learning_rate": 0.00031953083029622836, "batch_size": 16, "hidden_dims": [128, 64], "dropout_rate": 0.21513074354853653, "weight_decay": 0.008738749581408703}
+
+================================================================================

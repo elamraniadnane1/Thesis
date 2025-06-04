@@ -1,0 +1,29 @@
+{
+  "success": true,
+  "training_results": {
+    "success": true,
+    "epochs_completed": 4,
+    "best_epoch": 1,
+    "best_val_accuracy": 0.396,
+    "best_val_f1": 0.23172107580885834,
+    "training_time": 12.265143156051636,
+    "model_path": "arabic_sentiment_tuned_final.pt",
+    "history_path": "arabic_sentiment_tuned_final_history.json"
+  },
+  "evaluation_results": {
+    "error": "'charmap' codec can't encode characters in position 8-13: character maps to <undefined>",
+    "success": false
+  },
+  "best_parameters": {
+    "learning_rate": 7.576556982209176e-05,
+    "batch_size": 32,
+    "hidden_dims": [
+      128
+    ],
+    "dropout_rate": 0.46420813607351463,
+    "weight_decay": 0.0011672238437199925
+  },
+  "model_path": "arabic_sentiment_tuned_final.pt",
+  "final_test_accuracy": null,
+  "final_test_f1": null
+}

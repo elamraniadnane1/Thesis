@@ -10,6 +10,7 @@ python script13.py --collection "sentiment_analysis_dataset" --host "localhost" 
 
 python script13.py --collection "sentiment_analysis_dataset" --host "localhost" --port 6333 --limit 5000 --use-ml --ml-model-type bert --train --tune --num-trials 20 --output "arabic_sentiment_limited" --no-cache
 
+python script13.py --collection "sentiment_analysis_dataset" --host "localhost" --port 6333 --use-ml --ml-model-type hybrid --train --tune --num-trials 150 --output "arabic_sentiment_hybrid_optimized" --batch-size 32 --no-cache
 cd C:\Users\Administrator\Desktop
 python -m venv venv
 .\venv\Scripts\activate

@@ -3121,7 +3121,7 @@ class OptimizedArabicSentimentAnalyzer:
             
             # Generate evaluation report
             report_file = f"{output_file}_report.txt"
-            with open(report_file, 'w') as f:
+            with open(report_file, 'w', encoding='utf-8') as f:
                 f.write("=" * 80 + "\n")
                 f.write("MODEL EVALUATION REPORT\n")
                 f.write("=" * 80 + "\n")
@@ -3379,7 +3379,7 @@ class OptimizedArabicSentimentAnalyzer:
         
         # Generate tuning report
         report_file = f"{output_file}_report.txt"
-        with open(report_file, 'w') as f:
+        with open(report_file, 'w', encoding='utf-8') as f:
             f.write("=" * 80 + "\n")
             f.write("HYPERPARAMETER TUNING REPORT\n")
             f.write("=" * 80 + "\n")
