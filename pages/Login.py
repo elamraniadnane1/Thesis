@@ -36,8 +36,8 @@ from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 SECRET_KEY = os.environ.get("SECRET_KEY", "civic_catalyst_secret_key_2024")
 JWT_ALGORITHM = "HS256"
 COOKIE_PASSWORD = os.environ.get("COOKIE_PASSWORD", "STRONG_PASSWORD_2024")
-MONGO_URI = os.environ.get("MONGO_URI", "mongodb://localhost:27017")
-REDIS_URL = os.environ.get("REDIS_URL", "redis://localhost:6379/0")
+MONGO_URI = os.environ.get("MONGO_URI", "mongodb://154.44.186.241:27017")
+REDIS_URL = os.environ.get("REDIS_URL", "redis://155.44.186.241:6379/0")
 
 # Security settings
 MAX_LOGIN_ATTEMPTS = 5
