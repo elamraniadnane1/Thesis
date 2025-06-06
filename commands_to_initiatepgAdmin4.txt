@@ -1,0 +1,1272 @@
+To properly **connect PostgreSQL and pgAdmin4 containers**, **remove the old containers**, and **recreate connected ones**, follow these steps:
+
+---
+
+## ✅ 1. **Remove Existing Containers**
+
+```bash
+docker rm 66b08e83e700 5cc66d365e35
+```
+
+> Or by name:
+
+```bash
+docker rm civic-postgres thirsty_zhukovsky
+```
+
+---
+
+## ✅ 2. **Create a Docker Network**
+
+This allows both containers to communicate via a shared virtual network:
+
+```bash
+docker network create civic-net
+```
+
+---
+
+## ✅ 3. **Start PostgreSQL Container**
+
+Use a name and attach it to the network:
+
+```bash
+docker run -d \
+  --name civic-postgres \
+  --network civic-net \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=Abdi2022 \
+  -e POSTGRES_DB=CivicCatalyst \
+  postgres
+```
+
+---
+
+## ✅ 4. **Start pgAdmin4 Container**
+
+Attach it to the same network and expose port 80:
+
+```bash
+docker run -d \
+  --name civic-pgadmin \
+  --network civic-net \
+  -e PGADMIN_DEFAULT_EMAIL=elamraniadnane1@gmail.com \
+  -e PGADMIN_DEFAULT_PASSWORD=Abdi2022 \
+  -p 80:80 \
+  dpage/pgadmin4
+```
+
+---
+
+## ✅ 5. **Access pgAdmin4**
+
+Go to: [http://localhost](http://localhost)
+Login with:
+
+* **Email:** `elamraniadnane1@gmail.com`
+* **Password:** `Abdi2022`
+
+---
+
+## ✅ 6. **Register the PostgreSQL Server in pgAdmin4**
+
+* Click “Add New Server” in pgAdmin.
+* **Name:** CivicCatalyst
+* Go to “Connection” tab:
+
+  * **Host name/address:** `civic-postgres` (this is the container name on the same network)
+  * **Port:** `5432`
+  * **Username:** `postgres`
+  * **Password:** `Abdi2022`
+
+---
+
+Let me know if you want to make this a `docker-compose.yml` instead.
+
+
+docker run -d --name civic-postgres --network civic-net -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=Abdi2022 -e POSTGRES_DB=CivicCatalyst postgres
+sudo docker run -d --name civic-pgadmin --network civic-net -e PGADMIN_DEFAULT_EMAIL=elamraniadnane1@gmail.com -e PGADMIN_DEFAULT_PASSWORD=Abdi2022 -p 80:80 dpage/pgadmin4
+
+
+
+administrator@DESKTOP-G35L8O1:~$ sudo docker network inspect civic-net
+[
+    {
+        "Name": "civic-net",
+        "Id": "bcfeb1063ca71287e36f3bb486b90b6e834e49829d237c5996f428ea3a75941c",
+        "Created": "2025-06-05T18:23:59.350274918-07:00",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv4": true,
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": {},
+            "Config": [
+                {
+                    "Subnet": "172.18.0.0/16",
+                    "Gateway": "172.18.0.1"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Containers": {
+            "502257bc3dd5956fee35880c91b77df1bd9c12f09d255b214b9cc28d204369fd": {
+                "Name": "civic-postgres",
+                "EndpointID": "d08ce0143459d7d57cc6b9ed1457bb8ea228c4616ce600056e3a285940987cd1",
+                "MacAddress": "fa:d6:19:73:72:6a",
+                "IPv4Address": "172.18.0.2/16",
+                "IPv6Address": ""
+            },
+            "65a25ded76659a341c88656aad4314d9ecc155a0037db06847484699594e9682": {
+                "Name": "civic-pgadmin",
+                "EndpointID": "97781256493ceae0f5f7cf721ff64510a03b211d1fed4115590610782314128b",
+                "MacAddress": "be:d3:d2:7a:f8:d9",
+                "IPv4Address": "172.18.0.3/16",
+                "IPv6Address": ""
+            }
+        },
+        "Options": {},
+        "Labels": {}
+    }
+]
+
+
+# Dockerfile
+FROM python:3.10-slim
+
+WORKDIR /app
+
+COPY Script1.py .
+
+RUN pip install psycopg2-binary qdrant-client tqdm
+
+CMD ["python", "Script1.py"]
+cd /mnt/c/Users/Administrator/Desktop
+docker build -f dockerfile.dockerfile -t civic-script .
+docker run --rm --name civic-script --network civic-net civic-script
+
+
+
+sudo docker rm -f civic-postgres civic-pgadmin
+
+sudo docker network rm civic-net || true && sudo docker network create civic-net
+
+sudo docker run -d --name civic-postgres --network civic-net -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=Abdi2022 -e POSTGRES_DB=CivicCatalyst postgis/postgis
+
+sudo docker run -d --name civic-pgadmin --network civic-net -e PGADMIN_DEFAULT_EMAIL=elamraniadnane1@gmail.com -e PGADMIN_DEFAULT_PASSWORD=Abdi2022 -p 80:80 dpage/pgadmin4
+
+cd /mnt/c/Users/Administrator/Desktop
+
+sudo docker build -f dockerfile.dockerfile -t civic-script .
+
+sudo docker run --rm --name civic-script --network civic-net civic-script
+
+
+
+
+sudo docker rm -f civic-postgres civic-pgadmin
+
+sudo docker network rm civic-net || true
+
+sudo docker network create civic-net
+
+sudo docker run -d --name civic-postgres --network civic-net \
+  -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=Abdi2022 -e POSTGRES_DB=CivicCatalyst \
+  kartoza/postgis   # includes postgis, uuid-ossp, pg_trgm, btree_gin, unaccent
+
+sudo docker run -d --name civic-pgadmin --network civic-net \
+  -e PGADMIN_DEFAULT_EMAIL=elamraniadnane1@gmail.com -e PGADMIN_DEFAULT_PASSWORD=Abdi2022 \
+  -p 80:80 dpage/pgadmin4
+
+cd /mnt/c/Users/Administrator/Desktop
+
+sudo docker build -f dockerfile.dockerfile -t civic-script .
+
+sudo docker run --rm --name civic-script --network civic-net civic-script
+
+
+sudo docker run -d --name civic-postgres --network civic-net -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=Abdi2022 -e POSTGRES_DB=CivicCatalyst kartoza/postgis
+
+sudo docker run -d --name civic-pgadmin --network civic-net -e PGADMIN_DEFAULT_EMAIL=elamraniadnane1@gmail.com -e PGADMIN_DEFAULT_PASSWORD=Abdi2022 -p 80:80 dpage/pgadmin4
+
+
+sudo docker build -f dockerfile.dockerfile -t civic-script .
+
+sudo docker run --rm --name civic-script --network civic-net civic-script
+
+Cleaning the DB:
+
+DO
+$$
+DECLARE
+    rec  RECORD;
+BEGIN
+    -----------------------------------------------------------------
+    -- 1. disable triggers so FK constraints don’t complain
+    -----------------------------------------------------------------
+    FOR rec IN
+        SELECT quote_ident(schemaname)  AS schem,
+               quote_ident(tablename)   AS tab
+        FROM   pg_tables
+        WHERE  schemaname IN ('core', 'geo', 'analytics',
+                              'engagement', 'governance', 'system')
+    LOOP
+        EXECUTE format('ALTER TABLE %s.%s DISABLE TRIGGER ALL;',
+                       rec.schem, rec.tab);
+    END LOOP;
+
+    -----------------------------------------------------------------
+    -- 2. truncate every table (CASCADE clears child tables too)
+    -----------------------------------------------------------------
+    FOR rec IN
+        SELECT quote_ident(schemaname)  AS schem,
+               quote_ident(tablename)   AS tab
+        FROM   pg_tables
+        WHERE  schemaname IN ('core', 'geo', 'analytics',
+                              'engagement', 'governance', 'system')
+    LOOP
+        EXECUTE format('TRUNCATE TABLE %s.%s CASCADE;', rec.schem, rec.tab);
+    END LOOP;
+
+    -----------------------------------------------------------------
+    -- 3. reset all sequences so PKs start at 1 again
+    -----------------------------------------------------------------
+    FOR rec IN
+        SELECT quote_ident(nsp.nspname)   AS schem,
+               quote_ident(cls.relname)   AS seq
+        FROM   pg_class       cls
+        JOIN   pg_namespace   nsp ON nsp.oid = cls.relnamespace
+        WHERE  cls.relkind = 'S'                -- sequence
+          AND  nsp.nspname IN ('core', 'geo', 'analytics',
+                               'engagement', 'governance', 'system')
+    LOOP
+        EXECUTE format(
+            'SELECT setval(%L, 1, false);',
+            concat(rec.schem, '.', rec.seq)
+        );
+    END LOOP;
+
+    -----------------------------------------------------------------
+    -- 4. re-enable all triggers
+    -----------------------------------------------------------------
+    FOR rec IN
+        SELECT quote_ident(schemaname)  AS schem,
+               quote_ident(tablename)   AS tab
+        FROM   pg_tables
+        WHERE  schemaname IN ('core', 'geo', 'analytics',
+                              'engagement', 'governance', 'system')
+    LOOP
+        EXECUTE format('ALTER TABLE %s.%s ENABLE TRIGGER ALL;',
+                       rec.schem, rec.tab);
+    END LOOP;
+
+END;
+$$;
+
+
+-- core.projects must have a "status" column using the project_status enum
+ALTER TABLE core.projects
+    ADD COLUMN IF NOT EXISTS status project_status
+               DEFAULT 'proposed';
+
+-- core.users needs "role"
+ALTER TABLE core.users
+    ADD COLUMN IF NOT EXISTS role user_role
+               DEFAULT 'citizen';
+
+-- engagement.comments needs "sentiment"
+ALTER TABLE engagement.comments
+    ADD COLUMN IF NOT EXISTS sentiment sentiment_enum,
+    ADD COLUMN IF NOT EXISTS sentiment_score DECIMAL(3,2);
+
+-- engagement.news_articles needs "themes"
+ALTER TABLE engagement.news_articles
+    ADD COLUMN IF NOT EXISTS themes remacto_theme[];
+
+-- analytics.engagement_metrics got a new updated_at column in the last edit
+ALTER TABLE analytics.engagement_metrics
+    ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP
+               DEFAULT CURRENT_TIMESTAMP;
+
+
+
+
+
+
+# PostgreSQL Remote Access Setup Guide
+
+Here's a detailed, step-by-step guide to make your PostgreSQL database accessible from external networks. Execute these commands one by one:
+
+## 1. Stop and remove current PostgreSQL container
+
+```bash
+sudo docker stop civic-postgres
+sudo docker rm civic-postgres
+```
+
+## 2. Create new container with proper port mapping
+
+```bash
+sudo docker run -d --name civic-postgres \
+  -e POSTGRES_DB=CivicCatalyst \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=Abdi2022 \
+  -p 5432:5432 \
+  kartoza/postgis
+```
+
+## 3. Wait for container to start fully
+
+```bash
+sleep 10
+```
+
+## 4. Configure PostgreSQL to accept remote connections
+
+```bash
+sudo docker exec -it civic-postgres bash -c "apt-get update && apt-get install -y nano"
+```
+
+```bash
+sudo docker exec -it civic-postgres bash -c "echo \"listen_addresses = '*'\" >> /etc/postgresql/14/main/postgresql.conf"
+```
+
+```bash
+sudo docker exec -it civic-postgres bash -c "sed -i '/host all all 127.0.0.1\/32/a host all all 0.0.0.0/0 md5' /etc/postgresql/14/main/pg_hba.conf"
+```
+
+## 5. Restart PostgreSQL service within container
+
+```bash
+sudo docker exec -it civic-postgres bash -c "service postgresql restart"
+```
+
+## 6. Verify PostgreSQL is listening on all interfaces
+
+```bash
+sudo docker exec -it civic-postgres bash -c "apt-get install -y net-tools && netstat -tuln | grep 5432"
+```
+
+## 7. Set up Windows port forwarding
+
+```powershell
+netsh interface portproxy delete v4tov4 listenport=5432 listenaddress=0.0.0.0
+```
+
+```powershell
+netsh interface portproxy add v4tov4 listenport=5432 listenaddress=0.0.0.0 connectport=5432 connectaddress=172.21.0.58
+```
+
+## 8. Add Windows Firewall rule (run in PowerShell as Administrator)
+
+```powershell
+New-NetFirewallRule -DisplayName "PostgreSQL" -Direction Inbound -Action Allow -Protocol TCP -LocalPort 5432
+```
+
+## 9. Verify connection from WSL
+
+```bash
+psql -h localhost -p 5432 -U postgres -d CivicCatalyst
+```
+
+## 10. Verify external connection
+
+```bash
+psql -h 154.44.186.241 -p 5432 -U postgres -d CivicCatalyst
+```
+
+## Additional Troubleshooting Commands
+
+If you're still having issues, run these diagnostic commands:
+
+```bash
+sudo docker logs civic-postgres | tail -n 50
+```
+
+```bash
+sudo docker inspect civic-postgres | grep -A 20 "NetworkSettings"
+```
+
+```bash
+sudo docker exec -it civic-postgres bash -c "cat /etc/postgresql/17/main/postgresql.conf | grep listen_addresses"
+```
+
+```bash
+sudo docker exec -it civic-postgres bash -c "cat /etc/postgresql/17/main/pg_hba.conf | grep -A 10 '# IPv4 local'"
+```
+
+These steps should correctly configure your PostgreSQL container to accept remote connections. The key was ensuring proper port mapping and configuring PostgreSQL to listen on all interfaces.
+
+
+
+-- This script was generated by the ERD tool in pgAdmin 4.
+-- Please log an issue at https://github.com/pgadmin-org/pgadmin4/issues/new/choose if you find any bugs, including reproduction steps.
+BEGIN;
+
+
+CREATE TABLE IF NOT EXISTS analytics.engagement_metrics
+(
+    id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    municipality_id uuid,
+    metric_date date NOT NULL,
+    metric_type character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    total_users integer DEFAULT 0,
+    active_users integer DEFAULT 0,
+    new_users integer DEFAULT 0,
+    total_comments integer DEFAULT 0,
+    total_ideas integer DEFAULT 0,
+    total_votes integer DEFAULT 0,
+    avg_session_duration integer,
+    participation_rate numeric(5, 2),
+    sentiment_distribution jsonb,
+    top_themes remacto_theme[],
+    device_breakdown jsonb,
+    demographic_breakdown jsonb,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT engagement_metrics_pkey PRIMARY KEY (id),
+    CONSTRAINT engagement_metrics_municipality_id_metric_date_metric_type_key UNIQUE (municipality_id, metric_date, metric_type)
+);
+
+CREATE TABLE IF NOT EXISTS analytics.offensive_content
+(
+    id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    source_type character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    source_id uuid NOT NULL,
+    content text COLLATE pg_catalog."default" NOT NULL,
+    language language_enum NOT NULL,
+    is_offensive boolean NOT NULL,
+    offensive_categories text[] COLLATE pg_catalog."default",
+    confidence_scores jsonb,
+    severity_level integer,
+    context_considered text COLLATE pg_catalog."default",
+    model_version character varying(50) COLLATE pg_catalog."default",
+    flagged_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    review_status character varying(50) COLLATE pg_catalog."default" DEFAULT 'pending'::character varying,
+    reviewed_by uuid,
+    review_decision character varying(50) COLLATE pg_catalog."default",
+    review_notes text COLLATE pg_catalog."default",
+    reviewed_at timestamp without time zone,
+    CONSTRAINT offensive_content_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS analytics.sentiment_analysis
+(
+    id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    source_type character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    source_id uuid NOT NULL,
+    text_content text COLLATE pg_catalog."default" NOT NULL,
+    language language_enum NOT NULL,
+    sentiment sentiment_enum NOT NULL,
+    sentiment_scores jsonb NOT NULL,
+    emotion_scores jsonb,
+    topics remacto_theme[],
+    keywords text[] COLLATE pg_catalog."default",
+    entities jsonb,
+    model_version character varying(50) COLLATE pg_catalog."default",
+    confidence_score numeric(3, 2),
+    analyzed_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    metadata jsonb DEFAULT '{}'::jsonb,
+    CONSTRAINT sentiment_analysis_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS analytics.topic_analysis
+(
+    id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    analysis_date date NOT NULL,
+    municipality_id uuid,
+    source_type character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    topics jsonb NOT NULL,
+    dominant_theme remacto_theme,
+    theme_distribution jsonb,
+    total_documents integer,
+    model_type character varying(50) COLLATE pg_catalog."default",
+    model_parameters jsonb,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT topic_analysis_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS core.documents
+(
+    id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    title character varying(500) COLLATE pg_catalog."default" NOT NULL,
+    description text COLLATE pg_catalog."default",
+    document_type character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    file_path character varying(1000) COLLATE pg_catalog."default",
+    file_size integer,
+    mime_type character varying(100) COLLATE pg_catalog."default",
+    language language_enum NOT NULL,
+    municipality_id uuid,
+    project_id uuid,
+    consultation_id uuid,
+    uploaded_by uuid,
+    access_level character varying(50) COLLATE pg_catalog."default" DEFAULT 'public'::character varying,
+    download_count integer DEFAULT 0,
+    tags text[] COLLATE pg_catalog."default",
+    full_text text COLLATE pg_catalog."default",
+    summary text COLLATE pg_catalog."default",
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    metadata jsonb DEFAULT '{}'::jsonb,
+    CONSTRAINT documents_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS core.project_updates
+(
+    id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    project_id uuid,
+    update_type character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    title character varying(500) COLLATE pg_catalog."default" NOT NULL,
+    content text COLLATE pg_catalog."default" NOT NULL,
+    language language_enum NOT NULL,
+    created_by uuid,
+    attachments jsonb DEFAULT '[]'::jsonb,
+    is_public boolean DEFAULT true,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    metadata jsonb DEFAULT '{}'::jsonb,
+    CONSTRAINT project_updates_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS core.projects
+(
+    id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    municipality_id uuid NOT NULL,
+    title_ar character varying(500) COLLATE pg_catalog."default" NOT NULL,
+    title_fr character varying(500) COLLATE pg_catalog."default" NOT NULL,
+    title_en character varying(500) COLLATE pg_catalog."default",
+    description_ar text COLLATE pg_catalog."default" NOT NULL,
+    description_fr text COLLATE pg_catalog."default" NOT NULL,
+    description_en text COLLATE pg_catalog."default",
+    project_code character varying(50) COLLATE pg_catalog."default",
+    status project_status NOT NULL DEFAULT 'proposed'::project_status,
+    themes remacto_theme[] NOT NULL,
+    primary_theme remacto_theme NOT NULL,
+    budget_allocated numeric(15, 2),
+    budget_spent numeric(15, 2),
+    currency character varying(3) COLLATE pg_catalog."default" DEFAULT 'MAD'::character varying,
+    start_date date,
+    end_date date,
+    target_beneficiaries integer,
+    actual_beneficiaries integer,
+    location_description text COLLATE pg_catalog."default",
+    location_geometry geometry(Geometry,4326),
+    created_by uuid,
+    approved_by uuid,
+    approval_date timestamp without time zone,
+    completion_percentage integer DEFAULT 0,
+    is_participatory boolean DEFAULT false,
+    co_creation_phase cocreation_phase,
+    priority_score integer DEFAULT 50,
+    visibility character varying(20) COLLATE pg_catalog."default" DEFAULT 'public'::character varying,
+    tags text[] COLLATE pg_catalog."default",
+    attachments jsonb DEFAULT '[]'::jsonb,
+    milestones jsonb DEFAULT '[]'::jsonb,
+    kpis jsonb DEFAULT '[]'::jsonb,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    metadata jsonb DEFAULT '{}'::jsonb,
+    CONSTRAINT projects_pkey PRIMARY KEY (id),
+    CONSTRAINT projects_project_code_key UNIQUE (project_code)
+);
+
+CREATE TABLE IF NOT EXISTS core.users
+(
+    id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    username character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    email character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    phone character varying(50) COLLATE pg_catalog."default",
+    password_hash character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    role user_role NOT NULL DEFAULT 'citizen'::user_role,
+    municipality_id uuid,
+    arrondissement_id uuid,
+    first_name character varying(100) COLLATE pg_catalog."default",
+    last_name character varying(100) COLLATE pg_catalog."default",
+    display_name character varying(200) COLLATE pg_catalog."default",
+    preferred_language language_enum DEFAULT 'fr'::language_enum,
+    date_of_birth date,
+    gender character varying(20) COLLATE pg_catalog."default",
+    national_id_hash character varying(255) COLLATE pg_catalog."default",
+    is_active boolean DEFAULT true,
+    is_verified boolean DEFAULT false,
+    email_verified boolean DEFAULT false,
+    phone_verified boolean DEFAULT false,
+    two_factor_enabled boolean DEFAULT false,
+    last_login timestamp without time zone,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    metadata jsonb DEFAULT '{}'::jsonb,
+    profile_data jsonb DEFAULT '{}'::jsonb,
+    CONSTRAINT users_pkey PRIMARY KEY (id),
+    CONSTRAINT users_email_key UNIQUE (email),
+    CONSTRAINT users_username_key UNIQUE (username)
+);
+
+CREATE TABLE IF NOT EXISTS engagement.comments
+(
+    id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    user_id uuid,
+    project_id uuid,
+    consultation_id uuid,
+    parent_comment_id uuid,
+    content text COLLATE pg_catalog."default" NOT NULL,
+    language language_enum NOT NULL,
+    sentiment sentiment_enum,
+    sentiment_score numeric(3, 2),
+    sentiment_confidence numeric(3, 2),
+    is_offensive boolean DEFAULT false,
+    offensive_score numeric(3, 2),
+    offensive_categories text[] COLLATE pg_catalog."default",
+    moderation_status character varying(50) COLLATE pg_catalog."default" DEFAULT 'pending'::character varying,
+    moderation_reason text COLLATE pg_catalog."default",
+    moderated_by uuid,
+    moderated_at timestamp without time zone,
+    likes_count integer DEFAULT 0,
+    replies_count integer DEFAULT 0,
+    is_anonymous boolean DEFAULT false,
+    source character varying(50) COLLATE pg_catalog."default" DEFAULT 'platform'::character varying,
+    external_id character varying(255) COLLATE pg_catalog."default",
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    deleted_at timestamp without time zone,
+    metadata jsonb DEFAULT '{}'::jsonb,
+    CONSTRAINT comments_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS engagement.consultations
+(
+    id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    municipality_id uuid,
+    project_id uuid,
+    title_ar character varying(500) COLLATE pg_catalog."default" NOT NULL,
+    title_fr character varying(500) COLLATE pg_catalog."default" NOT NULL,
+    description_ar text COLLATE pg_catalog."default" NOT NULL,
+    description_fr text COLLATE pg_catalog."default" NOT NULL,
+    consultation_type character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    start_date timestamp without time zone NOT NULL,
+    end_date timestamp without time zone NOT NULL,
+    target_participants integer,
+    actual_participants integer,
+    themes remacto_theme[],
+    status character varying(50) COLLATE pg_catalog."default" DEFAULT 'draft'::character varying,
+    meeting_location text COLLATE pg_catalog."default",
+    online_platform_url character varying(500) COLLATE pg_catalog."default",
+    moderator_id uuid,
+    summary_ar text COLLATE pg_catalog."default",
+    summary_fr text COLLATE pg_catalog."default",
+    outcomes jsonb DEFAULT '[]'::jsonb,
+    created_by uuid,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    metadata jsonb DEFAULT '{}'::jsonb,
+    CONSTRAINT consultations_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS engagement.ideas
+(
+    id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    user_id uuid,
+    municipality_id uuid,
+    consultation_id uuid,
+    title character varying(500) COLLATE pg_catalog."default" NOT NULL,
+    description text COLLATE pg_catalog."default" NOT NULL,
+    language language_enum NOT NULL,
+    themes remacto_theme[],
+    category character varying(100) COLLATE pg_catalog."default",
+    estimated_cost numeric(15, 2),
+    implementation_time_months integer,
+    target_beneficiaries integer,
+    location_description text COLLATE pg_catalog."default",
+    location_geometry geometry(Geometry,4326),
+    status character varying(50) COLLATE pg_catalog."default" DEFAULT 'submitted'::character varying,
+    review_notes text COLLATE pg_catalog."default",
+    reviewed_by uuid,
+    reviewed_at timestamp without time zone,
+    votes_count integer DEFAULT 0,
+    comments_count integer DEFAULT 0,
+    feasibility_score integer,
+    impact_score integer,
+    priority_score integer,
+    attachments jsonb DEFAULT '[]'::jsonb,
+    is_anonymous boolean DEFAULT false,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    metadata jsonb DEFAULT '{}'::jsonb,
+    CONSTRAINT ideas_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS engagement.news_articles
+(
+    id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    source_name character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    source_url character varying(500) COLLATE pg_catalog."default",
+    article_url character varying(500) COLLATE pg_catalog."default" NOT NULL,
+    title character varying(1000) COLLATE pg_catalog."default" NOT NULL,
+    content text COLLATE pg_catalog."default" NOT NULL,
+    summary text COLLATE pg_catalog."default",
+    author character varying(255) COLLATE pg_catalog."default",
+    published_date timestamp without time zone,
+    language language_enum NOT NULL,
+    municipalities_mentioned uuid[],
+    themes remacto_theme[],
+    sentiment sentiment_enum,
+    sentiment_score numeric(3, 2),
+    keywords text[] COLLATE pg_catalog."default",
+    image_url character varying(500) COLLATE pg_catalog."default",
+    scraped_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    metadata jsonb DEFAULT '{}'::jsonb,
+    CONSTRAINT news_articles_pkey PRIMARY KEY (id),
+    CONSTRAINT news_articles_article_url_key UNIQUE (article_url)
+);
+
+CREATE TABLE IF NOT EXISTS engagement.news_comments
+(
+    id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    article_id uuid,
+    external_comment_id character varying(255) COLLATE pg_catalog."default",
+    author_name character varying(255) COLLATE pg_catalog."default",
+    content text COLLATE pg_catalog."default" NOT NULL,
+    language language_enum NOT NULL,
+    posted_date timestamp without time zone,
+    likes_count integer DEFAULT 0,
+    sentiment sentiment_enum,
+    sentiment_score numeric(3, 2),
+    is_offensive boolean DEFAULT false,
+    scraped_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    metadata jsonb DEFAULT '{}'::jsonb,
+    CONSTRAINT news_comments_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS geo.arrondissements
+(
+    id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    municipality_id uuid,
+    code character varying(20) COLLATE pg_catalog."default" NOT NULL,
+    name_ar character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    name_fr character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    name_en character varying(255) COLLATE pg_catalog."default",
+    geometry geometry(Polygon,4326),
+    population integer,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT arrondissements_pkey PRIMARY KEY (id),
+    CONSTRAINT arrondissements_code_key UNIQUE (code)
+);
+
+CREATE TABLE IF NOT EXISTS geo.cercles
+(
+    id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    province_id uuid,
+    code character varying(10) COLLATE pg_catalog."default" NOT NULL,
+    name_ar character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    name_fr character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    name_en character varying(255) COLLATE pg_catalog."default",
+    geometry geometry(Polygon,4326),
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT cercles_pkey PRIMARY KEY (id),
+    CONSTRAINT cercles_code_key UNIQUE (code)
+);
+
+CREATE TABLE IF NOT EXISTS geo.municipalities
+(
+    id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    cercle_id uuid,
+    province_id uuid,
+    region_id uuid,
+    code character varying(20) COLLATE pg_catalog."default" NOT NULL,
+    name_ar character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    name_fr character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    name_en character varying(255) COLLATE pg_catalog."default",
+    is_urban boolean DEFAULT true,
+    geometry geometry(Polygon,4326),
+    center_point geometry(Point,4326),
+    population integer,
+    area_km2 numeric(10, 2),
+    remacto_member boolean DEFAULT false,
+    remacto_join_date date,
+    website_url character varying(500) COLLATE pg_catalog."default",
+    contact_email character varying(255) COLLATE pg_catalog."default",
+    contact_phone character varying(50) COLLATE pg_catalog."default",
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    metadata jsonb DEFAULT '{}'::jsonb,
+    CONSTRAINT municipalities_pkey PRIMARY KEY (id),
+    CONSTRAINT municipalities_code_key UNIQUE (code)
+);
+
+CREATE TABLE IF NOT EXISTS geo.provinces
+(
+    id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    region_id uuid,
+    code character varying(10) COLLATE pg_catalog."default" NOT NULL,
+    name_ar character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    name_fr character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    name_en character varying(255) COLLATE pg_catalog."default",
+    is_prefecture boolean DEFAULT false,
+    geometry geometry(Polygon,4326),
+    population integer,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT provinces_pkey PRIMARY KEY (id),
+    CONSTRAINT provinces_code_key UNIQUE (code)
+);
+
+CREATE TABLE IF NOT EXISTS geo.regions
+(
+    id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    code character varying(10) COLLATE pg_catalog."default" NOT NULL,
+    name_ar character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    name_fr character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    name_en character varying(255) COLLATE pg_catalog."default",
+    geometry geometry(Polygon,4326),
+    population integer,
+    area_km2 numeric(10, 2),
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT regions_pkey PRIMARY KEY (id),
+    CONSTRAINT regions_code_key UNIQUE (code)
+);
+
+CREATE TABLE IF NOT EXISTS governance.budget_allocations
+(
+    id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    municipality_id uuid NOT NULL,
+    fiscal_year integer NOT NULL,
+    total_budget numeric(15, 2) NOT NULL,
+    currency character varying(3) COLLATE pg_catalog."default" DEFAULT 'MAD'::character varying,
+    allocation_data jsonb NOT NULL,
+    participatory_budget_amount numeric(15, 2),
+    openness_initiatives_budget numeric(15, 2),
+    themes_budget_distribution jsonb,
+    approval_date date,
+    approved_by uuid,
+    document_url character varying(500) COLLATE pg_catalog."default",
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT budget_allocations_pkey PRIMARY KEY (id),
+    CONSTRAINT budget_allocations_municipality_id_fiscal_year_key UNIQUE (municipality_id, fiscal_year)
+);
+
+CREATE TABLE IF NOT EXISTS governance.municipal_officials
+(
+    id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    user_id uuid,
+    municipality_id uuid,
+    "position" character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    department character varying(255) COLLATE pg_catalog."default",
+    office_phone character varying(50) COLLATE pg_catalog."default",
+    office_email character varying(255) COLLATE pg_catalog."default",
+    start_date date NOT NULL,
+    end_date date,
+    is_elected boolean DEFAULT false,
+    bio_ar text COLLATE pg_catalog."default",
+    bio_fr text COLLATE pg_catalog."default",
+    photo_url character varying(500) COLLATE pg_catalog."default",
+    responsibilities jsonb DEFAULT '[]'::jsonb,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT municipal_officials_pkey PRIMARY KEY (id),
+    CONSTRAINT municipal_officials_user_id_key UNIQUE (user_id)
+);
+
+CREATE TABLE IF NOT EXISTS governance.pb_proposals
+(
+    id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    idea_id uuid,
+    municipality_id uuid,
+    fiscal_year integer NOT NULL,
+    requested_amount numeric(15, 2) NOT NULL,
+    approved_amount numeric(15, 2),
+    votes_count integer DEFAULT 0,
+    status character varying(50) COLLATE pg_catalog."default" DEFAULT 'submitted'::character varying,
+    evaluation_notes text COLLATE pg_catalog."default",
+    implementation_plan text COLLATE pg_catalog."default",
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT pb_proposals_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS system.activity_logs
+(
+    id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    user_id uuid,
+    action_type character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    resource_type character varying(100) COLLATE pg_catalog."default",
+    resource_id uuid,
+    description text COLLATE pg_catalog."default",
+    ip_address inet,
+    user_agent text COLLATE pg_catalog."default",
+    request_data jsonb,
+    response_status integer,
+    duration_ms integer,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT activity_logs_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS system.ai_models
+(
+    id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    model_name character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    model_type character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    version character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    parameters jsonb,
+    performance_metrics jsonb,
+    training_data_info jsonb,
+    is_active boolean DEFAULT false,
+    deployed_at timestamp without time zone,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT ai_models_pkey PRIMARY KEY (id),
+    CONSTRAINT ai_models_model_name_version_key UNIQUE (model_name, version)
+);
+
+CREATE TABLE IF NOT EXISTS system.configurations
+(
+    id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    municipality_id uuid,
+    config_key character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    config_value jsonb NOT NULL,
+    description text COLLATE pg_catalog."default",
+    is_active boolean DEFAULT true,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT configurations_pkey PRIMARY KEY (id),
+    CONSTRAINT configurations_municipality_id_config_key_key UNIQUE (municipality_id, config_key)
+);
+
+CREATE TABLE IF NOT EXISTS system.notifications
+(
+    id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    user_id uuid,
+    notification_type character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    title character varying(500) COLLATE pg_catalog."default",
+    message text COLLATE pg_catalog."default" NOT NULL,
+    language language_enum NOT NULL,
+    priority integer DEFAULT 3,
+    channels text[] COLLATE pg_catalog."default",
+    status character varying(50) COLLATE pg_catalog."default" DEFAULT 'pending'::character varying,
+    sent_at timestamp without time zone,
+    read_at timestamp without time zone,
+    metadata jsonb DEFAULT '{}'::jsonb,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT notifications_pkey PRIMARY KEY (id)
+);
+
+ALTER TABLE IF EXISTS analytics.engagement_metrics
+    ADD CONSTRAINT engagement_metrics_municipality_id_fkey FOREIGN KEY (municipality_id)
+    REFERENCES geo.municipalities (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS analytics.offensive_content
+    ADD CONSTRAINT offensive_content_reviewed_by_fkey FOREIGN KEY (reviewed_by)
+    REFERENCES core.users (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS analytics.topic_analysis
+    ADD CONSTRAINT topic_analysis_municipality_id_fkey FOREIGN KEY (municipality_id)
+    REFERENCES geo.municipalities (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS core.documents
+    ADD CONSTRAINT documents_consultation_id_fkey FOREIGN KEY (consultation_id)
+    REFERENCES engagement.consultations (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS core.documents
+    ADD CONSTRAINT documents_municipality_id_fkey FOREIGN KEY (municipality_id)
+    REFERENCES geo.municipalities (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS core.documents
+    ADD CONSTRAINT documents_project_id_fkey FOREIGN KEY (project_id)
+    REFERENCES core.projects (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS core.documents
+    ADD CONSTRAINT documents_uploaded_by_fkey FOREIGN KEY (uploaded_by)
+    REFERENCES core.users (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS core.project_updates
+    ADD CONSTRAINT project_updates_created_by_fkey FOREIGN KEY (created_by)
+    REFERENCES core.users (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS core.project_updates
+    ADD CONSTRAINT project_updates_project_id_fkey FOREIGN KEY (project_id)
+    REFERENCES core.projects (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE CASCADE;
+
+
+ALTER TABLE IF EXISTS core.projects
+    ADD CONSTRAINT projects_approved_by_fkey FOREIGN KEY (approved_by)
+    REFERENCES core.users (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS core.projects
+    ADD CONSTRAINT projects_created_by_fkey FOREIGN KEY (created_by)
+    REFERENCES core.users (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS core.projects
+    ADD CONSTRAINT projects_municipality_id_fkey FOREIGN KEY (municipality_id)
+    REFERENCES geo.municipalities (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+CREATE INDEX IF NOT EXISTS idx_projects_municipality
+    ON core.projects(municipality_id);
+
+
+ALTER TABLE IF EXISTS core.users
+    ADD CONSTRAINT users_arrondissement_id_fkey FOREIGN KEY (arrondissement_id)
+    REFERENCES geo.arrondissements (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS core.users
+    ADD CONSTRAINT users_municipality_id_fkey FOREIGN KEY (municipality_id)
+    REFERENCES geo.municipalities (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+CREATE INDEX IF NOT EXISTS idx_users_municipality
+    ON core.users(municipality_id);
+
+
+ALTER TABLE IF EXISTS engagement.comments
+    ADD CONSTRAINT comments_consultation_id_fkey FOREIGN KEY (consultation_id)
+    REFERENCES engagement.consultations (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+CREATE INDEX IF NOT EXISTS idx_comments_consultation
+    ON engagement.comments(consultation_id);
+
+
+ALTER TABLE IF EXISTS engagement.comments
+    ADD CONSTRAINT comments_moderated_by_fkey FOREIGN KEY (moderated_by)
+    REFERENCES core.users (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS engagement.comments
+    ADD CONSTRAINT comments_parent_comment_id_fkey FOREIGN KEY (parent_comment_id)
+    REFERENCES engagement.comments (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS engagement.comments
+    ADD CONSTRAINT comments_project_id_fkey FOREIGN KEY (project_id)
+    REFERENCES core.projects (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+CREATE INDEX IF NOT EXISTS idx_comments_project
+    ON engagement.comments(project_id);
+
+
+ALTER TABLE IF EXISTS engagement.comments
+    ADD CONSTRAINT comments_user_id_fkey FOREIGN KEY (user_id)
+    REFERENCES core.users (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+CREATE INDEX IF NOT EXISTS idx_comments_user
+    ON engagement.comments(user_id);
+
+
+ALTER TABLE IF EXISTS engagement.consultations
+    ADD CONSTRAINT consultations_created_by_fkey FOREIGN KEY (created_by)
+    REFERENCES core.users (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS engagement.consultations
+    ADD CONSTRAINT consultations_moderator_id_fkey FOREIGN KEY (moderator_id)
+    REFERENCES core.users (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS engagement.consultations
+    ADD CONSTRAINT consultations_municipality_id_fkey FOREIGN KEY (municipality_id)
+    REFERENCES geo.municipalities (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS engagement.consultations
+    ADD CONSTRAINT consultations_project_id_fkey FOREIGN KEY (project_id)
+    REFERENCES core.projects (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS engagement.ideas
+    ADD CONSTRAINT ideas_consultation_id_fkey FOREIGN KEY (consultation_id)
+    REFERENCES engagement.consultations (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS engagement.ideas
+    ADD CONSTRAINT ideas_municipality_id_fkey FOREIGN KEY (municipality_id)
+    REFERENCES geo.municipalities (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS engagement.ideas
+    ADD CONSTRAINT ideas_reviewed_by_fkey FOREIGN KEY (reviewed_by)
+    REFERENCES core.users (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS engagement.ideas
+    ADD CONSTRAINT ideas_user_id_fkey FOREIGN KEY (user_id)
+    REFERENCES core.users (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS engagement.news_comments
+    ADD CONSTRAINT news_comments_article_id_fkey FOREIGN KEY (article_id)
+    REFERENCES engagement.news_articles (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS geo.arrondissements
+    ADD CONSTRAINT arrondissements_municipality_id_fkey FOREIGN KEY (municipality_id)
+    REFERENCES geo.municipalities (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS geo.cercles
+    ADD CONSTRAINT cercles_province_id_fkey FOREIGN KEY (province_id)
+    REFERENCES geo.provinces (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS geo.municipalities
+    ADD CONSTRAINT municipalities_cercle_id_fkey FOREIGN KEY (cercle_id)
+    REFERENCES geo.cercles (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS geo.municipalities
+    ADD CONSTRAINT municipalities_province_id_fkey FOREIGN KEY (province_id)
+    REFERENCES geo.provinces (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS geo.municipalities
+    ADD CONSTRAINT municipalities_region_id_fkey FOREIGN KEY (region_id)
+    REFERENCES geo.regions (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS geo.provinces
+    ADD CONSTRAINT provinces_region_id_fkey FOREIGN KEY (region_id)
+    REFERENCES geo.regions (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS governance.budget_allocations
+    ADD CONSTRAINT budget_allocations_approved_by_fkey FOREIGN KEY (approved_by)
+    REFERENCES core.users (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS governance.budget_allocations
+    ADD CONSTRAINT budget_allocations_municipality_id_fkey FOREIGN KEY (municipality_id)
+    REFERENCES geo.municipalities (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS governance.municipal_officials
+    ADD CONSTRAINT municipal_officials_municipality_id_fkey FOREIGN KEY (municipality_id)
+    REFERENCES geo.municipalities (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS governance.municipal_officials
+    ADD CONSTRAINT municipal_officials_user_id_fkey FOREIGN KEY (user_id)
+    REFERENCES core.users (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+CREATE INDEX IF NOT EXISTS municipal_officials_user_id_key
+    ON governance.municipal_officials(user_id);
+
+
+ALTER TABLE IF EXISTS governance.pb_proposals
+    ADD CONSTRAINT pb_proposals_idea_id_fkey FOREIGN KEY (idea_id)
+    REFERENCES engagement.ideas (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS governance.pb_proposals
+    ADD CONSTRAINT pb_proposals_municipality_id_fkey FOREIGN KEY (municipality_id)
+    REFERENCES geo.municipalities (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS system.activity_logs
+    ADD CONSTRAINT activity_logs_user_id_fkey FOREIGN KEY (user_id)
+    REFERENCES core.users (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS system.configurations
+    ADD CONSTRAINT configurations_municipality_id_fkey FOREIGN KEY (municipality_id)
+    REFERENCES geo.municipalities (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+ALTER TABLE IF EXISTS system.notifications
+    ADD CONSTRAINT notifications_user_id_fkey FOREIGN KEY (user_id)
+    REFERENCES core.users (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+END;

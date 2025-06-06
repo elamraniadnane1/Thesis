@@ -1,5 +1,16 @@
 python -m streamlit run Main.py
 
+
+administrator@DESKTOP-G35L8O1:~$ sudo docker ps -a
+CONTAINER ID   IMAGE                                     COMMAND                  CREATED          STATUS                    PORTS                                                   NAMES
+66b08e83e700   postgres                                  "docker-entrypoint.s…"   3 minutes ago    Up 3 minutes              0.0.0.0:5432->5432/tcp, [::]:5432->5432/tcp             civic-postgres
+5cc66d365e35   dpage/pgadmin4                            "/entrypoint.sh"         32 minutes ago   Up 32 minutes             0.0.0.0:80->80/tcp, [::]:80->80/tcp, 443/tcp            thirsty_zhukovsky
+02ea2d659f2b   mongodb/mongodb-community-server:latest   "python3 /usr/local/…"   26 hours ago     Up 20 hours               0.0.0.0:27017->27017/tcp, [::]:27017->27017/tcp         mongodb
+08aaeac1ca2b   redis/redis-stack-server:latest           "/entrypoint.sh"         9 days ago       Up 20 hours               0.0.0.0:6379->6379/tcp, [::]:6379->6379/tcp             redis-stack-server
+004be2b88559   zenmldocker/zenml-server                  "uvicorn zenml.zen_s…"   9 days ago       Up 20 hours               0.0.0.0:8080->8080/tcp, [::]:8080->8080/tcp             stoic_leavitt
+dc1d8910fa74   qdrant/qdrant:latest                      "./entrypoint.sh"        9 days ago       Up 20 hours               0.0.0.0:6333->6333/tcp, [::]:6333->6333/tcp, 6334/tcp   qdrant
+b7d7b12e6add   hello-world                               "/hello"                 9 days ago       Exited (0) 20 hours ago
+
 python script12.py --tune --iterations 10 --tune_limit 3000
 
 python script13.py --collection "sentiment_analysis_dataset" --host "localhost" --port 6333 --use-ml --ml-model-type bert --train --tune --num-trials 20 --device cuda --output "arabic_sentiment_best" --batch-size 32 --memory-limit 4096 --no-cache
@@ -16,12 +27,15 @@ python -m venv venv
 .\venv\Scripts\activate
 
 sudo docker start 02ea2d659f2b 08aaeac1ca2b 004be2b88559 dc1d8910fa74 b7d7b12e6add
-
+sudo docker run -p 80:80 -e PGADMIN_DEFAULT_EMAIL=elamraniadnane1@gmail.com -e PGADMIN_DEFAULT_PASSWORD=Abdi2022 -d dpage/pgadmin4
+sudo docker run -d --name civic-postgres -e POSTGRES_DB=CivicCatalyst -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=Abdi2022 -p 5432:5432 postgres
 
 docker start 08aaeac1ca2b 004be2b88559 dc1d8910fa74 b7d7b12e6add
 
 docker run -d --name qdrant -p 6333:6333 -v qdrant_storage:/qdrant/storage qdrant/qdrant:latest
 
+netsh interface portproxy add v4tov4 listenport=80 listenaddress=0.0.0.0 connectport=80 connectaddress=172.21.0.58
+netsh interface portproxy add v4tov4 listenport=5432 listenaddress=0.0.0.0 connectport=5432 connectaddress=172.21.0.58
 docker run -it -d -p 8080:8080 zenmldocker/zenml-server
 
 # Add Docker's official GPG key:
