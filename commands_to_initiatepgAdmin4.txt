@@ -1270,3 +1270,23 @@ ALTER TABLE IF EXISTS system.notifications
     ON DELETE NO ACTION;
 
 END;
+
+
+-- This will delete all data from all tables in one transaction
+BEGIN;
+
+DO $$ 
+DECLARE
+    r RECORD;
+BEGIN
+    -- Truncate all tables in all schemas
+    FOR r IN 
+        SELECT schemaname, tablename 
+        FROM pg_tables 
+        WHERE schemaname IN ('analytics', 'core', 'engagement', 'geo', 'governance', 'system')
+    LOOP
+        EXECUTE format('TRUNCATE TABLE %I.%I CASCADE', r.schemaname, r.tablename);
+    END LOOP;
+END $$;
+
+COMMIT;
